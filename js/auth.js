@@ -10,11 +10,29 @@
  * requireAuth     : Redireciona para login se não autenticado
  */
 
+// --- Verificar aprovação ---
+async function checkApproved(userId) {
+  const { data, error } = await supabaseClient
+    .from('profiles')
+    .select('approved')
+    .eq('id', userId)
+    .single();
+  if (error || !data) return false;
+  return data.approved === true;
+}
+
 // --- Login ---
 async function authLogin(email, password) {
   try {
     const { data, error } = await supabaseClient.auth.signInWithPassword({ email, password });
     if (error) throw error;
+
+    const approved = await checkApproved(data.user.id);
+    if (!approved) {
+      await supabaseClient.auth.signOut();
+      return { error: 'pending_approval' };
+    }
+
     return { data };
   } catch (err) {
     return { error: translateAuthError(err.message) };
@@ -79,6 +97,12 @@ async function getUser() {
 async function requireAuth() {
   const session = await getSession();
   if (!session) {
+    window.location.href = 'index.html';
+    return null;
+  }
+  const approved = await checkApproved(session.user.id);
+  if (!approved) {
+    await supabaseClient.auth.signOut();
     window.location.href = 'index.html';
     return null;
   }

@@ -1036,7 +1036,9 @@
     const result = await authLogin(email, password);
     setLoading('login', false);
 
-    if (result.error) {
+    if (result.error === 'pending_approval') {
+      showAlert('Sua conta está aguardando aprovação. Entraremos em contato em breve.', 'warning');
+    } else if (result.error) {
       showAlert(result.error);
     } else {
       window.location.href = 'dashboard.html';
