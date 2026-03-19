@@ -45,7 +45,7 @@ function buildSidebar(user) {
   return `
     <!-- Mobile Header -->
     <div class="mobile-header">
-      <div class="mobile-logo">CLUBE DOS REFERIDOS</div>
+      <img src="images/logo-full.svg" alt="Clube dos Referidos" class="mobile-logo" style="height:36px;width:auto;">
       <button class="menu-toggle" id="menuToggle" aria-label="Abrir menu">☰</button>
     </div>
 
@@ -55,11 +55,7 @@ function buildSidebar(user) {
     <!-- Sidebar -->
     <aside class="sidebar" id="sidebar">
       <div class="sidebar-logo">
-        <div class="logo-icon">CR</div>
-        <div class="logo-text">
-          CLUBE DOS REFERIDOS
-          <span>Mentoria & Vendas</span>
-        </div>
+        <img src="images/logo-full.svg" alt="Clube dos Referidos" style="height:40px;width:auto;max-width:100%;">
       </div>
 
       <nav class="sidebar-nav">

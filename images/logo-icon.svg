@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 40 40" fill="none">
+  <!-- Connecting lines (behind circles) -->
+  <line x1="20" y1="14" x2="20" y2="10.5" stroke="#00E5FF" stroke-width="1.5" stroke-linecap="round"/>
+  <line x1="24.5" y1="23.5" x2="27.5" y2="25.5" stroke="#00E5FF" stroke-width="1.5" stroke-linecap="round"/>
+  <line x1="15.5" y1="23.5" x2="12.5" y2="25.5" stroke="#00E5FF" stroke-width="1.5" stroke-linecap="round"/>
+  <!-- Central node — filled, glowing -->
+  <circle cx="20" cy="20" r="6" fill="#00E5FF"/>
+  <circle cx="20" cy="20" r="9" fill="#00E5FF" opacity="0.12"/>
+  <!-- Top outer node -->
+  <circle cx="20" cy="7" r="3.5" stroke="#00E5FF" stroke-width="1.5"/>
+  <!-- Bottom-right outer node -->
+  <circle cx="31" cy="27.5" r="3.5" stroke="#00E5FF" stroke-width="1.5"/>
+  <!-- Bottom-left outer node -->
+  <circle cx="9" cy="27.5" r="3.5" stroke="#00E5FF" stroke-width="1.5"/>
+</svg>

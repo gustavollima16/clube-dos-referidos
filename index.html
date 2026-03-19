@@ -142,34 +142,9 @@
       margin-bottom: var(--space-xl);
     }
 
-    .auth-logo-icon {
-      width: 40px;
-      height: 40px;
-      background: var(--accent);
-      border-radius: var(--radius-sm);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-family: var(--font-display);
-      font-size: 1.2rem;
-      color: #000;
-      font-weight: 900;
-    }
-
-    .auth-logo-text {
-      font-family: var(--font-display);
-      font-size: 1.1rem;
-      letter-spacing: 0.06em;
-    }
-
-    .auth-logo-text span {
-      display: block;
-      font-family: var(--font-body);
-      font-size: 0.65rem;
-      color: var(--accent);
-      font-weight: 500;
-      letter-spacing: 0.12em;
-      text-transform: uppercase;
+    .auth-logo img {
+      height: 44px;
+      width: auto;
     }
 
     .auth-title {
@@ -328,6 +303,10 @@
   <!-- HERO -->
   <div class="hero-panel">
     <div class="hero-content">
+      <div style="margin-bottom: var(--space-2xl);">
+        <img src="images/logo-full.svg" alt="Clube dos Referidos" style="height: 52px; width: auto; opacity: 0.95;">
+      </div>
+
       <div class="hero-badge">
         <span class="glow-dot"></span>
         Área exclusiva de membros
@@ -363,11 +342,7 @@
 
     <div class="auth-header">
       <div class="auth-logo">
-        <div class="auth-logo-icon">CR</div>
-        <div class="auth-logo-text">
-          CLUBE DOS REFERIDOS
-          <span>Mentoria & Vendas</span>
-        </div>
+        <img src="images/logo-full.svg" alt="Clube dos Referidos">
       </div>
 
       <div id="mainAuthBlock">
