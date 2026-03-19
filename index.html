@@ -1159,7 +1159,7 @@
     applySpinner.style.display = 'inline-block';
 
     try {
-      const { error } = await supabase.from('candidatos').insert([dados]);
+      const { error } = await supabaseClient.from('candidatos').insert([dados]);
       if (error) throw error;
 
       // Notificação por email para o admin
