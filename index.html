@@ -634,6 +634,61 @@
     }
     .apply-success .success-icon { margin-bottom: var(--space-lg); display: flex; justify-content: center; }
     .apply-success .success-icon svg { width: 72px; height: 72px; color: var(--accent); }
+    /* Footer */
+    .site-footer {
+      background: var(--bg-secondary);
+      border-top: 1px solid var(--border-subtle);
+      padding: var(--space-2xl) var(--space-2xl);
+    }
+    .footer-inner {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: var(--space-sm);
+      text-align: center;
+    }
+    .footer-logo {
+      height: 40px;
+      width: auto;
+      opacity: 0.6;
+      margin-bottom: var(--space-xs);
+    }
+    .footer-copy {
+      font-size: 0.82rem;
+      color: var(--text-muted);
+    }
+    .footer-sub {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      opacity: 0.6;
+    }
+    /* Botão flutuante WhatsApp */
+    .whatsapp-float {
+      position: fixed;
+      bottom: 28px;
+      right: 28px;
+      z-index: 9999;
+      width: 56px;
+      height: 56px;
+      background: #25D366;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #fff;
+      box-shadow: 0 4px 20px rgba(37, 211, 102, 0.45);
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+    .whatsapp-float svg {
+      width: 30px;
+      height: 30px;
+    }
+    .whatsapp-float:hover {
+      transform: scale(1.12);
+      box-shadow: 0 6px 28px rgba(37, 211, 102, 0.65);
+    }
     /* Divisor de seção */
     .section-divider {
       width: 100%;
@@ -981,7 +1036,7 @@
 <!-- ========== SEÇÃO: OS MENTORES ========== -->
 <div class="section-divider"></div>
 <section id="mentores">
-  <div class="lp-section">
+  <div class="lp-section" style="padding-bottom: 50px;">
     <span class="section-tag">Os Mentores</span>
     <h2 class="lp-title">Os profissionais por<br>trás do <span style="color:var(--accent)">método</span></h2>
     <p class="lp-subtitle">Formados diretamente por Flávio Augusto, co-fundadores do Clube dos Referidos e referências nacionais em vendas ativas e liderança comercial.</p>
@@ -1171,6 +1226,23 @@
     </div>
   </div>
 </section>
+
+<!-- ========== FOOTER ========== -->
+<footer class="site-footer">
+  <div class="footer-inner">
+    <img src="images/logo.png" alt="Clube dos Referidos" class="footer-logo">
+    <p class="footer-copy">© 2025 Clube dos Referidos. Todos os direitos reservados.</p>
+    <p class="footer-sub">Clube dos Referidos — Comunidade de Alta Performance em Vendas</p>
+  </div>
+</footer>
+
+<!-- Botão flutuante WhatsApp -->
+<a href="https://wa.me/5511991439098" target="_blank" rel="noopener" class="whatsapp-float" aria-label="Falar no WhatsApp">
+  <svg viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+    <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/>
+    <path d="M12 0C5.373 0 0 5.373 0 12c0 2.117.554 4.103 1.523 5.824L.057 23.428a.75.75 0 0 0 .906.94l5.803-1.519A11.934 11.934 0 0 0 12 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 22c-1.925 0-3.736-.51-5.3-1.4l-.38-.22-3.44.9.92-3.35-.25-.39A9.956 9.956 0 0 1 2 12C2 6.477 6.477 2 12 2s10 4.477 10 10-4.477 10-10 10z"/>
+  </svg>
+</a>
 
 <!-- Scripts -->
 
