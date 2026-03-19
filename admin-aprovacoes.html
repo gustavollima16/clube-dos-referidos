@@ -34,13 +34,21 @@
       background: rgba(0,229,160,0.1); border: 1px solid rgba(0,229,160,0.3);
       color: #00E5A0; border-radius: 2rem; font-size: 0.72rem; font-weight: 600;
     }
-    .btn-approve {
-      padding: 0.4rem 1rem; background: var(--accent); color: #000;
-      border: none; border-radius: var(--radius-sm); font-size: 0.8rem;
-      font-weight: 700; cursor: pointer; transition: opacity 0.2s;
+    .btn-approve, .btn-deny, .btn-revoke {
+      padding: 0.4rem 1rem; border: none; border-radius: var(--radius-sm);
+      font-size: 0.8rem; font-weight: 700; cursor: pointer; transition: opacity 0.2s;
     }
-    .btn-approve:hover { opacity: 0.85; }
-    .btn-approve:disabled { opacity: 0.4; cursor: default; }
+    .btn-approve { background: var(--accent); color: #000; }
+    .btn-deny { background: rgba(255,77,106,0.15); color: #FF6B84; border: 1px solid rgba(255,77,106,0.3); }
+    .btn-revoke { background: rgba(255,180,0,0.12); color: #FFB400; border: 1px solid rgba(255,180,0,0.35); }
+    .btn-approve:hover, .btn-deny:hover, .btn-revoke:hover { opacity: 0.8; }
+    .btn-approve:disabled, .btn-deny:disabled, .btn-revoke:disabled { opacity: 0.4; cursor: default; }
+    .badge-denied {
+      display: inline-block; padding: 0.25rem 0.7rem;
+      background: rgba(255,77,106,0.1); border: 1px solid rgba(255,77,106,0.3);
+      color: #FF6B84; border-radius: 2rem; font-size: 0.72rem; font-weight: 600;
+    }
+    .action-btns { display: flex; gap: 0.5rem; flex-wrap: wrap; }
     #loadingMsg { color: var(--text-muted); margin-bottom: var(--space-xl); }
     #adminGate { display: none; }
     #loginForm { max-width: 360px; }
@@ -133,15 +141,18 @@
       <tr id="row-${u.id}">
         <td style="color:var(--text-primary);">${u.email || u.id}</td>
         <td>${u.created_at ? new Date(u.created_at).toLocaleDateString('pt-BR') : '—'}</td>
-        <td>
-          ${u.approved
-            ? '<span class="badge-approved">Aprovado</span>'
-            : '<span class="badge-pending">Aguardando</span>'}
+        <td id="status-${u.id}">
+          ${u.approved === true  ? '<span class="badge-approved">Aprovado</span>'
+          : u.approved === false && u.denied ? '<span class="badge-denied">Negado</span>'
+          : '<span class="badge-pending">Aguardando</span>'}
         </td>
         <td>
-          ${u.approved
-            ? '<span style="color:var(--text-muted);font-size:0.8rem;">✓ Liberado</span>'
-            : `<button class="btn-approve" onclick="approveUser('${u.id}', '${u.email}', this)">Aprovar acesso</button>`}
+          <div class="action-btns" id="actions-${u.id}">
+            ${u.approved
+              ? `<button class="btn-revoke" onclick="revokeUser('${u.id}', this)">Revogar acesso</button>`
+              : `<button class="btn-approve" onclick="approveUser('${u.id}', '${u.email}', this)">Aprovar</button>
+                 <button class="btn-deny" onclick="denyUser('${u.id}', this)">Negar</button>`}
+          </div>
         </td>
       </tr>
     `).join('');
@@ -153,17 +164,45 @@
     const { error } = await supabaseClient.from('profiles').update({ approved: true }).eq('id', userId);
     if (error) {
       btn.disabled = false;
-      btn.textContent = 'Aprovar acesso';
+      btn.textContent = 'Aprovar';
       alert('Erro ao aprovar. Tente novamente.');
       return;
     }
-    // Enviar email de aprovação via Resend
-    if (RESEND_API_KEY && email) {
-      await sendApprovalEmail(email);
+    if (RESEND_API_KEY && email) await sendApprovalEmail(email);
+    document.getElementById('status-' + userId).innerHTML = '<span class="badge-approved">Aprovado</span>';
+    document.getElementById('actions-' + userId).innerHTML = `<button class="btn-revoke" onclick="revokeUser('${userId}', this)">Revogar acesso</button>`;
+  }
+
+  async function denyUser(userId, btn) {
+    if (!confirm('Tem certeza que deseja negar o acesso deste usuário?')) return;
+    btn.disabled = true;
+    btn.textContent = 'Negando...';
+    const { error } = await supabaseClient.from('profiles').update({ approved: false }).eq('id', userId);
+    if (error) {
+      btn.disabled = false;
+      btn.textContent = 'Negar';
+      alert('Erro ao negar. Tente novamente.');
+      return;
     }
-    const row = document.getElementById('row-' + userId);
-    row.cells[2].innerHTML = '<span class="badge-approved">Aprovado</span>';
-    row.cells[3].innerHTML = '<span style="color:var(--text-muted);font-size:0.8rem;">✓ Liberado</span>';
+    document.getElementById('status-' + userId).innerHTML = '<span class="badge-denied">Negado</span>';
+    document.getElementById('actions-' + userId).innerHTML = `<button class="btn-approve" onclick="approveUser('${userId}', '', this)">Aprovar</button>`;
+  }
+
+  async function revokeUser(userId, btn) {
+    if (!confirm('Tem certeza que deseja revogar o acesso deste usuário?')) return;
+    btn.disabled = true;
+    btn.textContent = 'Revogando...';
+    const { error } = await supabaseClient.from('profiles').update({ approved: false }).eq('id', userId);
+    if (error) {
+      btn.disabled = false;
+      btn.textContent = 'Revogar acesso';
+      alert('Erro ao revogar. Tente novamente.');
+      return;
+    }
+    document.getElementById('status-' + userId).innerHTML = '<span class="badge-pending">Aguardando</span>';
+    document.getElementById('actions-' + userId).innerHTML = `
+      <button class="btn-approve" onclick="approveUser('${userId}', '', this)">Aprovar</button>
+      <button class="btn-deny" onclick="denyUser('${userId}', this)">Negar</button>`;
   }
 
   async function sendApprovalEmail(toEmail) {
