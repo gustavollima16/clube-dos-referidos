@@ -372,9 +372,8 @@
 
     /* ===================== SEÇÕES LANDING ===================== */
     .lp-section {
-      padding: 100px var(--space-2xl);
-      max-width: 1100px;
-      margin: 0 auto;
+      padding: 100px var(--space-2xl) 100px 6vw;
+      max-width: 1200px;
       width: 100%;
     }
     .section-tag {
@@ -538,7 +537,7 @@
     <li><a href="#clube">O Clube</a></li>
     <li><a href="#somos">Quem Somos</a></li>
     <li><a href="#depoimentos">Depoimentos</a></li>
-    <li><a href="#inscricao">Inscrever-se</a></li>
+    <li><a href="#inscricao">Aplique</a></li>
     <li class="nav-cta"><a href="#area-membros" onclick="scrollToAuth(event)">Área de Membros</a></li>
   </ul>
   <button class="hamburger-btn" id="hamburgerBtn" aria-label="Menu">☰</button>
@@ -549,7 +548,7 @@
   <a href="#clube" onclick="closeMobileMenu()">O Clube</a>
   <a href="#somos" onclick="closeMobileMenu()">Quem Somos</a>
   <a href="#depoimentos" onclick="closeMobileMenu()">Depoimentos</a>
-  <a href="#inscricao" onclick="closeMobileMenu()">Inscrever-se</a>
+  <a href="#inscricao" onclick="closeMobileMenu()">Aplique</a>
   <a href="#area-membros" onclick="scrollToAuth(event);closeMobileMenu()">Área de Membros</a>
 </div>
 
@@ -572,11 +571,6 @@
     <div class="hero-content">
       <div style="margin-bottom: var(--space-2xl); margin-left: -32px; margin-top: -20px;">
         <img src="images/logo.png" alt="Clube dos Referidos" style="height:180px;width:auto;">
-      </div>
-
-      <div class="hero-badge">
-        <span class="glow-dot"></span>
-        Área exclusiva de membros
       </div>
 
       <h1 class="hero-title">
@@ -610,6 +604,10 @@
     <div class="auth-header">
 
       <div id="mainAuthBlock">
+        <div class="hero-badge" style="margin-bottom: var(--space-md);">
+          <span class="glow-dot"></span>
+          Área exclusiva de membros
+        </div>
         <h2 class="auth-title">Bem-vindo de volta</h2>
         <p class="auth-subtitle">Acesse sua conta para continuar aprendendo.</p>
       </div>
@@ -820,7 +818,7 @@
         </div>
       </div>
       <div class="somos-img-placeholder">
-        <img src="images/logo.png" alt="Clube dos Referidos" style="width:60%;opacity:0.5;">
+        <img src="images/logo.png" alt="Clube dos Referidos" style="width:100%;opacity:0.5;">
       </div>
     </div>
   </div>
@@ -876,8 +874,8 @@
 <div class="section-divider"></div>
 <section id="inscricao" class="form-section-wrapper">
   <div class="lp-section">
-    <span class="section-tag">Inscrever-se</span>
-    <h2 class="lp-title">Quero fazer parte<br>do Clube dos Referidos</h2>
+    <span class="section-tag">Aplique</span>
+    <h2 class="lp-title">Aplique para o<br>Clube dos Referidos</h2>
     <p class="lp-subtitle">Preencha o formulário abaixo e entraremos em contato para agendar uma apresentação exclusiva.</p>
 
     <div id="applyFormWrapper" class="apply-form">
@@ -916,20 +914,10 @@
           </div>
         </div>
 
-        <div class="form-group">
-          <label class="form-label" for="applySonho">Qual é o seu grande sonho ou meta?</label>
-          <textarea class="form-control" id="applySonho" placeholder="Descreva brevemente o que você quer conquistar nos próximos anos..."></textarea>
-        </div>
-
-        <div class="form-group">
-          <label class="form-label" for="applyDisponibilidade">Melhor dia e horário para a apresentação *</label>
-          <input class="form-control" type="text" id="applyDisponibilidade" placeholder="Ex: Terças e quintas, após as 18h" required>
-        </div>
-
         <div id="applyAlert" class="alert" style="margin-bottom: var(--space-lg);"></div>
 
         <button type="submit" class="btn btn-primary btn-lg" id="applyBtn" style="min-width: 220px;">
-          <span id="applyBtnText">Enviar inscrição</span>
+          <span id="applyBtnText">Enviar aplicação</span>
           <span id="applySpinner" class="spinner" style="display:none;"></span>
         </button>
       </form>
@@ -1112,8 +1100,6 @@
       instagram: document.getElementById('applyInstagram').value.trim() || null,
       cargo: document.getElementById('applyCargo').value.trim() || null,
       faturamento: document.getElementById('applyFaturamento').value.trim(),
-      sonho: document.getElementById('applySonho').value.trim() || null,
-      disponibilidade: document.getElementById('applyDisponibilidade').value.trim(),
     };
 
     const applyBtn = document.getElementById('applyBtn');
