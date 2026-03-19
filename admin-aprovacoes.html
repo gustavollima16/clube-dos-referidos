@@ -476,6 +476,17 @@
       console.error('Erro ao enviar email:', e);
     }
   }
+
+  // Ao carregar a página, verifica se já existe sessão ativa de admin
+  document.addEventListener('DOMContentLoaded', async () => {
+    const { data: { session } } = await supabaseClient.auth.getSession();
+    if (session && ADMIN_EMAILS.includes(session.user.email)) {
+      document.getElementById('loginForm').style.display = 'none';
+      document.getElementById('adminGate').style.display = 'block';
+      loadUsers();
+      loadInvites();
+    }
+  });
 </script>
 </body>
 </html>
