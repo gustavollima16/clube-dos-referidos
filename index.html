@@ -1163,7 +1163,7 @@
       if (error) throw error;
 
       // Notificação por email para o admin
-      await fetch('https://api.resend.com/emails', {
+      try { await fetch('https://api.resend.com/emails', {
         method: 'POST',
         headers: {
           'Authorization': 'Bearer re_ZE5ZdxAs_2rPKV5gGt8ECVQ8u2ZrT6Gh4',
@@ -1194,7 +1194,7 @@
             </div>
           `
         })
-      });
+      }); } catch(e) { console.error('Erro email:', e); }
 
       // Notificação por WhatsApp para o admin
       try {
