@@ -13,23 +13,25 @@
       align-items: center;
       justify-content: center;
       padding: var(--space-xl);
+      padding-top: 7rem;
+    }
+
+    .invite-logo-top {
+      position: fixed;
+      top: var(--space-xl);
+      left: var(--space-xl);
+      z-index: 10;
+    }
+
+    .invite-logo-top img {
+      height: 106px;
+      width: auto;
+      display: block;
     }
 
     .invite-wrapper {
       width: 100%;
       max-width: 440px;
-    }
-
-    .invite-logo {
-      text-align: center;
-      margin-bottom: var(--space-2xl);
-    }
-
-    .invite-logo img {
-      height: 96px;
-      width: auto;
-      display: block;
-      margin: 0 auto;
     }
 
     .invite-card {
@@ -170,7 +172,7 @@
       max-width: 900px;
       aspect-ratio: 1;
       background: url('images/emblema.png') center/contain no-repeat;
-      opacity: 0.04;
+      opacity: 0.05;
       pointer-events: none;
       z-index: 0;
     }
@@ -180,11 +182,11 @@
 </head>
 <body>
 
-<div class="invite-wrapper">
+<div class="invite-logo-top">
+  <img src="images/logo.png" alt="Clube dos Referidos">
+</div>
 
-  <div class="invite-logo">
-    <img src="images/logo.png" alt="Clube dos Referidos">
-  </div>
+<div class="invite-wrapper">
 
   <div class="invite-card">
 
