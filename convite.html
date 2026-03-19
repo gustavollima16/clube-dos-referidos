@@ -26,8 +26,10 @@
     }
 
     .invite-logo img {
-      height: 64px;
+      height: 96px;
       width: auto;
+      display: block;
+      margin: 0 auto;
     }
 
     .invite-card {
@@ -50,20 +52,33 @@
       color: var(--accent);
       letter-spacing: 0.1em;
       text-transform: uppercase;
-      margin-bottom: var(--space-md);
+      margin-bottom: var(--space-2xl);
+      margin-top: -1.5rem;
     }
 
     .invite-card h2 {
       font-size: 1.4rem;
-      margin-bottom: var(--space-xs);
+      margin-bottom: var(--space-lg);
     }
 
     .invite-card p.subtitle {
       font-size: 0.85rem;
       color: var(--text-muted);
       margin-bottom: var(--space-xl);
+      margin-top: var(--space-sm);
       line-height: 1.6;
     }
+
+    /* Olhinho de senha — igual à página principal */
+    .input-password-wrap { position: relative; }
+    .input-password-wrap .form-control { padding-right: 2.8rem; }
+    .toggle-pw {
+      position: absolute; right: 0.9rem; top: 50%; transform: translateY(-50%);
+      background: none; border: none; cursor: pointer; padding: 0;
+      color: var(--text-muted); transition: color var(--transition);
+      display: flex; align-items: center;
+    }
+    .toggle-pw:hover { color: var(--accent); }
 
     .state-loading,
     .state-invalid,
@@ -143,6 +158,24 @@
     }
 
     @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* Marca d'água de fundo */
+    body::before {
+      content: '';
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 130vw;
+      max-width: 900px;
+      aspect-ratio: 1;
+      background: url('images/emblema.png') center/contain no-repeat;
+      opacity: 0.04;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .invite-wrapper { position: relative; z-index: 1; }
   </style>
 </head>
 <body>
