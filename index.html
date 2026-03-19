@@ -247,6 +247,35 @@
       line-height: 1.5;
     }
 
+    /* LGPD Checkbox */
+    .lgpd-check {
+      display: flex;
+      align-items: flex-start;
+      gap: 0.65rem;
+      margin-top: var(--space-md);
+      cursor: pointer;
+    }
+
+    .lgpd-check input[type="checkbox"] {
+      width: 16px;
+      height: 16px;
+      min-width: 16px;
+      margin-top: 2px;
+      accent-color: var(--accent);
+      cursor: pointer;
+    }
+
+    .lgpd-check span {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      line-height: 1.5;
+    }
+
+    .lgpd-check a {
+      color: var(--accent);
+      text-decoration: underline;
+    }
+
     /* Separador "ou" */
     .auth-divider {
       display: flex;
@@ -848,10 +877,10 @@
           <span id="loginSpinner" class="spinner" style="display:none;"></span>
         </button>
 
-        <p class="terms-text" style="margin-top: 1.2rem;">
-          Ao entrar, você concorda com os<br>
-          termos de uso do Clube dos Referidos.
-        </p>
+        <label class="lgpd-check" style="margin-top: 1.2rem;">
+          <input type="checkbox" id="loginTerms" required>
+          <span>Li e concordo com os <a href="termos.html" target="_blank">Termos de Uso</a> do Clube dos Referidos.</span>
+        </label>
       </form>
 
       <!-- SIGNUP FORM -->
@@ -905,10 +934,10 @@
           <span id="signupSpinner" class="spinner" style="display:none;"></span>
         </button>
 
-        <p class="terms-text">
-          Ao criar sua conta, você concorda com os<br>
-          termos de uso do Clube dos Referidos.
-        </p>
+        <label class="lgpd-check">
+          <input type="checkbox" id="signupTerms" required>
+          <span>Li e concordo com os <a href="termos.html" target="_blank">Termos de Uso</a> do Clube dos Referidos.</span>
+        </label>
       </form>
     </div>
 
@@ -1202,6 +1231,11 @@
           </div>
         </div>
 
+        <label class="lgpd-check" style="margin-bottom: var(--space-md);">
+          <input type="checkbox" id="applyTerms" required>
+          <span>Li e concordo com os <a href="termos.html" target="_blank">Termos de Uso</a> e autorizo o uso dos meus dados para análise da candidatura, conforme a LGPD.</span>
+        </label>
+
         <div id="applyAlert" class="alert" style="margin-bottom: var(--space-lg);"></div>
 
         <button type="submit" class="btn btn-primary btn-lg" id="applyBtn" style="min-width: 220px;">
@@ -1309,6 +1343,11 @@
     e.preventDefault();
     clearAlert();
 
+    if (!document.getElementById('loginTerms').checked) {
+      showAlert('Você precisa aceitar os Termos de Uso para continuar.');
+      return;
+    }
+
     const email = document.getElementById('loginEmail').value.trim();
     const password = document.getElementById('loginPassword').value;
 
@@ -1328,6 +1367,11 @@
   async function handleSignup(e) {
     e.preventDefault();
     clearAlert();
+
+    if (!document.getElementById('signupTerms').checked) {
+      showAlert('Você precisa aceitar os Termos de Uso para criar sua conta.');
+      return;
+    }
 
     const name = document.getElementById('signupName').value.trim();
     const email = document.getElementById('signupEmail').value.trim();
@@ -1416,6 +1460,12 @@
     const alertEl = document.getElementById('applyAlert');
     alertEl.className = 'alert';
     alertEl.textContent = '';
+
+    if (!document.getElementById('applyTerms').checked) {
+      alertEl.textContent = 'Você precisa aceitar os Termos de Uso para enviar sua aplicação.';
+      alertEl.className = 'alert alert-error show';
+      return;
+    }
 
     const dados = {
       nome: document.getElementById('applyNome').value.trim(),
