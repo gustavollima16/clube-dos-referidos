@@ -45,21 +45,7 @@ function buildSidebar(user) {
   return `
     <!-- Mobile Header -->
     <div class="mobile-header">
-      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 52" fill="none" class="mobile-logo" style="height:36px;width:auto;" aria-label="Clube dos Referidos">
-        <g transform="translate(0,6) scale(1)">
-          <line x1="20" y1="14" x2="20" y2="10.5" stroke="#00E5FF" stroke-width="1.5" stroke-linecap="round"/>
-          <line x1="24.5" y1="23.5" x2="27.5" y2="25.5" stroke="#00E5FF" stroke-width="1.5" stroke-linecap="round"/>
-          <line x1="15.5" y1="23.5" x2="12.5" y2="25.5" stroke="#00E5FF" stroke-width="1.5" stroke-linecap="round"/>
-          <circle cx="20" cy="20" r="6" fill="#00E5FF"/>
-          <circle cx="20" cy="20" r="9" fill="#00E5FF" opacity="0.12"/>
-          <circle cx="20" cy="7" r="3.5" stroke="#00E5FF" stroke-width="1.5"/>
-          <circle cx="31" cy="27.5" r="3.5" stroke="#00E5FF" stroke-width="1.5"/>
-          <circle cx="9" cy="27.5" r="3.5" stroke="#00E5FF" stroke-width="1.5"/>
-        </g>
-        <line x1="52" y1="8" x2="52" y2="44" stroke="#00E5FF" stroke-width="1" opacity="0.25"/>
-        <text x="64" y="24" font-family="'Bebas Neue','Arial Narrow',Arial,sans-serif" font-size="21" fill="#FFFFFF" letter-spacing="3">CLUBE DOS</text>
-        <text x="64" y="46" font-family="'Bebas Neue','Arial Narrow',Arial,sans-serif" font-size="21" fill="#00E5FF" letter-spacing="3">REFERIDOS</text>
-      </svg>
+      <img src="images/logo.png" alt="Clube dos Referidos" class="mobile-logo" style="height:48px;width:auto;">
       <button class="menu-toggle" id="menuToggle" aria-label="Abrir menu">☰</button>
     </div>
 
@@ -69,21 +55,7 @@ function buildSidebar(user) {
     <!-- Sidebar -->
     <aside class="sidebar" id="sidebar">
       <div class="sidebar-logo">
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 52" fill="none" style="height:40px;width:auto;max-width:100%;" aria-label="Clube dos Referidos">
-          <g transform="translate(0,6) scale(1)">
-            <line x1="20" y1="14" x2="20" y2="10.5" stroke="#00E5FF" stroke-width="1.5" stroke-linecap="round"/>
-            <line x1="24.5" y1="23.5" x2="27.5" y2="25.5" stroke="#00E5FF" stroke-width="1.5" stroke-linecap="round"/>
-            <line x1="15.5" y1="23.5" x2="12.5" y2="25.5" stroke="#00E5FF" stroke-width="1.5" stroke-linecap="round"/>
-            <circle cx="20" cy="20" r="6" fill="#00E5FF"/>
-            <circle cx="20" cy="20" r="9" fill="#00E5FF" opacity="0.12"/>
-            <circle cx="20" cy="7" r="3.5" stroke="#00E5FF" stroke-width="1.5"/>
-            <circle cx="31" cy="27.5" r="3.5" stroke="#00E5FF" stroke-width="1.5"/>
-            <circle cx="9" cy="27.5" r="3.5" stroke="#00E5FF" stroke-width="1.5"/>
-          </g>
-          <line x1="52" y1="8" x2="52" y2="44" stroke="#00E5FF" stroke-width="1" opacity="0.25"/>
-          <text x="64" y="24" font-family="'Bebas Neue','Arial Narrow',Arial,sans-serif" font-size="21" fill="#FFFFFF" letter-spacing="3">CLUBE DOS</text>
-          <text x="64" y="46" font-family="'Bebas Neue','Arial Narrow',Arial,sans-serif" font-size="21" fill="#00E5FF" letter-spacing="3">REFERIDOS</text>
-        </svg>
+        <img src="images/logo.png" alt="Clube dos Referidos" style="height:70px;width:auto;max-width:100%;">
       </div>
 
       <nav class="sidebar-nav">
