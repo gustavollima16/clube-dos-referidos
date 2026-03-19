@@ -1202,7 +1202,7 @@
         })
       }); } catch(e) { console.error('Erro email:', e); }
 
-      // Notificação por WhatsApp para o admin
+      // Notificação por WhatsApp para o admin (template nova_aplicacao)
       try {
         await fetch('https://graph.facebook.com/v18.0/1016285141569023/messages', {
           method: 'POST',
@@ -1213,9 +1213,19 @@
           body: JSON.stringify({
             messaging_product: 'whatsapp',
             to: '5511991439098',
-            type: 'text',
-            text: {
-              body: `📋 *Nova aplicação — Clube dos Referidos*\n\n👤 *Nome:* ${dados.nome}\n📱 *WhatsApp:* ${dados.telefone}\n📧 *Email:* ${dados.email}\n📸 *Instagram:* ${dados.instagram || '—'}\n💼 *Cargo:* ${dados.cargo || '—'}\n💰 *Faturamento:* ${dados.faturamento}\n\n🔗 Aprovar: https://clubedosreferidos.com/admin-aprovacoes.html`
+            type: 'template',
+            template: {
+              name: 'nova_aplicacao',
+              language: { code: 'pt_BR' },
+              components: [{
+                type: 'body',
+                parameters: [
+                  { type: 'text', text: dados.nome },
+                  { type: 'text', text: dados.telefone },
+                  { type: 'text', text: dados.email },
+                  { type: 'text', text: dados.faturamento }
+                ]
+              }]
             }
           })
         });
