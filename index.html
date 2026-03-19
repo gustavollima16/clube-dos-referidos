@@ -297,11 +297,263 @@
         display: none;
       }
     }
+
+    /* ===================== NAVBAR ===================== */
+    .top-nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 1000;
+      height: 68px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 var(--space-2xl);
+      background: rgba(10,10,14,0.85);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border-subtle);
+    }
+    .nav-logo img { height: 44px; width: auto; }
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: var(--space-xl);
+      list-style: none;
+    }
+    .nav-links a {
+      font-size: 0.875rem;
+      font-weight: 500;
+      color: var(--text-secondary);
+      letter-spacing: 0.04em;
+      transition: color var(--transition);
+    }
+    .nav-links a:hover { color: var(--accent); }
+    .nav-links .nav-cta a {
+      padding: 0.45rem 1.1rem;
+      background: var(--accent);
+      color: #000;
+      border-radius: var(--radius-sm);
+      font-weight: 700;
+      font-size: 0.8rem;
+    }
+    .nav-links .nav-cta a:hover { background: #00c4e0; color: #000; }
+    .hamburger-btn {
+      display: none;
+      background: none;
+      border: none;
+      color: var(--text-primary);
+      font-size: 1.5rem;
+      cursor: pointer;
+    }
+    .mobile-menu {
+      display: none;
+      position: fixed;
+      top: 68px; left: 0; right: 0;
+      background: var(--bg-secondary);
+      border-bottom: 1px solid var(--border-subtle);
+      z-index: 999;
+      padding: var(--space-lg) var(--space-xl);
+      flex-direction: column;
+      gap: var(--space-md);
+    }
+    .mobile-menu.open { display: flex; }
+    .mobile-menu a {
+      color: var(--text-secondary);
+      font-size: 1rem;
+      font-weight: 500;
+      padding: var(--space-sm) 0;
+      border-bottom: 1px solid var(--border-subtle);
+    }
+    .mobile-menu a:last-child { border-bottom: none; color: var(--accent); }
+    @media (max-width: 860px) {
+      .hamburger-btn { display: block; }
+      .nav-links { display: none; }
+      .top-nav { padding: 0 var(--space-lg); }
+    }
+
+    /* ===================== SEÇÕES LANDING ===================== */
+    .lp-section {
+      padding: 100px var(--space-2xl);
+      max-width: 1100px;
+      margin: 0 auto;
+      width: 100%;
+    }
+    .section-tag {
+      display: inline-block;
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--accent);
+      background: var(--accent-dim);
+      border: 1px solid var(--border);
+      border-radius: 2rem;
+      padding: 0.3rem 0.9rem;
+      margin-bottom: var(--space-lg);
+    }
+    .lp-title {
+      font-family: var(--font-display);
+      font-size: clamp(2rem, 4vw, 3.2rem);
+      line-height: 1.1;
+      margin-bottom: var(--space-lg);
+    }
+    .lp-subtitle {
+      font-size: 1.05rem;
+      color: var(--text-secondary);
+      line-height: 1.7;
+      max-width: 600px;
+      margin-bottom: var(--space-3xl);
+    }
+    /* Cards benefícios */
+    .benefits-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+      gap: var(--space-xl);
+    }
+    .benefit-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-lg);
+      padding: var(--space-xl);
+      transition: border-color var(--transition), transform var(--transition);
+    }
+    .benefit-card:hover {
+      border-color: var(--accent);
+      transform: translateY(-4px);
+    }
+    .benefit-icon {
+      font-size: 2rem;
+      margin-bottom: var(--space-md);
+    }
+    .benefit-title {
+      font-family: var(--font-display);
+      font-size: 1.2rem;
+      margin-bottom: var(--space-sm);
+    }
+    .benefit-desc {
+      font-size: 0.875rem;
+      color: var(--text-secondary);
+      line-height: 1.6;
+    }
+    /* Quem somos */
+    .somos-wrapper {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: var(--space-3xl);
+      align-items: center;
+    }
+    .somos-img {
+      border-radius: var(--radius-lg);
+      width: 100%;
+      aspect-ratio: 1;
+      object-fit: cover;
+      border: 1px solid var(--border-subtle);
+    }
+    .somos-img-placeholder {
+      border-radius: var(--radius-lg);
+      width: 100%;
+      aspect-ratio: 1;
+      background: var(--bg-card);
+      border: 1px solid var(--border-subtle);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    /* Depoimentos */
+    .depo-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: var(--space-xl);
+    }
+    .depo-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-lg);
+      padding: var(--space-xl);
+    }
+    .depo-stars { color: var(--accent); margin-bottom: var(--space-md); font-size: 1rem; }
+    .depo-text {
+      font-size: 0.95rem;
+      color: var(--text-secondary);
+      line-height: 1.7;
+      margin-bottom: var(--space-lg);
+      font-style: italic;
+    }
+    .depo-author { display: flex; align-items: center; gap: var(--space-md); }
+    .depo-avatar {
+      width: 42px; height: 42px;
+      border-radius: 50%;
+      background: var(--accent-dim);
+      border: 1px solid var(--border);
+      display: flex; align-items: center; justify-content: center;
+      font-weight: 700; font-size: 0.85rem; color: var(--accent);
+    }
+    .depo-name { font-weight: 600; font-size: 0.9rem; }
+    .depo-role { font-size: 0.75rem; color: var(--text-muted); }
+    /* Formulário inscrição */
+    .form-section-wrapper {
+      background: var(--bg-secondary);
+      border-top: 1px solid var(--border-subtle);
+      border-bottom: 1px solid var(--border-subtle);
+    }
+    .apply-form {
+      max-width: 680px;
+    }
+    .apply-form .form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: var(--space-lg);
+    }
+    .apply-form textarea.form-control {
+      resize: vertical;
+      min-height: 100px;
+    }
+    .apply-success {
+      text-align: center;
+      padding: var(--space-3xl) 0;
+    }
+    .apply-success .success-icon { font-size: 3.5rem; margin-bottom: var(--space-lg); }
+    /* Divisor de seção */
+    .section-divider {
+      width: 100%;
+      height: 1px;
+      background: var(--border-subtle);
+    }
+    /* Offset para navbar fixa */
+    .landing-wrapper { padding-top: 68px; }
+    @media (max-width: 900px) {
+      .somos-wrapper { grid-template-columns: 1fr; }
+      .apply-form .form-row { grid-template-columns: 1fr; }
+      .lp-section { padding: 70px var(--space-lg); }
+    }
   </style>
 </head>
 <body class="auth-page">
 
-<div class="landing-wrapper">
+<!-- ========== NAVBAR ========== -->
+<nav class="top-nav">
+  <div class="nav-logo">
+    <a href="#"><img src="images/logo.png" alt="Clube dos Referidos"></a>
+  </div>
+  <ul class="nav-links">
+    <li><a href="#clube">O Clube</a></li>
+    <li><a href="#somos">Quem Somos</a></li>
+    <li><a href="#depoimentos">Depoimentos</a></li>
+    <li><a href="#inscricao">Inscrever-se</a></li>
+    <li class="nav-cta"><a href="#area-membros" onclick="scrollToAuth(event)">Área de Membros</a></li>
+  </ul>
+  <button class="hamburger-btn" id="hamburgerBtn" aria-label="Menu">☰</button>
+</nav>
+
+<!-- Mobile menu -->
+<div class="mobile-menu" id="mobileMenu">
+  <a href="#clube" onclick="closeMobileMenu()">O Clube</a>
+  <a href="#somos" onclick="closeMobileMenu()">Quem Somos</a>
+  <a href="#depoimentos" onclick="closeMobileMenu()">Depoimentos</a>
+  <a href="#inscricao" onclick="closeMobileMenu()">Inscrever-se</a>
+  <a href="#area-membros" onclick="scrollToAuth(event);closeMobileMenu()">Área de Membros</a>
+</div>
+
+<div class="landing-wrapper" id="area-membros">
 
   <!-- HERO -->
   <div class="hero-panel">
@@ -407,12 +659,12 @@
 
         <a class="forgot-link" href="#" onclick="showResetForm(event)">Esqueci minha senha</a>
 
-        <button type="submit" class="btn btn-primary btn-full btn-lg" id="loginBtn">
+        <button type="submit" class="btn btn-primary btn-full btn-lg" id="loginBtn" style="margin-top: 2rem;">
           <span id="loginBtnText">Acessar minha conta</span>
           <span id="loginSpinner" class="spinner" style="display:none;"></span>
         </button>
 
-        <p class="terms-text">
+        <p class="terms-text" style="margin-top: 1.2rem;">
           Ao entrar, você concorda com os<br>
           termos de uso do Clube dos Referidos.
         </p>
@@ -509,7 +761,193 @@
   </div><!-- /auth-panel -->
 </div><!-- /landing-wrapper -->
 
+<!-- ========== SEÇÃO: O QUE É O CLUBE ========== -->
+<div class="section-divider"></div>
+<section id="clube">
+  <div class="lp-section">
+    <span class="section-tag">O Clube</span>
+    <h2 class="lp-title">A comunidade dos melhores<br>vendedores do Brasil</h2>
+    <p class="lp-subtitle">O Clube dos Referidos reúne profissionais de alta performance que querem crescer juntos, compartilhar conhecimento e conquistar resultados extraordinários.</p>
+
+    <div class="benefits-grid">
+      <div class="benefit-card">
+        <div class="benefit-icon">🎬</div>
+        <div class="benefit-title">Videoaulas Exclusivas</div>
+        <p class="benefit-desc">Mais de 80 aulas com técnicas avançadas de vendas, liderança e desenvolvimento pessoal produzidas por especialistas do mercado.</p>
+      </div>
+      <div class="benefit-card">
+        <div class="benefit-icon">📚</div>
+        <div class="benefit-title">Biblioteca de Conteúdo</div>
+        <p class="benefit-desc">eBooks, PDFs, scripts de vendas, planilhas e materiais práticos para você aplicar imediatamente no seu negócio.</p>
+      </div>
+      <div class="benefit-card">
+        <div class="benefit-icon">👥</div>
+        <div class="benefit-title">Rede de Referidos</div>
+        <p class="benefit-desc">Conecte-se com uma rede exclusiva de profissionais, troque indicações qualificadas e multiplique seus resultados.</p>
+      </div>
+      <div class="benefit-card">
+        <div class="benefit-icon">🏆</div>
+        <div class="benefit-title">Eventos & Encontros</div>
+        <p class="benefit-desc">Participe de encontros presenciais e virtuais com os maiores nomes do mundo das vendas e do empreendedorismo.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ========== SEÇÃO: QUEM SOMOS ========== -->
+<div class="section-divider"></div>
+<section id="somos" style="background: var(--bg-secondary);">
+  <div class="lp-section">
+    <div class="somos-wrapper">
+      <div>
+        <span class="section-tag">Quem Somos</span>
+        <h2 class="lp-title">Nascemos para<br>transformar vendedores<br>em <span style="color:var(--accent)">referências</span></h2>
+        <p class="lp-subtitle" style="margin-bottom: var(--space-xl);">O Clube dos Referidos surgiu da visão de que os melhores vendedores merecem um espaço exclusivo para crescer, se conectar e ser reconhecidos.</p>
+        <p style="color: var(--text-secondary); line-height: 1.8; font-size: 0.95rem; margin-bottom: var(--space-xl);">Nossa missão é simples: reunir profissionais de alta performance, oferecer ferramentas de elite e criar uma rede de conexões que gera oportunidades reais. Acreditamos que quando vendedores excepcionais se encontram, negócios extraordinários acontecem.</p>
+        <div class="hero-stats" style="margin-top: 0;">
+          <div class="stat-item">
+            <div class="stat-number">500+</div>
+            <div class="stat-label">Membros ativos</div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-number">R$50M+</div>
+            <div class="stat-label">Gerados pela rede</div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-number">5 anos</div>
+            <div class="stat-label">De comunidade</div>
+          </div>
+        </div>
+      </div>
+      <div class="somos-img-placeholder">
+        <img src="images/logo.png" alt="Clube dos Referidos" style="width:60%;opacity:0.5;">
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ========== SEÇÃO: DEPOIMENTOS ========== -->
+<div class="section-divider"></div>
+<section id="depoimentos">
+  <div class="lp-section">
+    <span class="section-tag">Depoimentos</span>
+    <h2 class="lp-title">O que dizem nossos membros</h2>
+    <p class="lp-subtitle">Histórias reais de profissionais que transformaram seus negócios dentro do Clube dos Referidos.</p>
+
+    <div class="depo-grid">
+      <div class="depo-card">
+        <div class="depo-stars">★★★★★</div>
+        <p class="depo-text">"O Clube dos Referidos mudou completamente minha visão de vendas. As conexões que fiz aqui me trouxeram clientes que jamais teria alcançado sozinho."</p>
+        <div class="depo-author">
+          <div class="depo-avatar">RM</div>
+          <div>
+            <div class="depo-name">Ricardo Mendes</div>
+            <div class="depo-role">Diretor Comercial</div>
+          </div>
+        </div>
+      </div>
+      <div class="depo-card">
+        <div class="depo-stars">★★★★★</div>
+        <p class="depo-text">"Em 6 meses de clube, fechei mais negócios do que nos 2 anos anteriores. O conteúdo é absurdamente prático e a rede de membros é incomparável."</p>
+        <div class="depo-author">
+          <div class="depo-avatar">AC</div>
+          <div>
+            <div class="depo-name">Ana Carolina</div>
+            <div class="depo-role">Consultora de Negócios</div>
+          </div>
+        </div>
+      </div>
+      <div class="depo-card">
+        <div class="depo-stars">★★★★★</div>
+        <p class="depo-text">"Vale cada centavo. O acesso às videoaulas, os materiais e principalmente a comunidade fazem do Clube uma das melhores decisões que já tomei na minha carreira."</p>
+        <div class="depo-author">
+          <div class="depo-avatar">FS</div>
+          <div>
+            <div class="depo-name">Fernando Silva</div>
+            <div class="depo-role">Empreendedor</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ========== SEÇÃO: FORMULÁRIO DE INSCRIÇÃO ========== -->
+<div class="section-divider"></div>
+<section id="inscricao" class="form-section-wrapper">
+  <div class="lp-section">
+    <span class="section-tag">Inscrever-se</span>
+    <h2 class="lp-title">Quero fazer parte<br>do Clube dos Referidos</h2>
+    <p class="lp-subtitle">Preencha o formulário abaixo e entraremos em contato para agendar uma apresentação exclusiva.</p>
+
+    <div id="applyFormWrapper" class="apply-form">
+      <form id="applyForm" onsubmit="handleApply(event)">
+
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label" for="applyNome">Nome e sobrenome *</label>
+            <input class="form-control" type="text" id="applyNome" placeholder="Seu nome completo" required>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="applyTelefone">WhatsApp *</label>
+            <input class="form-control" type="tel" id="applyTelefone" placeholder="(11) 99999-9999" required>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label" for="applyEmail">Email *</label>
+            <input class="form-control" type="email" id="applyEmail" placeholder="seu@email.com" required>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="applyInstagram">Instagram (@)</label>
+            <input class="form-control" type="text" id="applyInstagram" placeholder="@seuperfil">
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label" for="applyCargo">Cargo e função principal</label>
+            <input class="form-control" type="text" id="applyCargo" placeholder="Ex: Gerente Comercial">
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="applyFaturamento">Faturamento anual *</label>
+            <input class="form-control" type="text" id="applyFaturamento" placeholder="Ex: R$ 500 mil" required>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="applySonho">Qual é o seu grande sonho ou meta?</label>
+          <textarea class="form-control" id="applySonho" placeholder="Descreva brevemente o que você quer conquistar nos próximos anos..."></textarea>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="applyDisponibilidade">Melhor dia e horário para a apresentação *</label>
+          <input class="form-control" type="text" id="applyDisponibilidade" placeholder="Ex: Terças e quintas, após as 18h" required>
+        </div>
+
+        <div id="applyAlert" class="alert" style="margin-bottom: var(--space-lg);"></div>
+
+        <button type="submit" class="btn btn-primary btn-lg" id="applyBtn" style="min-width: 220px;">
+          <span id="applyBtnText">Enviar inscrição</span>
+          <span id="applySpinner" class="spinner" style="display:none;"></span>
+        </button>
+      </form>
+    </div>
+
+    <!-- Sucesso -->
+    <div id="applySuccess" class="apply-success" style="display:none;">
+      <div class="success-icon">🎉</div>
+      <h3 class="lp-title" style="font-size: 2rem;">Inscrição recebida!</h3>
+      <p style="color: var(--text-secondary); font-size: 1rem; line-height: 1.7; max-width: 480px; margin: 0 auto;">
+        Obrigado pelo seu interesse! Nossa equipe entrará em contato em breve para agendar sua apresentação exclusiva ao Clube dos Referidos.
+      </p>
+    </div>
+  </div>
+</section>
+
 <!-- Scripts -->
+
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 <script src="js/supabase-config.js"></script>
 <script src="js/auth.js"></script>
@@ -634,6 +1072,70 @@
     btn.disabled = isLoading;
     text.style.display = isLoading ? 'none' : 'inline';
     spinner.style.display = isLoading ? 'inline-block' : 'none';
+  }
+
+  // ---- Navbar ----
+  const hamburgerBtn = document.getElementById('hamburgerBtn');
+  const mobileMenu = document.getElementById('mobileMenu');
+
+  hamburgerBtn.addEventListener('click', () => {
+    mobileMenu.classList.toggle('open');
+  });
+
+  function closeMobileMenu() {
+    mobileMenu.classList.remove('open');
+  }
+
+  function scrollToAuth(e) {
+    e.preventDefault();
+    document.getElementById('area-membros').scrollIntoView({ behavior: 'smooth' });
+  }
+
+  // Close mobile menu when clicking outside
+  document.addEventListener('click', (e) => {
+    if (!hamburgerBtn.contains(e.target) && !mobileMenu.contains(e.target)) {
+      mobileMenu.classList.remove('open');
+    }
+  });
+
+  // ---- Formulário de inscrição ----
+  async function handleApply(e) {
+    e.preventDefault();
+    const alertEl = document.getElementById('applyAlert');
+    alertEl.className = 'alert';
+    alertEl.textContent = '';
+
+    const dados = {
+      nome: document.getElementById('applyNome').value.trim(),
+      telefone: document.getElementById('applyTelefone').value.trim(),
+      email: document.getElementById('applyEmail').value.trim(),
+      instagram: document.getElementById('applyInstagram').value.trim() || null,
+      cargo: document.getElementById('applyCargo').value.trim() || null,
+      faturamento: document.getElementById('applyFaturamento').value.trim(),
+      sonho: document.getElementById('applySonho').value.trim() || null,
+      disponibilidade: document.getElementById('applyDisponibilidade').value.trim(),
+    };
+
+    const applyBtn = document.getElementById('applyBtn');
+    const applyBtnText = document.getElementById('applyBtnText');
+    const applySpinner = document.getElementById('applySpinner');
+
+    applyBtn.disabled = true;
+    applyBtnText.style.display = 'none';
+    applySpinner.style.display = 'inline-block';
+
+    try {
+      const { error } = await supabase.from('candidatos').insert([dados]);
+      if (error) throw error;
+      document.getElementById('applyFormWrapper').style.display = 'none';
+      document.getElementById('applySuccess').style.display = 'block';
+    } catch (err) {
+      alertEl.textContent = 'Erro ao enviar inscrição. Tente novamente ou entre em contato pelo WhatsApp.';
+      alertEl.className = 'alert alert-error show';
+      applyBtn.disabled = false;
+      applyBtnText.style.display = 'inline';
+      applySpinner.style.display = 'none';
+    }
   }
 </script>
 
