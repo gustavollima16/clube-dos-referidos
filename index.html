@@ -1196,6 +1196,27 @@
         })
       });
 
+      // Notificação por WhatsApp para o admin
+      try {
+        await fetch('https://graph.facebook.com/v18.0/1016285141569023/messages', {
+          method: 'POST',
+          headers: {
+            'Authorization': 'Bearer EAAR4o2HIXgQBQ69epCBboLHXRoL4glQNZAnZCj3OqUXBTk4erEfyvjoZCX8f6Qq0A5xWJSQKfv9oQhkMmoFvXnIMykoZAIcVdknHzJrqLhZAlmK0ylmNCQUs46SRnxcuW7oRRcXc9uwwjpJpj6CyFCfJxBPnzLInzy1Uw36Ys5JTOcLwXuUZBjrhsQRLhbZALHCBXBi6zZAxDzUeewxtmZAq9iYizGSXZA3NyWFhdnxAacScGOxjNfSPRevF0ra7zeaZA2JGaDguwxvNu7vwlO724nX7CYZCuQp7oZCcZD',
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            messaging_product: 'whatsapp',
+            to: '5511991439098',
+            type: 'text',
+            text: {
+              body: `📋 *Nova aplicação — Clube dos Referidos*\n\n👤 *Nome:* ${dados.nome}\n📱 *WhatsApp:* ${dados.telefone}\n📧 *Email:* ${dados.email}\n📸 *Instagram:* ${dados.instagram || '—'}\n💼 *Cargo:* ${dados.cargo || '—'}\n💰 *Faturamento:* ${dados.faturamento}\n\n🔗 Aprovar: https://clubedosreferidos.com/admin-aprovacoes.html`
+            }
+          })
+        });
+      } catch(e) {
+        console.error('Erro ao enviar WhatsApp:', e);
+      }
+
       document.getElementById('applyFormWrapper').style.display = 'none';
       document.getElementById('applySuccess').style.display = 'block';
     } catch (err) {
