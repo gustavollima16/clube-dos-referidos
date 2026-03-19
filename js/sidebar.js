@@ -9,7 +9,7 @@
 const NAV_ITEMS = [
   { href: 'dashboard.html',  icon: '⊞',  label: 'Dashboard',       section: 'MENU' },
   { href: 'videoaulas.html', icon: '▶',  label: 'Vídeo Aulas',     section: null },
-  { href: 'ebooks.html',     icon: '📖', label: 'eBooks & PDFs',   section: null },
+  { href: 'ebooks.html',     icon: '📖', label: 'eBooks e PDFs',   section: null },
   { href: 'arquivos.html',   icon: '📁', label: 'Arquivos',         section: null },
   { href: 'fotos.html',      icon: '🖼', label: 'Galeria de Fotos', section: null },
   { href: 'membros.html',    icon: '👥', label: 'Membros',          section: 'COMUNIDADE' },

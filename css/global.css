@@ -13,13 +13,13 @@
   --bg-secondary:     #111111;
   --bg-card:          #1A1A1A;
   --bg-card-hover:    #222222;
-  --accent:           #00E5FF;
-  --accent-dim:       rgba(0, 229, 255, 0.15);
-  --accent-glow:      rgba(0, 229, 255, 0.4);
+  --accent:           #00C8E8;
+  --accent-dim:       rgba(0, 200, 232, 0.15);
+  --accent-glow:      rgba(0, 200, 232, 0.4);
   --text-primary:     #FFFFFF;
   --text-secondary:   #9CA3AF;
   --text-muted:       #6B7280;
-  --border:           rgba(0, 229, 255, 0.2);
+  --border:           rgba(0, 200, 232, 0.2);
   --border-subtle:    rgba(255, 255, 255, 0.06);
   --danger:           #FF4D6A;
   --success:          #00E5A0;
@@ -51,8 +51,8 @@
 
   /* Sombras */
   --shadow-card: 0 4px 24px rgba(0, 0, 0, 0.4);
-  --shadow-glow: 0 0 20px rgba(0, 229, 255, 0.25);
-  --shadow-glow-strong: 0 0 40px rgba(0, 229, 255, 0.5);
+  --shadow-glow: 0 0 20px rgba(0, 200, 232, 0.25);
+  --shadow-glow-strong: 0 0 40px rgba(0, 200, 232, 0.5);
 
   /* Sidebar width */
   --sidebar-width: 260px;
@@ -362,7 +362,7 @@ p {
 .btn-primary {
   background: var(--accent);
   color: #000;
-  box-shadow: 0 0 16px rgba(0, 229, 255, 0.3);
+  box-shadow: 0 0 16px rgba(0, 200, 232, 0.3);
 }
 
 .btn-primary:hover {
@@ -500,7 +500,7 @@ p {
 
 .form-control:focus {
   border-color: var(--accent);
-  box-shadow: 0 0 0 3px rgba(0, 229, 255, 0.1);
+  box-shadow: 0 0 0 3px rgba(0, 200, 232, 0.1);
 }
 
 .form-control::placeholder {
