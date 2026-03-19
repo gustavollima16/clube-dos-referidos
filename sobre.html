@@ -1,0 +1,453 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sobre o Clube — Clube dos Referidos</title>
+  <link rel="stylesheet" href="css/global.css">
+  <style>
+    /* --- Hero institucional --- */
+    .sobre-hero {
+      background: linear-gradient(135deg, var(--bg-card) 0%, rgba(0,229,255,0.05) 100%);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-xl);
+      padding: var(--space-3xl) var(--space-2xl);
+      margin-bottom: var(--space-2xl);
+      position: relative;
+      overflow: hidden;
+      text-align: center;
+    }
+
+    .sobre-hero::before {
+      content: '';
+      position: absolute;
+      top: 50%; left: 50%;
+      transform: translate(-50%, -50%);
+      width: 400px; height: 200px;
+      background: radial-gradient(ellipse, rgba(0,229,255,0.08) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    .sobre-hero h2 {
+      font-size: clamp(1.8rem, 4vw, 3rem);
+      margin-bottom: var(--space-md);
+      position: relative;
+    }
+
+    .sobre-hero p {
+      max-width: 680px;
+      margin: 0 auto;
+      font-size: 1.05rem;
+      line-height: 1.8;
+      position: relative;
+    }
+
+    /* --- MVV Cards --- */
+    .mvv-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: var(--space-lg);
+      margin-bottom: var(--space-2xl);
+    }
+
+    .mvv-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-lg);
+      padding: var(--space-xl);
+      transition: all var(--transition);
+    }
+
+    .mvv-card:hover {
+      border-color: var(--border);
+      transform: translateY(-2px);
+    }
+
+    .mvv-icon {
+      font-size: 2rem;
+      margin-bottom: var(--space-md);
+    }
+
+    .mvv-card h3 {
+      font-size: 1.2rem;
+      margin-bottom: var(--space-sm);
+      color: var(--accent);
+    }
+
+    .mvv-card p {
+      font-size: 0.9rem;
+    }
+
+    /* --- Valores em lista --- */
+    .valores-section {
+      background: var(--bg-card);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-xl);
+      padding: var(--space-2xl);
+      margin-bottom: var(--space-2xl);
+    }
+
+    .valores-section h2 {
+      margin-bottom: var(--space-xl);
+    }
+
+    .valores-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: var(--space-md);
+    }
+
+    .valor-item {
+      display: flex;
+      align-items: flex-start;
+      gap: var(--space-sm);
+      padding: var(--space-md);
+      background: var(--bg-secondary);
+      border-radius: var(--radius-md);
+      border: 1px solid var(--border-subtle);
+    }
+
+    .valor-check {
+      color: var(--accent);
+      font-size: 1rem;
+      flex-shrink: 0;
+      margin-top: 2px;
+    }
+
+    .valor-text strong {
+      display: block;
+      font-size: 0.9rem;
+      color: var(--text-primary);
+      margin-bottom: 2px;
+    }
+
+    .valor-text span {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+    }
+
+    /* --- Fundadores --- */
+    .founders-section {
+      margin-bottom: var(--space-2xl);
+    }
+
+    .founders-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: var(--space-lg);
+    }
+
+    .founder-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-xl);
+      overflow: hidden;
+      transition: all var(--transition);
+    }
+
+    .founder-card:hover {
+      border-color: var(--border);
+      transform: translateY(-3px);
+      box-shadow: 0 12px 40px rgba(0, 229, 255, 0.1);
+    }
+
+    .founder-photo {
+      width: 100%;
+      aspect-ratio: 4/3;
+      background: var(--bg-secondary);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .founder-photo img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .founder-photo-placeholder {
+      font-family: var(--font-display);
+      font-size: 4rem;
+      color: var(--accent);
+      opacity: 0.3;
+    }
+
+    .founder-info {
+      padding: var(--space-lg);
+    }
+
+    .founder-name {
+      font-family: var(--font-display);
+      font-size: 1.3rem;
+      margin-bottom: var(--space-xs);
+    }
+
+    .founder-role {
+      font-size: 0.78rem;
+      color: var(--accent);
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      margin-bottom: var(--space-md);
+    }
+
+    .founder-bio {
+      font-size: 0.875rem;
+      line-height: 1.7;
+      margin-bottom: var(--space-md);
+    }
+
+    .founder-socials {
+      display: flex;
+      gap: var(--space-sm);
+    }
+
+    .social-btn {
+      display: flex;
+      align-items: center;
+      gap: var(--space-xs);
+      padding: 0.4rem 0.8rem;
+      background: var(--bg-secondary);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-md);
+      font-size: 0.78rem;
+      color: var(--text-secondary);
+      transition: all var(--transition);
+      text-decoration: none;
+    }
+
+    .social-btn:hover {
+      border-color: var(--accent);
+      color: var(--accent);
+      background: var(--accent-dim);
+    }
+
+    /* --- CTA Section --- */
+    .cta-section {
+      background: linear-gradient(135deg, rgba(0,229,255,0.08) 0%, var(--bg-card) 100%);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-xl);
+      padding: var(--space-2xl);
+      text-align: center;
+    }
+
+    .cta-section h2 {
+      margin-bottom: var(--space-md);
+    }
+
+    .cta-section p {
+      max-width: 480px;
+      margin: 0 auto var(--space-xl);
+    }
+
+    @media (max-width: 768px) {
+      .mvv-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .valores-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+
+<div id="sidebar-mount"></div>
+
+<div class="app-layout">
+  <div class="main-content">
+
+    <div class="page-header">
+      <h1>Sobre o Clube</h1>
+      <p>Conheça a história, missão e as pessoas por trás do Clube dos Referidos.</p>
+    </div>
+
+    <div class="page-body">
+
+      <!-- Hero institucional -->
+      <div class="sobre-hero">
+        <div class="welcome-badge" style="display:inline-flex; align-items:center; gap:6px; padding:0.3rem 0.8rem; background:var(--accent-dim); border:1px solid var(--border); border-radius:2rem; font-size:0.72rem; font-weight:600; color:var(--accent); letter-spacing:0.1em; text-transform:uppercase; margin-bottom:var(--space-lg);">
+          <span class="glow-dot"></span>
+          Nossa história
+        </div>
+        <h2>O <span class="text-accent">Clube</span> que transforma vendedores em referência</h2>
+        <p>
+          O Clube dos Referidos nasceu da convicção de que os melhores vendedores e líderes comerciais do Brasil precisam de um espaço exclusivo para crescer juntos. Aqui, compartilhamos conhecimento, estratégias e conexões que elevam resultados de forma consistente.
+        </p>
+      </div>
+
+      <!-- MVV -->
+      <div class="section-title">
+        <span class="glow-dot"></span>
+        <h2>Nossa Essência</h2>
+      </div>
+
+      <div class="mvv-grid">
+        <div class="mvv-card">
+          <div class="mvv-icon">🎯</div>
+          <h3>Missão</h3>
+          <p>
+            Acelerar o crescimento de vendedores e líderes comerciais através de mentoria exclusiva, conteúdo de alta qualidade e uma rede de conexões estratégicas.
+          </p>
+        </div>
+
+        <div class="mvv-card">
+          <div class="mvv-icon">🔭</div>
+          <h3>Visão</h3>
+          <p>
+            Ser a maior comunidade de alta performance em vendas do Brasil, formando os próximos líderes e referências do mercado comercial nacional.
+          </p>
+        </div>
+
+        <div class="mvv-card">
+          <div class="mvv-icon">⚡</div>
+          <h3>Propósito</h3>
+          <p>
+            Transformar profissionais de vendas em referências no mercado, por meio de método, mentoria e uma comunidade que cresce junta.
+          </p>
+        </div>
+      </div>
+
+      <!-- Valores -->
+      <div class="valores-section">
+        <div class="section-title" style="margin-bottom:var(--space-xl);">
+          <span class="glow-dot"></span>
+          <h2>Nossos Valores</h2>
+        </div>
+
+        <div class="valores-grid">
+          <div class="valor-item">
+            <div class="valor-check">✦</div>
+            <div class="valor-text">
+              <strong>Alta Performance</strong>
+              <span>Buscamos constantemente a excelência nos resultados e comportamentos.</span>
+            </div>
+          </div>
+
+          <div class="valor-item">
+            <div class="valor-check">✦</div>
+            <div class="valor-text">
+              <strong>Colaboração</strong>
+              <span>Crescemos mais quando compartilhamos conhecimento e oportunidades.</span>
+            </div>
+          </div>
+
+          <div class="valor-item">
+            <div class="valor-check">✦</div>
+            <div class="valor-text">
+              <strong>Integridade</strong>
+              <span>Vendas éticas e relações duradouras baseadas em confiança.</span>
+            </div>
+          </div>
+
+          <div class="valor-item">
+            <div class="valor-check">✦</div>
+            <div class="valor-text">
+              <strong>Inovação</strong>
+              <span>Adaptamos estratégias ao mercado em constante transformação.</span>
+            </div>
+          </div>
+
+          <div class="valor-item">
+            <div class="valor-check">✦</div>
+            <div class="valor-text">
+              <strong>Liderança pelo Exemplo</strong>
+              <span>Nossos líderes praticam o que ensinam, todos os dias.</span>
+            </div>
+          </div>
+
+          <div class="valor-item">
+            <div class="valor-check">✦</div>
+            <div class="valor-text">
+              <strong>Comunidade Primeiro</strong>
+              <span>O sucesso individual está conectado ao crescimento coletivo.</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Fundadores -->
+      <div class="founders-section">
+        <div class="section-title">
+          <span class="glow-dot"></span>
+          <h2>Os Fundadores</h2>
+        </div>
+
+        <div class="founders-grid">
+          <!-- Fundador 1 — Edite com os dados reais -->
+          <div class="founder-card">
+            <div class="founder-photo">
+              <!-- Substitua o src pela URL real da foto -->
+              <!-- <img src="assets/images/fundador1.jpg" alt="Fundador"> -->
+              <div class="founder-photo-placeholder">CR</div>
+            </div>
+            <div class="founder-info">
+              <h3 class="founder-name">Nome do Fundador</h3>
+              <div class="founder-role">Co-fundador & CEO</div>
+              <p class="founder-bio">
+                Especialista em vendas consultivas com mais de 15 anos de experiência. Formou mais de 200 líderes comerciais e acelerou o crescimento de dezenas de empresas no Brasil.
+              </p>
+              <div class="founder-socials">
+                <a href="#" class="social-btn" target="_blank" rel="noopener">
+                  📸 Instagram
+                </a>
+                <a href="#" class="social-btn" target="_blank" rel="noopener">
+                  💼 LinkedIn
+                </a>
+              </div>
+            </div>
+          </div>
+
+          <!-- Fundador 2 — Edite com os dados reais -->
+          <div class="founder-card">
+            <div class="founder-photo">
+              <!-- <img src="assets/images/fundador2.jpg" alt="Co-fundadora"> -->
+              <div class="founder-photo-placeholder">CR</div>
+            </div>
+            <div class="founder-info">
+              <h3 class="founder-name">Nome da Co-fundadora</h3>
+              <div class="founder-role">Co-fundadora & COO</div>
+              <p class="founder-bio">
+                Especialista em formação de times comerciais de alto impacto. Desenvolveu metodologias únicas de recrutamento, onboarding e aceleração de performance em vendas.
+              </p>
+              <div class="founder-socials">
+                <a href="#" class="social-btn" target="_blank" rel="noopener">
+                  📸 Instagram
+                </a>
+                <a href="#" class="social-btn" target="_blank" rel="noopener">
+                  💼 LinkedIn
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- CTA -->
+      <div class="cta-section">
+        <h2>Pronto para ir mais longe?</h2>
+        <p>Explore todo o conteúdo disponível e comece sua jornada de alta performance hoje mesmo.</p>
+        <a href="videoaulas.html" class="btn btn-primary btn-lg">
+          ▶ Começar pelas Vídeo Aulas
+        </a>
+      </div>
+
+    </div><!-- /page-body -->
+  </div><!-- /main-content -->
+</div><!-- /app-layout -->
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+<script src="js/supabase-config.js"></script>
+<script src="js/auth.js"></script>
+<script src="js/sidebar.js"></script>
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    initSidebar();
+  });
+</script>
+</body>
+</html>

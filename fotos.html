@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Galeria de Fotos — Clube dos Referidos</title>
+  <link rel="stylesheet" href="css/global.css">
+  <style>
+    /* --- Filter --- */
+    .filter-bar {
+      display: flex;
+      gap: var(--space-sm);
+      flex-wrap: wrap;
+      margin-bottom: var(--space-xl);
+    }
+
+    .filter-btn {
+      padding: 0.4rem 1rem;
+      background: var(--bg-card);
+      border: 1px solid var(--border-subtle);
+      border-radius: 2rem;
+      color: var(--text-secondary);
+      font-size: 0.82rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all var(--transition);
+    }
+
+    .filter-btn:hover,
+    .filter-btn.active {
+      background: var(--accent-dim);
+      border-color: var(--accent);
+      color: var(--accent);
+    }
+
+    /* --- Masonry-style photo grid --- */
+    .photo-grid {
+      columns: 3;
+      column-gap: var(--space-md);
+    }
+
+    .photo-item {
+      break-inside: avoid;
+      margin-bottom: var(--space-md);
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+      cursor: pointer;
+      position: relative;
+      background: var(--bg-card);
+      border: 1px solid var(--border-subtle);
+      transition: all var(--transition);
+    }
+
+    .photo-item:hover {
+      border-color: var(--accent);
+      box-shadow: 0 0 20px rgba(0, 229, 255, 0.2);
+      transform: scale(1.01);
+    }
+
+    .photo-item img {
+      width: 100%;
+      display: block;
+      transition: transform var(--transition-slow);
+    }
+
+    .photo-item:hover img {
+      transform: scale(1.04);
+    }
+
+    .photo-overlay {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to top, rgba(0,0,0,0.7) 0%, transparent 50%);
+      opacity: 0;
+      transition: opacity var(--transition);
+      display: flex;
+      align-items: flex-end;
+      padding: var(--space-md);
+    }
+
+    .photo-item:hover .photo-overlay {
+      opacity: 1;
+    }
+
+    .photo-caption {
+      color: #fff;
+      font-size: 0.82rem;
+      line-height: 1.4;
+    }
+
+    .photo-placeholder {
+      width: 100%;
+      aspect-ratio: 4/3;
+      background: var(--bg-secondary);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      gap: var(--space-sm);
+    }
+
+    .photo-placeholder-icon {
+      font-size: 2.5rem;
+      opacity: 0.2;
+    }
+
+    .photo-placeholder-text {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+    }
+
+    /* --- Lightbox --- */
+    .lightbox {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.97);
+      z-index: 1000;
+      align-items: center;
+      justify-content: center;
+      padding: var(--space-xl);
+    }
+
+    .lightbox.open {
+      display: flex;
+    }
+
+    .lightbox-inner {
+      position: relative;
+      max-width: 1100px;
+      width: 100%;
+    }
+
+    .lightbox-img-wrapper {
+      text-align: center;
+    }
+
+    .lightbox-img-wrapper img {
+      max-height: 80vh;
+      max-width: 100%;
+      object-fit: contain;
+      border-radius: var(--radius-lg);
+      border: 1px solid var(--border);
+      display: inline-block;
+    }
+
+    .lightbox-caption {
+      text-align: center;
+      margin-top: var(--space-md);
+      color: var(--text-secondary);
+      font-size: 0.875rem;
+    }
+
+    .lightbox-close {
+      position: absolute;
+      top: -50px;
+      right: 0;
+      background: none;
+      border: none;
+      color: #fff;
+      font-size: 2rem;
+      cursor: pointer;
+      opacity: 0.7;
+      transition: opacity var(--transition);
+    }
+
+    .lightbox-close:hover { opacity: 1; }
+
+    .lightbox-nav {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      background: rgba(0,0,0,0.6);
+      border: 1px solid var(--border-subtle);
+      color: #fff;
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: all var(--transition);
+      font-size: 1.2rem;
+    }
+
+    .lightbox-nav:hover {
+      background: var(--accent);
+      color: #000;
+      border-color: var(--accent);
+    }
+
+    .lightbox-prev { left: -60px; }
+    .lightbox-next { right: -60px; }
+
+    /* --- Upload info banner --- */
+    .upload-info {
+      background: var(--bg-card);
+      border: 1px dashed var(--border);
+      border-radius: var(--radius-lg);
+      padding: var(--space-xl);
+      text-align: center;
+      margin-bottom: var(--space-xl);
+    }
+
+    .upload-info p {
+      font-size: 0.875rem;
+      margin-top: var(--space-xs);
+    }
+
+    @media (max-width: 768px) {
+      .photo-grid { columns: 2; }
+      .lightbox-prev { left: -10px; }
+      .lightbox-next { right: -10px; }
+    }
+
+    @media (max-width: 480px) {
+      .photo-grid { columns: 1; }
+    }
+  </style>
+</head>
+<body>
+
+<div id="sidebar-mount"></div>
+
+<div class="app-layout">
+  <div class="main-content">
+
+    <div class="page-header">
+      <h1>Galeria de Fotos</h1>
+      <p>Registros dos nossos eventos, encontros, mentorias e bastidores do clube.</p>
+    </div>
+
+    <div class="page-body">
+
+      <!-- Info de upload -->
+      <div class="upload-info">
+        <div style="font-size:1.5rem; margin-bottom:var(--space-sm);">🖼️</div>
+        <strong>Como adicionar fotos:</strong>
+        <p>
+          Faça upload das fotos no <strong>Supabase Storage</strong> (bucket: <code style="color:var(--accent); font-size:0.8rem;">fotos</code>)
+          e adicione as URLs no array <code style="color:var(--accent); font-size:0.8rem;">FOTOS</code> em <code style="color:var(--accent); font-size:0.8rem;">js/data/fotos.js</code>.
+        </p>
+      </div>
+
+      <!-- Filtros -->
+      <div class="filter-bar" id="filterBar">
+        <button class="filter-btn active" onclick="filterAlbum(null, this)">Todas as fotos</button>
+      </div>
+
+      <!-- Grid de fotos -->
+      <div class="photo-grid" id="photoGrid"></div>
+
+    </div>
+  </div>
+</div>
+
+<!-- Lightbox -->
+<div class="lightbox" id="lightbox">
+  <div class="lightbox-inner">
+    <button class="lightbox-close" onclick="closeLightbox()">✕</button>
+    <button class="lightbox-nav lightbox-prev" onclick="navigateLightbox(-1)">‹</button>
+    <button class="lightbox-nav lightbox-next" onclick="navigateLightbox(1)">›</button>
+
+    <div class="lightbox-img-wrapper">
+      <img id="lightboxImg" src="" alt="">
+    </div>
+    <div class="lightbox-caption" id="lightboxCaption"></div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+<script src="js/supabase-config.js"></script>
+<script src="js/auth.js"></script>
+<script src="js/sidebar.js"></script>
+<script>
+  /**
+   * FOTOS — Configuração
+   * Adicione as fotos aqui ou crie js/data/fotos.js
+   *
+   * Campos:
+   *  - url     : URL da imagem (Supabase Storage)
+   *  - caption : Legenda
+   *  - album   : Album/categoria
+   */
+  const FOTOS = [
+    // Exemplo com placeholder — substitua pela URL real
+    { url: '', caption: 'Encontro de membros — São Paulo', album: 'Eventos' },
+    { url: '', caption: 'Mentoria em grupo — Módulo de Liderança', album: 'Mentorias' },
+    { url: '', caption: 'Workshop de Vendas Consultivas', album: 'Workshops' },
+    { url: '', caption: 'Encontro de membros — Rio de Janeiro', album: 'Eventos' },
+    { url: '', caption: 'Bastidores — Gravação de conteúdo', album: 'Bastidores' },
+    { url: '', caption: 'Mentoria 1-1 com o fundador', album: 'Mentorias' },
+    { url: '', caption: 'Happy hour dos membros', album: 'Eventos' },
+    { url: '', caption: 'Aula ao vivo — Pipeline e Forecast', album: 'Aulas ao Vivo' },
+    { url: '', caption: 'Equipe do Clube dos Referidos', album: 'Bastidores' },
+  ];
+
+  let currentIndex = 0;
+  let activeAlbum = null;
+  let filteredPhotos = FOTOS;
+
+  document.addEventListener('DOMContentLoaded', async () => {
+    await initSidebar();
+    renderFilterBtns();
+    renderPhotos();
+  });
+
+  function renderFilterBtns() {
+    const bar = document.getElementById('filterBar');
+    const albums = [...new Set(FOTOS.map(f => f.album))];
+    albums.forEach(album => {
+      const btn = document.createElement('button');
+      btn.className = 'filter-btn';
+      btn.textContent = album;
+      btn.onclick = () => filterAlbum(album, btn);
+      bar.appendChild(btn);
+    });
+  }
+
+  function filterAlbum(album, btn) {
+    activeAlbum = album;
+    document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    renderPhotos();
+  }
+
+  function renderPhotos() {
+    filteredPhotos = activeAlbum ? FOTOS.filter(f => f.album === activeAlbum) : FOTOS;
+    const grid = document.getElementById('photoGrid');
+
+    if (!filteredPhotos.length) {
+      grid.innerHTML = `<div class="empty-state"><div class="empty-icon">🖼️</div><p>Nenhuma foto neste álbum ainda.</p></div>`;
+      return;
+    }
+
+    grid.innerHTML = filteredPhotos.map((foto, i) => `
+      <div class="photo-item" onclick="openLightbox(${i})">
+        ${foto.url
+          ? `<img src="${foto.url}" alt="${foto.caption}" loading="lazy">`
+          : `<div class="photo-placeholder">
+              <div class="photo-placeholder-icon">🖼️</div>
+              <div class="photo-placeholder-text">${foto.caption}</div>
+            </div>`
+        }
+        <div class="photo-overlay">
+          <div class="photo-caption">
+            <div>${foto.caption}</div>
+            <div style="font-size:0.72rem; color:var(--accent); margin-top:2px;">${foto.album}</div>
+          </div>
+        </div>
+      </div>
+    `).join('');
+  }
+
+  function openLightbox(index) {
+    currentIndex = index;
+    showLightboxPhoto();
+    document.getElementById('lightbox').classList.add('open');
+    document.body.style.overflow = 'hidden';
+  }
+
+  function showLightboxPhoto() {
+    const foto = filteredPhotos[currentIndex];
+    const img = document.getElementById('lightboxImg');
+    img.src = foto.url || '';
+    img.alt = foto.caption;
+    document.getElementById('lightboxCaption').textContent = `${foto.caption} — ${foto.album}`;
+  }
+
+  function navigateLightbox(dir) {
+    currentIndex = (currentIndex + dir + filteredPhotos.length) % filteredPhotos.length;
+    showLightboxPhoto();
+  }
+
+  function closeLightbox() {
+    document.getElementById('lightbox').classList.remove('open');
+    document.body.style.overflow = '';
+  }
+
+  // Teclado
+  document.addEventListener('keydown', (e) => {
+    if (!document.getElementById('lightbox').classList.contains('open')) return;
+    if (e.key === 'Escape')     closeLightbox();
+    if (e.key === 'ArrowLeft')  navigateLightbox(-1);
+    if (e.key === 'ArrowRight') navigateLightbox(1);
+  });
+
+  // Clicar fora
+  document.getElementById('lightbox').addEventListener('click', (e) => {
+    if (e.target === e.currentTarget) closeLightbox();
+  });
+</script>
+</body>
+</html>

@@ -1,0 +1,446 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Vídeo Aulas — Clube dos Referidos</title>
+  <link rel="stylesheet" href="css/global.css">
+  <style>
+    /* --- Filter tabs --- */
+    .filter-bar {
+      display: flex;
+      gap: var(--space-sm);
+      flex-wrap: wrap;
+      margin-bottom: var(--space-xl);
+    }
+
+    .filter-btn {
+      padding: 0.4rem 1rem;
+      background: var(--bg-card);
+      border: 1px solid var(--border-subtle);
+      border-radius: 2rem;
+      color: var(--text-secondary);
+      font-size: 0.82rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all var(--transition);
+    }
+
+    .filter-btn:hover,
+    .filter-btn.active {
+      background: var(--accent-dim);
+      border-color: var(--accent);
+      color: var(--accent);
+    }
+
+    /* --- Módulo section --- */
+    .module-section {
+      margin-bottom: var(--space-2xl);
+    }
+
+    .module-header {
+      display: flex;
+      align-items: center;
+      gap: var(--space-md);
+      padding: var(--space-md) var(--space-lg);
+      background: var(--bg-card);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-lg);
+      margin-bottom: var(--space-lg);
+      cursor: pointer;
+      transition: all var(--transition);
+    }
+
+    .module-header:hover {
+      border-color: var(--border);
+    }
+
+    .module-header.active {
+      border-color: var(--accent);
+      background: var(--accent-dim);
+    }
+
+    .module-icon {
+      font-size: 1.4rem;
+    }
+
+    .module-info {
+      flex: 1;
+    }
+
+    .module-title {
+      font-family: var(--font-display);
+      font-size: 1.1rem;
+      letter-spacing: 0.03em;
+    }
+
+    .module-desc {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      margin-top: 2px;
+    }
+
+    .module-count {
+      font-size: 0.78rem;
+      color: var(--text-muted);
+      flex-shrink: 0;
+    }
+
+    .module-toggle {
+      color: var(--text-muted);
+      font-size: 0.9rem;
+      transition: transform var(--transition);
+    }
+
+    .module-header.active .module-toggle {
+      transform: rotate(180deg);
+    }
+
+    /* --- Video grid --- */
+    .videos-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: var(--space-lg);
+    }
+
+    .video-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+      transition: all var(--transition);
+      cursor: pointer;
+    }
+
+    .video-card:hover {
+      border-color: var(--accent);
+      transform: translateY(-3px);
+      box-shadow: 0 8px 32px rgba(0, 229, 255, 0.1);
+    }
+
+    .video-thumbnail {
+      width: 100%;
+      aspect-ratio: 16/9;
+      background: var(--bg-secondary);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .video-thumbnail img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .video-play {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(0,0,0,0.5);
+      transition: background var(--transition);
+    }
+
+    .video-card:hover .video-play {
+      background: rgba(0,229,255,0.15);
+    }
+
+    .play-btn {
+      width: 48px;
+      height: 48px;
+      background: var(--accent);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.2rem;
+      color: #000;
+      box-shadow: 0 0 20px rgba(0,229,255,0.6);
+    }
+
+    .video-duration {
+      position: absolute;
+      bottom: 8px;
+      right: 8px;
+      background: rgba(0,0,0,0.85);
+      color: var(--text-primary);
+      font-size: 0.72rem;
+      font-weight: 600;
+      padding: 2px 8px;
+      border-radius: 4px;
+    }
+
+    .video-info {
+      padding: var(--space-md) var(--space-lg);
+    }
+
+    .video-title {
+      font-weight: 600;
+      font-size: 0.95rem;
+      margin-bottom: var(--space-xs);
+      line-height: 1.4;
+    }
+
+    .video-desc {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      line-height: 1.5;
+    }
+
+    .video-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 4px;
+      margin-top: var(--space-sm);
+    }
+
+    .video-tag {
+      font-size: 0.68rem;
+      padding: 2px 8px;
+      background: var(--accent-dim);
+      color: var(--accent);
+      border-radius: 2rem;
+      border: 1px solid rgba(0,229,255,0.2);
+    }
+
+    /* --- Modal do player --- */
+    .video-modal {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.95);
+      z-index: 1000;
+      align-items: center;
+      justify-content: center;
+      padding: var(--space-lg);
+    }
+
+    .video-modal.open {
+      display: flex;
+    }
+
+    .modal-inner {
+      width: 100%;
+      max-width: 900px;
+      position: relative;
+    }
+
+    .modal-close {
+      position: absolute;
+      top: -44px;
+      right: 0;
+      background: none;
+      border: none;
+      color: #fff;
+      font-size: 2rem;
+      cursor: pointer;
+      opacity: 0.7;
+      transition: opacity var(--transition);
+      line-height: 1;
+    }
+
+    .modal-close:hover { opacity: 1; }
+
+    .modal-title {
+      font-family: var(--font-display);
+      font-size: 1.2rem;
+      margin-bottom: var(--space-sm);
+      color: var(--text-primary);
+    }
+
+    .video-wrapper {
+      position: relative;
+      padding-bottom: 56.25%; /* 16:9 */
+      height: 0;
+      overflow: hidden;
+      border-radius: var(--radius-lg);
+      border: 1px solid var(--border);
+    }
+
+    .video-wrapper iframe {
+      position: absolute;
+      top: 0; left: 0;
+      width: 100%;
+      height: 100%;
+    }
+  </style>
+</head>
+<body>
+
+<div id="sidebar-mount"></div>
+
+<div class="app-layout">
+  <div class="main-content">
+
+    <div class="page-header">
+      <h1>Vídeo Aulas</h1>
+      <p>Conteúdo em vídeo organizado em módulos para sua evolução em vendas e liderança.</p>
+    </div>
+
+    <div class="page-body">
+
+      <!-- Filtro de módulos -->
+      <div class="filter-bar" id="filterBar">
+        <button class="filter-btn active" onclick="filterModule(null, this)">Todos os módulos</button>
+        <!-- Preenchido via JS -->
+      </div>
+
+      <!-- Conteúdo de módulos -->
+      <div id="modulesContainer"></div>
+
+    </div>
+  </div>
+</div>
+
+<!-- Modal Player -->
+<div class="video-modal" id="videoModal">
+  <div class="modal-inner">
+    <button class="modal-close" onclick="closeVideoModal()">✕</button>
+    <div class="modal-title" id="modalTitle"></div>
+    <div class="video-wrapper">
+      <iframe id="videoIframe" src="" frameborder="0"
+        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+        allowfullscreen>
+      </iframe>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+<script src="js/supabase-config.js"></script>
+<script src="js/auth.js"></script>
+<script src="js/sidebar.js"></script>
+<script src="js/data/videos.js"></script>
+<script>
+  let activeModuleFilter = null;
+
+  document.addEventListener('DOMContentLoaded', async () => {
+    await initSidebar();
+    renderFilterBtns();
+    renderModules();
+  });
+
+  function renderFilterBtns() {
+    const bar = document.getElementById('filterBar');
+    // Limpa botões existentes (exceto o "Todos")
+    const allBtn = bar.querySelector('.filter-btn');
+
+    MODULOS.forEach(mod => {
+      const btn = document.createElement('button');
+      btn.className = 'filter-btn';
+      btn.textContent = mod.title.split('—')[0].trim();
+      btn.onclick = () => filterModule(mod.id, btn);
+      bar.appendChild(btn);
+    });
+  }
+
+  function filterModule(moduleId, clickedBtn) {
+    activeModuleFilter = moduleId;
+    document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+    clickedBtn.classList.add('active');
+    renderModules();
+  }
+
+  function renderModules() {
+    const container = document.getElementById('modulesContainer');
+    container.innerHTML = '';
+
+    const modulesToShow = activeModuleFilter
+      ? MODULOS.filter(m => m.id === activeModuleFilter)
+      : MODULOS;
+
+    modulesToShow.forEach(mod => {
+      const modVideos = VIDEOS.filter(v => v.moduleId === mod.id);
+      if (!modVideos.length) return;
+
+      const section = document.createElement('div');
+      section.className = 'module-section';
+
+      const videosHTML = modVideos.map(v => renderVideoCard(v)).join('');
+
+      section.innerHTML = `
+        <div class="module-header active" onclick="toggleModule(this)">
+          <span class="module-icon">${mod.icon}</span>
+          <div class="module-info">
+            <div class="module-title">${mod.title}</div>
+            <div class="module-desc">${mod.desc}</div>
+          </div>
+          <span class="module-count">${modVideos.length} aula${modVideos.length > 1 ? 's' : ''}</span>
+          <span class="module-toggle">▼</span>
+        </div>
+        <div class="videos-grid">
+          ${videosHTML}
+        </div>
+      `;
+
+      container.appendChild(section);
+    });
+  }
+
+  function renderVideoCard(video) {
+    const thumbUrl = video.youtubeId && !video.youtubeId.includes('SUBSTITUA')
+      ? `https://img.youtube.com/vi/${video.youtubeId}/mqdefault.jpg`
+      : '';
+
+    const thumbHTML = thumbUrl
+      ? `<img src="${thumbUrl}" alt="${video.title}" loading="lazy">`
+      : `<div style="background:var(--bg-secondary);width:100%;height:100%;display:flex;align-items:center;justify-content:center;font-size:2rem;color:var(--accent);opacity:0.3;">▶</div>`;
+
+    const tagsHTML = (video.tags || []).map(t => `<span class="video-tag">${t}</span>`).join('');
+
+    return `
+      <div class="video-card" onclick="openVideo('${video.youtubeId}', '${video.title.replace(/'/g, "\\'")}')">
+        <div class="video-thumbnail">
+          ${thumbHTML}
+          <div class="video-play">
+            <div class="play-btn">▶</div>
+          </div>
+          <span class="video-duration">${video.duration}</span>
+        </div>
+        <div class="video-info">
+          <div class="video-title">${video.title}</div>
+          <div class="video-desc">${video.desc}</div>
+          ${tagsHTML ? `<div class="video-tags">${tagsHTML}</div>` : ''}
+        </div>
+      </div>
+    `;
+  }
+
+  function toggleModule(header) {
+    header.classList.toggle('active');
+    const grid = header.nextElementSibling;
+    if (grid) {
+      grid.style.display = header.classList.contains('active') ? 'grid' : 'none';
+    }
+  }
+
+  function openVideo(youtubeId, title) {
+    if (!youtubeId || youtubeId.includes('SUBSTITUA')) {
+      alert('Este vídeo ainda não foi configurado. Adicione o ID do YouTube em js/data/videos.js');
+      return;
+    }
+    document.getElementById('modalTitle').textContent = title;
+    document.getElementById('videoIframe').src = `https://www.youtube.com/embed/${youtubeId}?autoplay=1&rel=0`;
+    document.getElementById('videoModal').classList.add('open');
+    document.body.style.overflow = 'hidden';
+  }
+
+  function closeVideoModal() {
+    document.getElementById('videoModal').classList.remove('open');
+    document.getElementById('videoIframe').src = '';
+    document.body.style.overflow = '';
+  }
+
+  // Fechar modal com ESC
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') closeVideoModal();
+  });
+
+  // Fechar modal clicando fora
+  document.getElementById('videoModal').addEventListener('click', (e) => {
+    if (e.target === e.currentTarget) closeVideoModal();
+  });
+</script>
+</body>
+</html>

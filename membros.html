@@ -1,0 +1,487 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Membros — Clube dos Referidos</title>
+  <link rel="stylesheet" href="css/global.css">
+  <style>
+    /* --- Search bar --- */
+    .search-row {
+      display: flex;
+      gap: var(--space-md);
+      margin-bottom: var(--space-xl);
+      flex-wrap: wrap;
+      align-items: center;
+    }
+
+    .search-input-wrapper {
+      position: relative;
+      flex: 1;
+      min-width: 240px;
+    }
+
+    .search-icon {
+      position: absolute;
+      left: 14px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--text-muted);
+      font-size: 1rem;
+    }
+
+    .search-input {
+      width: 100%;
+      background: var(--bg-card);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-md);
+      padding: 0.7rem 1rem 0.7rem 2.8rem;
+      color: var(--text-primary);
+      font-size: 0.9rem;
+      outline: none;
+      transition: all var(--transition);
+      font-family: var(--font-body);
+    }
+
+    .search-input:focus {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px rgba(0,229,255,0.1);
+    }
+
+    .search-input::placeholder {
+      color: var(--text-muted);
+    }
+
+    /* --- Filter tags --- */
+    .tags-filter {
+      display: flex;
+      gap: var(--space-sm);
+      flex-wrap: wrap;
+      margin-bottom: var(--space-xl);
+    }
+
+    .tag-btn {
+      padding: 0.35rem 0.9rem;
+      background: var(--bg-card);
+      border: 1px solid var(--border-subtle);
+      border-radius: 2rem;
+      color: var(--text-secondary);
+      font-size: 0.78rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all var(--transition);
+    }
+
+    .tag-btn:hover,
+    .tag-btn.active {
+      background: var(--accent-dim);
+      border-color: var(--accent);
+      color: var(--accent);
+    }
+
+    /* --- Members count --- */
+    .members-meta {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: var(--space-lg);
+    }
+
+    .members-count {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+    }
+
+    .members-count strong {
+      color: var(--accent);
+    }
+
+    /* --- Grid de membros --- */
+    .members-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: var(--space-lg);
+    }
+
+    /* --- Card de membro --- */
+    .member-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-xl);
+      overflow: hidden;
+      transition: all var(--transition);
+      display: flex;
+      flex-direction: column;
+    }
+
+    .member-card:hover {
+      border-color: var(--border);
+      transform: translateY(-4px);
+      box-shadow: 0 12px 40px rgba(0, 229, 255, 0.1);
+    }
+
+    .member-card.featured {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 1px rgba(0,229,255,0.2);
+    }
+
+    /* Área de foto + fundo */
+    .member-card-top {
+      position: relative;
+      background: linear-gradient(135deg, var(--bg-secondary) 0%, rgba(0,229,255,0.05) 100%);
+      padding: var(--space-xl) var(--space-xl) 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+    }
+
+    .member-card.featured .member-card-top {
+      background: linear-gradient(135deg, rgba(0,229,255,0.08) 0%, var(--bg-secondary) 100%);
+    }
+
+    /* Foto do membro */
+    .member-avatar {
+      width: 88px;
+      height: 88px;
+      border-radius: 50%;
+      overflow: hidden;
+      border: 3px solid var(--border-subtle);
+      background: var(--bg-primary);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: var(--space-md);
+      flex-shrink: 0;
+      position: relative;
+    }
+
+    .member-card.featured .member-avatar {
+      border-color: var(--accent);
+      box-shadow: 0 0 20px rgba(0,229,255,0.3);
+    }
+
+    .member-avatar img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .member-avatar-initials {
+      font-family: var(--font-display);
+      font-size: 2rem;
+      color: var(--accent);
+      opacity: 0.8;
+    }
+
+    .featured-badge {
+      position: absolute;
+      top: -4px;
+      right: -4px;
+      width: 22px;
+      height: 22px;
+      background: var(--accent);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.65rem;
+      color: #000;
+      box-shadow: 0 0 8px rgba(0,229,255,0.6);
+    }
+
+    .member-name {
+      font-family: var(--font-display);
+      font-size: 1.3rem;
+      letter-spacing: 0.02em;
+      margin-bottom: 4px;
+    }
+
+    .member-role {
+      font-size: 0.8rem;
+      color: var(--accent);
+      font-weight: 600;
+      letter-spacing: 0.05em;
+    }
+
+    .member-company {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      margin-top: 2px;
+    }
+
+    .member-location {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      margin-top: var(--space-sm);
+      padding-bottom: var(--space-lg);
+    }
+
+    /* Body do card */
+    .member-card-body {
+      padding: var(--space-lg);
+      flex: 1;
+    }
+
+    .member-bio {
+      font-size: 0.85rem;
+      color: var(--text-secondary);
+      line-height: 1.65;
+      margin-bottom: var(--space-md);
+    }
+
+    /* Tags de especialidade */
+    .member-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-bottom: var(--space-lg);
+    }
+
+    .member-tag {
+      font-size: 0.68rem;
+      padding: 3px 9px;
+      background: var(--bg-secondary);
+      border: 1px solid var(--border-subtle);
+      border-radius: 2rem;
+      color: var(--text-muted);
+    }
+
+    /* Redes sociais */
+    .member-socials {
+      display: flex;
+      gap: var(--space-sm);
+      flex-wrap: wrap;
+    }
+
+    .social-link {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      padding: 0.4rem 0.8rem;
+      background: var(--bg-secondary);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-md);
+      font-size: 0.78rem;
+      color: var(--text-secondary);
+      text-decoration: none;
+      transition: all var(--transition);
+    }
+
+    .social-link:hover {
+      color: var(--accent);
+      border-color: var(--accent);
+      background: var(--accent-dim);
+    }
+
+    /* Separador decorativo entre top e body */
+    .member-card-divider {
+      height: 1px;
+      background: linear-gradient(90deg, transparent, var(--border-subtle), transparent);
+      margin: 0 var(--space-lg);
+    }
+
+    /* --- Empty state --- */
+    .no-results {
+      text-align: center;
+      padding: var(--space-3xl);
+      color: var(--text-muted);
+    }
+
+    .no-results .no-icon {
+      font-size: 2.5rem;
+      margin-bottom: var(--space-md);
+      opacity: 0.4;
+    }
+
+    @media (max-width: 768px) {
+      .members-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+
+<div id="sidebar-mount"></div>
+
+<div class="app-layout">
+  <div class="main-content">
+
+    <div class="page-header">
+      <h1>Painel de Membros</h1>
+      <p>Conheça quem faz parte do Clube dos Referidos — perfis, especialidades e conexões.</p>
+    </div>
+
+    <div class="page-body">
+
+      <!-- Busca + Filtros -->
+      <div class="search-row">
+        <div class="search-input-wrapper">
+          <span class="search-icon">🔍</span>
+          <input
+            type="text"
+            class="search-input"
+            id="searchInput"
+            placeholder="Buscar por nome, cargo, empresa..."
+            oninput="onSearch()"
+          >
+        </div>
+      </div>
+
+      <!-- Tags de especialidade -->
+      <div class="tags-filter" id="tagsFilter">
+        <button class="tag-btn active" onclick="filterTag(null, this)">Todos</button>
+      </div>
+
+      <!-- Contador -->
+      <div class="members-meta">
+        <div class="members-count" id="membersCount">Carregando...</div>
+      </div>
+
+      <!-- Grid de membros -->
+      <div class="members-grid" id="membersGrid"></div>
+
+    </div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+<script src="js/supabase-config.js"></script>
+<script src="js/auth.js"></script>
+<script src="js/sidebar.js"></script>
+<script src="js/data/membros.js"></script>
+<script>
+  let activeTag = null;
+  let searchQuery = '';
+
+  const SOCIAL_META = {
+    instagram: { icon: '📸', label: 'Instagram' },
+    linkedin:  { icon: '💼', label: 'LinkedIn' },
+    whatsapp:  { icon: '💬', label: 'WhatsApp' },
+    twitter:   { icon: '🐦', label: 'Twitter' },
+  };
+
+  document.addEventListener('DOMContentLoaded', async () => {
+    await initSidebar();
+    buildTagsFilter();
+    renderMembers();
+  });
+
+  function buildTagsFilter() {
+    const allTags = [...new Set(MEMBROS.flatMap(m => m.tags || []))].sort();
+    const bar = document.getElementById('tagsFilter');
+
+    allTags.forEach(tag => {
+      const btn = document.createElement('button');
+      btn.className = 'tag-btn';
+      btn.textContent = tag;
+      btn.onclick = () => filterTag(tag, btn);
+      bar.appendChild(btn);
+    });
+  }
+
+  function filterTag(tag, btn) {
+    activeTag = tag;
+    document.querySelectorAll('.tag-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    renderMembers();
+  }
+
+  function onSearch() {
+    searchQuery = document.getElementById('searchInput').value.toLowerCase().trim();
+    renderMembers();
+  }
+
+  function getFilteredMembers() {
+    return MEMBROS.filter(m => {
+      const matchesTag = !activeTag || (m.tags || []).includes(activeTag);
+      const matchesSearch = !searchQuery || [
+        m.name, m.role, m.company, m.city, m.bio, ...(m.tags || [])
+      ].join(' ').toLowerCase().includes(searchQuery);
+      return matchesTag && matchesSearch;
+    });
+  }
+
+  function renderMembers() {
+    const filtered = getFilteredMembers();
+    const grid = document.getElementById('membersGrid');
+    const count = document.getElementById('membersCount');
+
+    count.innerHTML = `<strong>${filtered.length}</strong> membro${filtered.length !== 1 ? 's' : ''} encontrado${filtered.length !== 1 ? 's' : ''}`;
+
+    if (!filtered.length) {
+      grid.innerHTML = `
+        <div class="no-results" style="grid-column:1/-1;">
+          <div class="no-icon">🔍</div>
+          <p>Nenhum membro encontrado com esse filtro.</p>
+        </div>
+      `;
+      return;
+    }
+
+    // Destaca featured primeiro
+    const sorted = [...filtered].sort((a, b) => (b.featured ? 1 : 0) - (a.featured ? 1 : 0));
+    grid.innerHTML = sorted.map(renderMemberCard).join('');
+  }
+
+  function renderMemberCard(membro) {
+    const initials = membro.name.split(' ').map(w => w[0]).slice(0, 2).join('').toUpperCase();
+
+    const avatarHTML = membro.photo
+      ? `<img src="${membro.photo}" alt="${membro.name}" loading="lazy">`
+      : `<div class="member-avatar-initials">${initials}</div>`;
+
+    const featuredBadge = membro.featured
+      ? `<div class="featured-badge" title="Membro fundador">★</div>`
+      : '';
+
+    const tagsHTML = (membro.tags || []).map(t =>
+      `<span class="member-tag">${t}</span>`
+    ).join('');
+
+    const socialsHTML = Object.entries(membro.socials || {})
+      .filter(([, url]) => url)
+      .map(([platform, url]) => {
+        const meta = SOCIAL_META[platform] || { icon: '🔗', label: platform };
+        return `<a href="${url}" class="social-link" target="_blank" rel="noopener">
+          ${meta.icon} ${meta.label}
+        </a>`;
+      }).join('');
+
+    return `
+      <div class="member-card ${membro.featured ? 'featured' : ''}">
+
+        <div class="member-card-top">
+          <div class="member-avatar">
+            ${avatarHTML}
+            ${featuredBadge}
+          </div>
+
+          <div class="member-name">${membro.name}</div>
+          <div class="member-role">${membro.role}</div>
+          ${membro.company ? `<div class="member-company">${membro.company}</div>` : ''}
+          <div class="member-location">
+            📍 ${membro.city}
+          </div>
+        </div>
+
+        <div class="member-card-divider"></div>
+
+        <div class="member-card-body">
+          <p class="member-bio">${membro.bio}</p>
+
+          ${tagsHTML ? `<div class="member-tags">${tagsHTML}</div>` : ''}
+
+          ${socialsHTML ? `<div class="member-socials">${socialsHTML}</div>` : ''}
+        </div>
+
+      </div>
+    `;
+  }
+</script>
+</body>
+</html>

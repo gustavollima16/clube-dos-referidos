@@ -1,0 +1,26 @@
+# NETLIFY CONFIG — Clube dos Referidos
+# Para deploy na Netlify, conecte o repositório e este arquivo cuida do resto.
+
+[build]
+  publish = "."
+
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
+  conditions = {Role = ["anonymous"]}
+
+# Rota raiz
+[[redirects]]
+  from = "/"
+  to = "/index.html"
+  status = 200
+
+# Cabeçalhos de segurança
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Frame-Options = "SAMEORIGIN"
+    X-Content-Type-Options = "nosniff"
+    X-XSS-Protection = "1; mode=block"
+    Referrer-Policy = "strict-origin-when-cross-origin"

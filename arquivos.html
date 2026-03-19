@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Arquivos — Clube dos Referidos</title>
+  <link rel="stylesheet" href="css/global.css">
+  <style>
+    /* --- Filter bar --- */
+    .filter-bar {
+      display: flex;
+      gap: var(--space-sm);
+      flex-wrap: wrap;
+      margin-bottom: var(--space-xl);
+    }
+
+    .filter-btn {
+      padding: 0.4rem 1rem;
+      background: var(--bg-card);
+      border: 1px solid var(--border-subtle);
+      border-radius: 2rem;
+      color: var(--text-secondary);
+      font-size: 0.82rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all var(--transition);
+    }
+
+    .filter-btn:hover,
+    .filter-btn.active {
+      background: var(--accent-dim);
+      border-color: var(--accent);
+      color: var(--accent);
+    }
+
+    /* --- Files list --- */
+    .files-list {
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-sm);
+    }
+
+    .file-row {
+      background: var(--bg-card);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-lg);
+      padding: var(--space-lg);
+      display: flex;
+      align-items: center;
+      gap: var(--space-lg);
+      transition: all var(--transition);
+    }
+
+    .file-row:hover {
+      border-color: var(--border);
+      background: var(--bg-card-hover);
+    }
+
+    .file-type-icon {
+      width: 48px;
+      height: 48px;
+      border-radius: var(--radius-md);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.4rem;
+      flex-shrink: 0;
+    }
+
+    .file-type-xlsx { background: rgba(0, 180, 100, 0.15); border: 1px solid rgba(0,180,100,0.3); }
+    .file-type-docx { background: rgba(0, 100, 200, 0.15); border: 1px solid rgba(0,100,200,0.3); }
+    .file-type-pdf  { background: rgba(220, 50, 50, 0.15);  border: 1px solid rgba(220,50,50,0.3); }
+    .file-type-pptx { background: rgba(220, 100, 0, 0.15);  border: 1px solid rgba(220,100,0,0.3); }
+    .file-type-zip  { background: rgba(140, 80, 200, 0.15); border: 1px solid rgba(140,80,200,0.3); }
+    .file-type-csv  { background: rgba(0, 160, 160, 0.15);  border: 1px solid rgba(0,160,160,0.3); }
+
+    .file-info {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .file-name {
+      font-weight: 600;
+      font-size: 0.95rem;
+      margin-bottom: 4px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .file-desc {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      line-height: 1.5;
+    }
+
+    .file-meta {
+      display: flex;
+      align-items: center;
+      gap: var(--space-md);
+      flex-shrink: 0;
+    }
+
+    .file-size {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      white-space: nowrap;
+    }
+
+    .file-downloads {
+      font-size: 0.72rem;
+      color: var(--text-muted);
+      white-space: nowrap;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .btn-file-download {
+      display: flex;
+      align-items: center;
+      gap: var(--space-xs);
+      padding: 0.5rem 1rem;
+      background: var(--accent-dim);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      color: var(--accent);
+      font-size: 0.82rem;
+      font-weight: 600;
+      text-decoration: none;
+      transition: all var(--transition);
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+
+    .btn-file-download:hover {
+      background: var(--accent);
+      color: #000;
+      border-color: var(--accent);
+      box-shadow: var(--shadow-glow);
+    }
+
+    .category-header {
+      font-family: var(--font-display);
+      font-size: 1rem;
+      letter-spacing: 0.08em;
+      color: var(--text-muted);
+      padding: var(--space-sm) 0;
+      margin-top: var(--space-lg);
+      margin-bottom: var(--space-sm);
+      border-bottom: 1px solid var(--border-subtle);
+      display: flex;
+      align-items: center;
+      gap: var(--space-sm);
+    }
+
+    @media (max-width: 768px) {
+      .file-meta { flex-direction: column; align-items: flex-end; gap: 4px; }
+      .file-row { flex-wrap: wrap; }
+      .file-downloads { display: none; }
+    }
+
+    @media (max-width: 480px) {
+      .file-type-icon { width: 36px; height: 36px; font-size: 1rem; }
+      .btn-file-download { padding: 0.5rem 0.7rem; font-size: 0.78rem; }
+    }
+  </style>
+</head>
+<body>
+
+<div id="sidebar-mount"></div>
+
+<div class="app-layout">
+  <div class="main-content">
+
+    <div class="page-header">
+      <h1>Arquivos & Recursos</h1>
+      <p>Templates, planilhas, scripts e materiais de apoio para aplicar imediatamente.</p>
+    </div>
+
+    <div class="page-body">
+
+      <!-- Filtros -->
+      <div class="filter-bar" id="filterBar">
+        <button class="filter-btn active" onclick="filterCategory(null, this)">Todos</button>
+      </div>
+
+      <!-- Lista de arquivos -->
+      <div id="filesContainer"></div>
+
+    </div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+<script src="js/supabase-config.js"></script>
+<script src="js/auth.js"></script>
+<script src="js/sidebar.js"></script>
+<script src="js/data/arquivos.js"></script>
+<script>
+  let activeCategory = null;
+
+  const TYPE_ICONS = {
+    xlsx: '📊',
+    docx: '📝',
+    pdf:  '📄',
+    pptx: '📊',
+    zip:  '🗜',
+    csv:  '📋',
+  };
+
+  document.addEventListener('DOMContentLoaded', async () => {
+    await initSidebar();
+    renderFilterBtns();
+    renderFiles();
+  });
+
+  function renderFilterBtns() {
+    const bar = document.getElementById('filterBar');
+    const categories = [...new Set(ARQUIVOS.map(a => a.category))];
+    categories.forEach(cat => {
+      const btn = document.createElement('button');
+      btn.className = 'filter-btn';
+      btn.textContent = cat;
+      btn.onclick = () => filterCategory(cat, btn);
+      bar.appendChild(btn);
+    });
+  }
+
+  function filterCategory(cat, btn) {
+    activeCategory = cat;
+    document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    renderFiles();
+  }
+
+  function renderFiles() {
+    const container = document.getElementById('filesContainer');
+    const filtered = activeCategory
+      ? ARQUIVOS.filter(a => a.category === activeCategory)
+      : ARQUIVOS;
+
+    if (activeCategory) {
+      // Vista simples sem agrupamento
+      container.innerHTML = `<div class="files-list">${filtered.map(renderFileRow).join('')}</div>`;
+    } else {
+      // Agrupado por categoria
+      const categories = [...new Set(filtered.map(a => a.category))];
+      container.innerHTML = categories.map(cat => {
+        const catFiles = filtered.filter(a => a.category === cat);
+        return `
+          <div class="category-header">
+            <span class="glow-dot"></span>
+            ${cat}
+            <span style="font-family:var(--font-body);font-size:0.75rem;color:var(--text-muted);font-weight:400;">(${catFiles.length})</span>
+          </div>
+          <div class="files-list">
+            ${catFiles.map(renderFileRow).join('')}
+          </div>
+        `;
+      }).join('');
+    }
+  }
+
+  function renderFileRow(arquivo) {
+    const icon = TYPE_ICONS[arquivo.type] || '📄';
+    return `
+      <div class="file-row">
+        <div class="file-type-icon file-type-${arquivo.type}">${icon}</div>
+
+        <div class="file-info">
+          <div class="file-name">${arquivo.title}</div>
+          <div class="file-desc">${arquivo.desc}</div>
+        </div>
+
+        <div class="file-meta">
+          <span class="file-size">${arquivo.size}</span>
+          ${arquivo.downloads ? `<span class="file-downloads">⬇ ${arquivo.downloads}</span>` : ''}
+          <span class="badge badge-accent">${arquivo.type.toUpperCase()}</span>
+        </div>
+
+        <a href="${arquivo.fileUrl}" class="btn-file-download" target="_blank" rel="noopener" download>
+          ⬇ Baixar
+        </a>
+      </div>
+    `;
+  }
+</script>
+</body>
+</html>

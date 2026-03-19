@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashboard — Clube dos Referidos</title>
+  <link rel="stylesheet" href="css/global.css">
+  <style>
+    /* --- Welcome banner --- */
+    .welcome-banner {
+      background: linear-gradient(135deg, var(--bg-card) 0%, rgba(0, 229, 255, 0.06) 100%);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-xl);
+      padding: var(--space-2xl);
+      margin-bottom: var(--space-2xl);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .welcome-banner::before {
+      content: '';
+      position: absolute;
+      top: -40px; right: -40px;
+      width: 200px; height: 200px;
+      background: radial-gradient(circle, rgba(0,229,255,0.12) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    .welcome-banner h2 {
+      font-size: clamp(1.6rem, 3vw, 2.2rem);
+      margin-bottom: var(--space-xs);
+    }
+
+    .welcome-banner p {
+      margin-top: var(--space-xs);
+      max-width: 500px;
+    }
+
+    .welcome-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 0.3rem 0.8rem;
+      background: var(--accent-dim);
+      border: 1px solid var(--border);
+      border-radius: 2rem;
+      font-size: 0.72rem;
+      font-weight: 600;
+      color: var(--accent);
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      margin-bottom: var(--space-md);
+    }
+
+    /* --- Nav cards grid --- */
+    .nav-cards {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: var(--space-lg);
+      margin-bottom: var(--space-2xl);
+    }
+
+    .nav-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-lg);
+      padding: var(--space-xl) var(--space-lg);
+      text-align: center;
+      cursor: pointer;
+      transition: all var(--transition);
+      text-decoration: none;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: var(--space-sm);
+    }
+
+    .nav-card:hover {
+      border-color: var(--accent);
+      background: var(--bg-card-hover);
+      transform: translateY(-3px);
+      box-shadow: 0 8px 32px rgba(0, 229, 255, 0.12);
+    }
+
+    .nav-card-icon {
+      font-size: 2rem;
+      margin-bottom: var(--space-xs);
+    }
+
+    .nav-card-title {
+      font-family: var(--font-display);
+      font-size: 1rem;
+      letter-spacing: 0.05em;
+      color: var(--text-primary);
+    }
+
+    .nav-card-desc {
+      font-size: 0.78rem;
+      color: var(--text-muted);
+    }
+
+    /* --- Novidades --- */
+    .news-section {
+      margin-bottom: var(--space-2xl);
+    }
+
+    .news-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+    }
+
+    .news-item {
+      padding: var(--space-lg);
+      border-bottom: 1px solid var(--border-subtle);
+      display: flex;
+      gap: var(--space-md);
+      align-items: flex-start;
+    }
+
+    .news-item:last-child {
+      border-bottom: none;
+    }
+
+    .news-dot {
+      width: 8px;
+      height: 8px;
+      background: var(--accent);
+      border-radius: 50%;
+      box-shadow: 0 0 8px var(--accent);
+      flex-shrink: 0;
+      margin-top: 6px;
+    }
+
+    .news-date {
+      font-size: 0.72rem;
+      color: var(--text-muted);
+      margin-top: var(--space-xs);
+    }
+
+    .news-title {
+      font-weight: 600;
+      font-size: 0.95rem;
+      margin-bottom: var(--space-xs);
+    }
+
+    /* --- Stats --- */
+    .stats-row {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: var(--space-lg);
+      margin-bottom: var(--space-2xl);
+    }
+
+    .stat-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-lg);
+      padding: var(--space-lg);
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-xs);
+    }
+
+    .stat-card-label {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+    }
+
+    .stat-card-value {
+      font-family: var(--font-display);
+      font-size: 2rem;
+      color: var(--accent);
+      line-height: 1;
+    }
+
+    .stat-card-sub {
+      font-size: 0.78rem;
+      color: var(--text-muted);
+    }
+
+    @media (max-width: 768px) {
+      .stats-row {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .nav-cards {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    @media (max-width: 480px) {
+      .stats-row {
+        grid-template-columns: 1fr 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+
+<!-- Sidebar mount -->
+<div id="sidebar-mount"></div>
+
+<div class="app-layout">
+  <div class="main-content">
+
+    <!-- Page Header -->
+    <div class="page-header">
+      <h1>Dashboard</h1>
+      <p>Sua central de conteúdos exclusivos do Clube dos Referidos.</p>
+    </div>
+
+    <div class="page-body">
+
+      <!-- Welcome Banner -->
+      <div class="welcome-banner">
+        <div class="welcome-badge">
+          <span class="glow-dot"></span>
+          Área exclusiva
+        </div>
+        <h2>Bem-vindo, <span class="text-accent" id="userGreeting">Membro</span>! 👋</h2>
+        <p>Você está na sua área exclusiva do Clube dos Referidos. Explore os conteúdos, baixe materiais e evolua seus resultados em vendas.</p>
+      </div>
+
+      <!-- Stats -->
+      <div class="stats-row">
+        <div class="stat-card">
+          <div class="stat-card-label">Vídeo Aulas</div>
+          <div class="stat-card-value">80+</div>
+          <div class="stat-card-sub">Horas de conteúdo</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-card-label">Materiais</div>
+          <div class="stat-card-value">40+</div>
+          <div class="stat-card-sub">eBooks & arquivos</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-card-label">Membros</div>
+          <div class="stat-card-value">500+</div>
+          <div class="stat-card-sub">Na comunidade</div>
+        </div>
+      </div>
+
+      <!-- Quick Nav Cards -->
+      <div class="section-title">
+        <span class="glow-dot"></span>
+        <h2>Navegar pelo clube</h2>
+      </div>
+
+      <div class="nav-cards">
+        <a href="videoaulas.html" class="nav-card">
+          <div class="nav-card-icon">▶️</div>
+          <div class="nav-card-title">Vídeo Aulas</div>
+          <div class="nav-card-desc">Módulos de onboarding e treinamentos</div>
+        </a>
+
+        <a href="ebooks.html" class="nav-card">
+          <div class="nav-card-icon">📖</div>
+          <div class="nav-card-title">eBooks & PDFs</div>
+          <div class="nav-card-desc">Materiais exclusivos para download</div>
+        </a>
+
+        <a href="arquivos.html" class="nav-card">
+          <div class="nav-card-icon">📁</div>
+          <div class="nav-card-title">Arquivos</div>
+          <div class="nav-card-desc">Templates, planilhas e recursos</div>
+        </a>
+
+        <a href="fotos.html" class="nav-card">
+          <div class="nav-card-icon">🖼️</div>
+          <div class="nav-card-title">Galeria de Fotos</div>
+          <div class="nav-card-desc">Eventos, encontros e bastidores</div>
+        </a>
+
+        <a href="membros.html" class="nav-card">
+          <div class="nav-card-icon">👥</div>
+          <div class="nav-card-title">Membros</div>
+          <div class="nav-card-desc">Conheça a comunidade</div>
+        </a>
+
+        <a href="sobre.html" class="nav-card">
+          <div class="nav-card-icon">ℹ️</div>
+          <div class="nav-card-title">Sobre o Clube</div>
+          <div class="nav-card-desc">Missão, visão e fundadores</div>
+        </a>
+      </div>
+
+      <!-- Novidades -->
+      <div class="news-section">
+        <div class="section-title">
+          <span class="glow-dot"></span>
+          <h2>Avisos & Novidades</h2>
+        </div>
+
+        <div class="news-card">
+          <!-- Edite os itens abaixo para adicionar avisos/novidades -->
+          <div class="news-item">
+            <div class="news-dot"></div>
+            <div>
+              <div class="news-title">🎉 Bem-vindo ao Clube dos Referidos!</div>
+              <p style="font-size:0.875rem; margin-top:4px;">
+                Sua jornada começa aqui. Comece pelas Vídeo Aulas de onboarding para entender como funciona o clube e extrair o máximo desta experiência.
+              </p>
+              <div class="news-date">Publicado em 01/01/2025</div>
+            </div>
+          </div>
+
+          <div class="news-item">
+            <div class="news-dot"></div>
+            <div>
+              <div class="news-title">📹 Novo módulo disponível: Formação de Times Comerciais</div>
+              <p style="font-size:0.875rem; margin-top:4px;">
+                O Módulo 3 já está disponível na seção de Vídeo Aulas. Aprenda a montar, treinar e liderar um time de vendas de alta performance.
+              </p>
+              <div class="news-date">Publicado em 15/01/2025</div>
+            </div>
+          </div>
+
+          <div class="news-item">
+            <div class="news-dot"></div>
+            <div>
+              <div class="news-title">📄 Novo material: Planilha de Metas de Vendas 2025</div>
+              <p style="font-size:0.875rem; margin-top:4px;">
+                Baixe agora na seção de Arquivos a planilha atualizada para gestão de metas e forecast do seu time.
+              </p>
+              <div class="news-date">Publicado em 20/01/2025</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- /page-body -->
+  </div><!-- /main-content -->
+</div><!-- /app-layout -->
+
+<!-- Supabase CDN -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+<script src="js/supabase-config.js"></script>
+<script src="js/auth.js"></script>
+<script src="js/sidebar.js"></script>
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    initSidebar();
+  });
+</script>
+
+</body>
+</html>
