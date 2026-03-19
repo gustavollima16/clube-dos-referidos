@@ -530,14 +530,11 @@
 
 <!-- ========== NAVBAR ========== -->
 <nav class="top-nav">
-  <div class="nav-logo">
-    <a href="#"><img src="images/logo.png" alt="Clube dos Referidos"></a>
-  </div>
   <ul class="nav-links">
     <li><a href="#clube">O Clube</a></li>
     <li><a href="#somos">Quem Somos</a></li>
     <li><a href="#depoimentos">Depoimentos</a></li>
-    <li><a href="#inscricao">Aplique</a></li>
+    <li><a href="#inscricao">Aplicação</a></li>
     <li class="nav-cta"><a href="#area-membros" onclick="scrollToAuth(event)">Área de Membros</a></li>
   </ul>
   <button class="hamburger-btn" id="hamburgerBtn" aria-label="Menu">☰</button>
@@ -548,7 +545,7 @@
   <a href="#clube" onclick="closeMobileMenu()">O Clube</a>
   <a href="#somos" onclick="closeMobileMenu()">Quem Somos</a>
   <a href="#depoimentos" onclick="closeMobileMenu()">Depoimentos</a>
-  <a href="#inscricao" onclick="closeMobileMenu()">Aplique</a>
+  <a href="#inscricao" onclick="closeMobileMenu()">Aplicação</a>
   <a href="#area-membros" onclick="scrollToAuth(event);closeMobileMenu()">Área de Membros</a>
 </div>
 
@@ -569,8 +566,8 @@
       z-index: 0;
     ">
     <div class="hero-content">
-      <div style="margin-bottom: var(--space-2xl); margin-left: -32px; margin-top: -20px;">
-        <img src="images/logo.png" alt="Clube dos Referidos" style="height:180px;width:auto;">
+      <div style="margin-bottom: var(--space-2xl); margin-left: -41px; margin-top: -29px;">
+        <img src="images/logo.png" alt="Clube dos Referidos" style="height:171px;width:auto;">
       </div>
 
       <h1 class="hero-title">
@@ -604,11 +601,13 @@
     <div class="auth-header">
 
       <div id="mainAuthBlock">
-        <div class="hero-badge" style="margin-bottom: var(--space-md);">
-          <span class="glow-dot"></span>
-          Área exclusiva de membros
+        <div style="display:flex; align-items:center; gap: var(--space-md); margin-bottom: var(--space-sm); flex-wrap:wrap;">
+          <h2 class="auth-title" style="margin-bottom:0;">Bem-vindo de volta</h2>
+          <div class="hero-badge" style="margin-bottom:0; font-size:0.65rem;">
+            <span class="glow-dot"></span>
+            Área exclusiva de membros
+          </div>
         </div>
-        <h2 class="auth-title">Bem-vindo de volta</h2>
         <p class="auth-subtitle">Acesse sua conta para continuar aprendendo.</p>
       </div>
 
@@ -818,7 +817,7 @@
         </div>
       </div>
       <div class="somos-img-placeholder">
-        <img src="images/logo.png" alt="Clube dos Referidos" style="width:100%;opacity:0.5;">
+        <img src="images/logo.png" alt="Clube dos Referidos" style="width:115%;opacity:0.5;">
       </div>
     </div>
   </div>
@@ -874,9 +873,9 @@
 <div class="section-divider"></div>
 <section id="inscricao" class="form-section-wrapper">
   <div class="lp-section">
-    <span class="section-tag">Aplique</span>
-    <h2 class="lp-title">Aplique para o<br>Clube dos Referidos</h2>
-    <p class="lp-subtitle">Preencha o formulário abaixo e entraremos em contato para agendar uma apresentação exclusiva.</p>
+    <span class="section-tag">Aplicação</span>
+    <h2 class="lp-title">Aplicação para o<br>Clube dos Referidos</h2>
+    <p class="lp-subtitle">Preencha o formulário abaixo e em breve entraremos em contato.</p>
 
     <div id="applyFormWrapper" class="apply-form">
       <form id="applyForm" onsubmit="handleApply(event)">
