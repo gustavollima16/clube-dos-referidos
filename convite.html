@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Criar Conta — Clube dos Referidos</title>
+  <link rel="stylesheet" href="css/global.css">
+  <style>
+    body {
+      background: var(--bg-primary);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: var(--space-xl);
+    }
+
+    .invite-wrapper {
+      width: 100%;
+      max-width: 440px;
+    }
+
+    .invite-logo {
+      text-align: center;
+      margin-bottom: var(--space-2xl);
+    }
+
+    .invite-logo img {
+      height: 64px;
+      width: auto;
+    }
+
+    .invite-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-xl);
+      padding: var(--space-2xl);
+    }
+
+    .invite-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 0.3rem 0.8rem;
+      background: var(--accent-dim);
+      border: 1px solid var(--border);
+      border-radius: 2rem;
+      font-size: 0.72rem;
+      font-weight: 600;
+      color: var(--accent);
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      margin-bottom: var(--space-md);
+    }
+
+    .invite-card h2 {
+      font-size: 1.4rem;
+      margin-bottom: var(--space-xs);
+    }
+
+    .invite-card p.subtitle {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      margin-bottom: var(--space-xl);
+      line-height: 1.6;
+    }
+
+    .state-loading,
+    .state-invalid,
+    .state-used,
+    .state-form,
+    .state-success {
+      display: none;
+    }
+
+    .state-loading.active,
+    .state-invalid.active,
+    .state-used.active,
+    .state-form.active,
+    .state-success.active {
+      display: block;
+    }
+
+    .icon-big {
+      font-size: 3rem;
+      margin-bottom: var(--space-md);
+      display: block;
+      text-align: center;
+    }
+
+    .success-title {
+      font-size: 1.2rem;
+      font-weight: 700;
+      text-align: center;
+      margin-bottom: var(--space-sm);
+    }
+
+    .success-sub {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      text-align: center;
+      line-height: 1.7;
+    }
+
+    .lgpd-check {
+      display: flex;
+      align-items: flex-start;
+      gap: 0.65rem;
+      margin-top: var(--space-md);
+      cursor: pointer;
+    }
+
+    .lgpd-check input[type="checkbox"] {
+      width: 16px;
+      height: 16px;
+      min-width: 16px;
+      margin-top: 2px;
+      accent-color: var(--accent);
+      cursor: pointer;
+    }
+
+    .lgpd-check span {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      line-height: 1.5;
+    }
+
+    .lgpd-check a {
+      color: var(--accent);
+      text-decoration: underline;
+    }
+
+    .spinner {
+      width: 16px;
+      height: 16px;
+      border: 2px solid rgba(0,0,0,0.2);
+      border-top-color: #000;
+      border-radius: 50%;
+      animation: spin 0.7s linear infinite;
+      display: inline-block;
+      vertical-align: middle;
+      margin-left: 6px;
+    }
+
+    @keyframes spin { to { transform: rotate(360deg); } }
+  </style>
+</head>
+<body>
+
+<div class="invite-wrapper">
+
+  <div class="invite-logo">
+    <img src="images/logo.png" alt="Clube dos Referidos">
+  </div>
+
+  <div class="invite-card">
+
+    <!-- Loading -->
+    <div class="state-loading active" id="stateLoading">
+      <p style="color:var(--text-muted); text-align:center;">Validando convite...</p>
+    </div>
+
+    <!-- Inválido / Expirado -->
+    <div class="state-invalid" id="stateInvalid">
+      <span class="icon-big">❌</span>
+      <div class="success-title" style="color:#FF6B84;">Link inválido ou expirado</div>
+      <p class="success-sub">Este link de convite não é válido ou já expirou. Solicite um novo convite ao time do Clube dos Referidos.</p>
+    </div>
+
+    <!-- Já utilizado -->
+    <div class="state-used" id="stateUsed">
+      <span class="icon-big">🔒</span>
+      <div class="success-title" style="color:#FFB400;">Link já utilizado</div>
+      <p class="success-sub">Este link já foi usado para criar uma conta. Cada convite é válido para um único cadastro.</p>
+    </div>
+
+    <!-- Formulário -->
+    <div class="state-form" id="stateForm">
+      <div class="invite-badge">
+        <span class="glow-dot"></span>
+        Convite exclusivo
+      </div>
+      <h2>Criar minha conta</h2>
+      <p class="subtitle">Você foi convidado para o Clube dos Referidos. Preencha os dados abaixo para criar sua conta.</p>
+
+      <form id="inviteForm" onsubmit="handleInviteSignup(event)">
+        <div class="form-group">
+          <label class="form-label" for="inviteName">Nome completo</label>
+          <input class="form-control" type="text" id="inviteName" placeholder="Seu nome completo" required autocomplete="name">
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="inviteEmail">Email</label>
+          <input class="form-control" type="email" id="inviteEmail" placeholder="seu@email.com" required autocomplete="email">
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="invitePassword">Senha</label>
+          <div class="input-password-wrap">
+            <input class="form-control" type="password" id="invitePassword" placeholder="Mínimo 8 caracteres" required minlength="8" autocomplete="new-password">
+            <button type="button" class="toggle-pw" onclick="togglePw('invitePassword', this)" tabindex="-1">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+            </button>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="inviteConfirm">Confirmar senha</label>
+          <div class="input-password-wrap">
+            <input class="form-control" type="password" id="inviteConfirm" placeholder="Repita a senha" required autocomplete="new-password">
+            <button type="button" class="toggle-pw" onclick="togglePw('inviteConfirm', this)" tabindex="-1">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+            </button>
+          </div>
+        </div>
+
+        <label class="lgpd-check">
+          <input type="checkbox" id="inviteTerms" required>
+          <span>Li e concordo com os <a href="termos.html" target="_blank">Termos de Uso</a> e autorizo o uso dos meus dados, conforme a LGPD.</span>
+        </label>
+
+        <div id="inviteAlert" class="alert" style="margin-top: var(--space-md);"></div>
+
+        <button type="submit" class="btn btn-primary btn-full btn-lg" id="inviteBtn" style="margin-top: var(--space-xl);">
+          <span id="inviteBtnText">Criar minha conta</span>
+          <span id="inviteSpinner" class="spinner" style="display:none;"></span>
+        </button>
+      </form>
+    </div>
+
+    <!-- Sucesso -->
+    <div class="state-success" id="stateSuccess">
+      <span class="icon-big">✅</span>
+      <div class="success-title">Conta criada com sucesso!</div>
+      <p class="success-sub">
+        Enviamos um email de confirmação para <strong id="successEmail"></strong>.<br><br>
+        Clique no link do email para ativar sua conta e entrar no Clube dos Referidos.
+      </p>
+      <a href="index.html" class="btn btn-primary btn-full" style="margin-top: var(--space-xl); text-align:center; text-decoration:none;">
+        Ir para o login →
+      </a>
+    </div>
+
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+<script src="js/supabase-config.js"></script>
+<script>
+  let inviteToken = null;
+
+  function showState(id) {
+    ['stateLoading','stateInvalid','stateUsed','stateForm','stateSuccess'].forEach(s => {
+      document.getElementById(s).classList.remove('active');
+    });
+    document.getElementById(id).classList.add('active');
+  }
+
+  function togglePw(inputId, btn) {
+    const input = document.getElementById(inputId);
+    const isHidden = input.type === 'password';
+    input.type = isHidden ? 'text' : 'password';
+    btn.innerHTML = isHidden
+      ? '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94"/><path d="M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19"/><line x1="1" y1="1" x2="23" y2="23"/></svg>'
+      : '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>';
+  }
+
+  async function validateToken() {
+    const params = new URLSearchParams(window.location.search);
+    inviteToken = params.get('token');
+
+    if (!inviteToken) {
+      showState('stateInvalid');
+      return;
+    }
+
+    const { data, error } = await supabaseClient
+      .from('invites')
+      .select('id, used_at, expires_at')
+      .eq('token', inviteToken)
+      .single();
+
+    if (error || !data) {
+      showState('stateInvalid');
+      return;
+    }
+
+    if (data.used_at) {
+      showState('stateUsed');
+      return;
+    }
+
+    if (new Date(data.expires_at) < new Date()) {
+      showState('stateInvalid');
+      return;
+    }
+
+    showState('stateForm');
+  }
+
+  async function handleInviteSignup(e) {
+    e.preventDefault();
+    const alertEl = document.getElementById('inviteAlert');
+    alertEl.className = 'alert';
+    alertEl.textContent = '';
+
+    if (!document.getElementById('inviteTerms').checked) {
+      alertEl.textContent = 'Você precisa aceitar os Termos de Uso para continuar.';
+      alertEl.className = 'alert alert-error show';
+      return;
+    }
+
+    const name     = document.getElementById('inviteName').value.trim();
+    const email    = document.getElementById('inviteEmail').value.trim();
+    const password = document.getElementById('invitePassword').value;
+    const confirm  = document.getElementById('inviteConfirm').value;
+
+    if (password !== confirm) {
+      alertEl.textContent = 'As senhas não coincidem. Tente novamente.';
+      alertEl.className = 'alert alert-error show';
+      return;
+    }
+
+    // Loading
+    document.getElementById('inviteBtn').disabled = true;
+    document.getElementById('inviteBtnText').style.display = 'none';
+    document.getElementById('inviteSpinner').style.display = 'inline-block';
+
+    // 1. Criar conta
+    const { data, error } = await supabaseClient.auth.signUp({
+      email,
+      password,
+      options: { data: { full_name: name } }
+    });
+
+    if (error) {
+      alertEl.textContent = translateError(error.message);
+      alertEl.className = 'alert alert-error show';
+      document.getElementById('inviteBtn').disabled = false;
+      document.getElementById('inviteBtnText').style.display = 'inline';
+      document.getElementById('inviteSpinner').style.display = 'none';
+      return;
+    }
+
+    // 2. Aprovar automaticamente via RPC (função SECURITY DEFINER no Supabase)
+    if (data.user) {
+      await supabaseClient.rpc('use_invite_and_approve', {
+        p_token: inviteToken,
+        p_user_id: data.user.id,
+        p_email: email
+      });
+    }
+
+    // 3. Sucesso
+    document.getElementById('successEmail').textContent = email;
+    showState('stateSuccess');
+  }
+
+  function translateError(msg) {
+    if (msg.includes('already registered') || msg.includes('already been registered')) return 'Este email já possui uma conta cadastrada.';
+    if (msg.includes('Password should be')) return 'A senha deve ter pelo menos 8 caracteres.';
+    if (msg.includes('rate limit')) return 'Muitas tentativas. Aguarde alguns minutos.';
+    if (msg.includes('invalid email') || msg.includes('Unable to validate')) return 'Email inválido. Verifique e tente novamente.';
+    return 'Ocorreu um erro. Tente novamente em instantes.';
+  }
+
+  // Inicializar
+  document.addEventListener('DOMContentLoaded', validateToken);
+</script>
+</body>
+</html>
