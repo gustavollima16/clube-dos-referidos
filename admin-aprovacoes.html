@@ -131,7 +131,7 @@
   <!-- ── Links de Convite ─────────────────────────────────────────── -->
   <div class="section-block">
     <div class="section-block-title">🔗 Gerar Link de Convite</div>
-    <p class="section-block-sub">Crie um link exclusivo para convidar alguém. O convidado se cadastra diretamente, sem precisar de aprovação manual. Cada link expira em 7 dias e pode ser usado uma única vez.</p>
+    <p class="section-block-sub">Crie um link exclusivo para convidar alguém. O convidado se cadastra diretamente, sem precisar de aprovação manual. Cada link expira em 48 horas e pode ser usado uma única vez.</p>
 
     <button class="btn btn-primary" id="btnGerarConvite" onclick="gerarConvite()">Gerar novo link de convite</button>
 
@@ -245,7 +245,7 @@
 
     const token = data;
     const url = `${BASE_URL}/convite.html?token=${token}`;
-    const expiresAt = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000);
+    const expiresAt = new Date(Date.now() + 48 * 60 * 60 * 1000);
 
     document.getElementById('newInviteUrl').value = url;
     document.getElementById('inviteExpiryNote').textContent =
