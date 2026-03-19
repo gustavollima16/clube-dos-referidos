@@ -523,14 +523,20 @@
     .mentor-photo-wrap {
       position: relative;
       flex-shrink: 0;
-    }
-    .mentor-photo {
       width: 110px;
       height: 110px;
+      border-radius: 50%;
+      overflow: hidden;
+    }
+    .mentor-photo {
+      width: 100%;
+      height: 100%;
       border-radius: 50%;
       object-fit: cover;
       object-position: top;
       display: block;
+      transform: scale(1.3);
+      transform-origin: top center;
     }
     .mentor-photo-border {
       position: absolute;
