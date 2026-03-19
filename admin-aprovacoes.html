@@ -153,6 +153,7 @@
         <thead>
           <tr>
             <th>Link (token)</th>
+            <th>Gerado por</th>
             <th>Gerado em</th>
             <th>Expira em</th>
             <th>Status</th>
@@ -274,7 +275,7 @@
 
     const { data, error } = await supabaseClient
       .from('invites')
-      .select('token, created_at, expires_at, used_at')
+      .select('token, created_by_email, created_at, expires_at, used_at')
       .order('created_at', { ascending: false })
       .limit(30);
 
@@ -282,18 +283,24 @@
     table.style.display = 'table';
 
     if (error || !data || !data.length) {
-      tbody.innerHTML = '<tr><td colspan="4" style="color:var(--text-muted);text-align:center;padding:1.5rem;">Nenhum convite gerado ainda.</td></tr>';
+      tbody.innerHTML = '<tr><td colspan="5" style="color:var(--text-muted);text-align:center;padding:1.5rem;">Nenhum convite gerado ainda.</td></tr>';
       return;
     }
 
+    const CREATOR_NAMES = {
+      'grupoalpha.alphaville@gmail.com': 'Gustavo',
+      'juliana@brijrathi.com': 'Juliana'
+    };
+
     const now = new Date();
     tbody.innerHTML = data.map(inv => {
-      const shortToken = inv.token.substring(0, 8) + '…';
-      const fullUrl    = `${BASE_URL}/convite.html?token=${inv.token}`;
-      const createdAt  = new Date(inv.created_at).toLocaleDateString('pt-BR');
-      const expiresAt  = new Date(inv.expires_at).toLocaleDateString('pt-BR');
-      const isExpired  = new Date(inv.expires_at) < now;
-      const isUsed     = !!inv.used_at;
+      const shortToken  = inv.token.substring(0, 8) + '…';
+      const fullUrl     = `${BASE_URL}/convite.html?token=${inv.token}`;
+      const createdAt   = new Date(inv.created_at).toLocaleDateString('pt-BR');
+      const expiresAt   = new Date(inv.expires_at).toLocaleDateString('pt-BR');
+      const isExpired   = new Date(inv.expires_at) < now;
+      const isUsed      = !!inv.used_at;
+      const creatorName = CREATOR_NAMES[inv.created_by_email] || inv.created_by_email || '—';
 
       let badge;
       if (isUsed)          badge = '<span class="badge-used">Utilizado</span>';
@@ -306,6 +313,7 @@
             <span title="${fullUrl}">${shortToken}</span>
             ${!isUsed && !isExpired ? `<button onclick="copiarEspecifico('${fullUrl}', this)" style="margin-left:8px; background:transparent; border:1px solid var(--border); color:var(--accent); border-radius:4px; padding:1px 8px; font-size:0.7rem; cursor:pointer;">Copiar</button>` : ''}
           </td>
+          <td style="color:var(--text-primary); font-weight:600;">${creatorName}</td>
           <td>${createdAt}</td>
           <td>${expiresAt}</td>
           <td>${badge}</td>
