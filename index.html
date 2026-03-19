@@ -495,6 +495,110 @@
     }
     .depo-name { font-weight: 600; font-size: 0.9rem; }
     .depo-role { font-size: 0.75rem; color: var(--text-muted); }
+    /* Mentores */
+    .mentores-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: var(--space-2xl);
+      margin-bottom: var(--space-2xl);
+    }
+    .mentor-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-xl);
+      padding: var(--space-2xl);
+      display: flex;
+      gap: var(--space-xl);
+      align-items: flex-start;
+      transition: border-color var(--transition), transform var(--transition);
+    }
+    .mentor-card:hover {
+      border-color: var(--accent);
+      transform: translateY(-3px);
+    }
+    .mentor-photo-wrap {
+      position: relative;
+      flex-shrink: 0;
+    }
+    .mentor-photo {
+      width: 110px;
+      height: 110px;
+      border-radius: 50%;
+      object-fit: cover;
+      object-position: top;
+      display: block;
+    }
+    .mentor-photo-border {
+      position: absolute;
+      inset: -3px;
+      border-radius: 50%;
+      border: 2px solid var(--accent);
+      opacity: 0.6;
+      pointer-events: none;
+    }
+    .mentor-info {
+      flex: 1;
+      min-width: 0;
+    }
+    .mentor-name {
+      font-family: var(--font-display);
+      font-size: 1.35rem;
+      color: var(--text-primary);
+      margin-bottom: 4px;
+    }
+    .mentor-role {
+      font-size: 0.75rem;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: var(--space-md);
+    }
+    .mentor-creds {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-sm);
+    }
+    .mentor-creds li {
+      display: flex;
+      align-items: flex-start;
+      gap: 8px;
+      font-size: 0.855rem;
+      color: var(--text-secondary);
+      line-height: 1.5;
+    }
+    .cred-check {
+      width: 0.95rem;
+      height: 0.95rem;
+      color: var(--accent);
+      flex-shrink: 0;
+      margin-top: 3px;
+    }
+    .fa-badge {
+      background: rgba(0,200,232,0.06);
+      border: 1px solid rgba(0,200,232,0.2);
+      border-radius: var(--radius-lg);
+      padding: var(--space-lg) var(--space-xl);
+    }
+    .fa-badge-inner {
+      display: flex;
+      align-items: center;
+      gap: var(--space-md);
+      font-size: 0.875rem;
+      color: var(--text-secondary);
+      line-height: 1.6;
+    }
+    .fa-badge-inner strong { color: var(--text-primary); }
+    @media (max-width: 860px) {
+      .mentores-grid { grid-template-columns: 1fr; }
+    }
+    @media (max-width: 600px) {
+      .mentor-card { flex-direction: column; align-items: center; text-align: center; }
+      .mentor-creds li { justify-content: flex-start; text-align: left; }
+    }
     /* Formulário inscrição */
     .form-section-wrapper {
       background: var(--bg-secondary);
@@ -552,6 +656,7 @@
   <ul class="nav-links">
     <li><a href="#clube">O Clube</a></li>
     <li><a href="#somos">Quem Somos</a></li>
+    <li><a href="#mentores">Os Mentores</a></li>
     <li><a href="#depoimentos">Depoimentos</a></li>
     <li><a href="#inscricao">Aplicação</a></li>
     <li class="nav-cta"><a href="#area-membros" onclick="scrollToAuth(event)">Área de Membros</a></li>
@@ -563,6 +668,7 @@
 <div class="mobile-menu" id="mobileMenu">
   <a href="#clube" onclick="closeMobileMenu()">O Clube</a>
   <a href="#somos" onclick="closeMobileMenu()">Quem Somos</a>
+  <a href="#mentores" onclick="closeMobileMenu()">Os Mentores</a>
   <a href="#depoimentos" onclick="closeMobileMenu()">Depoimentos</a>
   <a href="#inscricao" onclick="closeMobileMenu()">Aplicação</a>
   <a href="#area-membros" onclick="scrollToAuth(event);closeMobileMenu()">Área de Membros</a>
@@ -858,6 +964,89 @@
         <img src="images/logo.png" alt="Clube dos Referidos" style="width:115%;opacity:0.5;">
       </div>
     </div>
+  </div>
+</section>
+
+<!-- ========== SEÇÃO: OS MENTORES ========== -->
+<div class="section-divider"></div>
+<section id="mentores">
+  <div class="lp-section">
+    <span class="section-tag">Os Mentores</span>
+    <h2 class="lp-title">Os profissionais por<br>trás do <span style="color:var(--accent)">método</span></h2>
+    <p class="lp-subtitle">Formados diretamente por Flávio Augusto, co-fundadores do Clube dos Referidos e referências nacionais em vendas ativas e liderança comercial.</p>
+
+    <div class="mentores-grid">
+
+      <!-- Gustavo Lima -->
+      <div class="mentor-card">
+        <div class="mentor-photo-wrap">
+          <img src="images/gustavo-lima.jpg" alt="Gustavo Lima" class="mentor-photo">
+          <div class="mentor-photo-border"></div>
+        </div>
+        <div class="mentor-info">
+          <div class="mentor-name">Gustavo Lima</div>
+          <div class="mentor-role">Co-fundador · Clube dos Referidos</div>
+          <ul class="mentor-creds">
+            <li>
+              <svg class="cred-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+              Franqueado formado diretamente por Flávio Augusto
+            </li>
+            <li>
+              <svg class="cred-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+              Proprietário Wise Up Alphaville — crescimento de 4× em 1 ano
+            </li>
+            <li>
+              <svg class="cred-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+              Especialista em vendas ativas, processos comerciais e liderança
+            </li>
+            <li>
+              <svg class="cred-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+              Mentor de médicos, clínicas e empresários de saúde
+            </li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- Juliana Daleva -->
+      <div class="mentor-card">
+        <div class="mentor-photo-wrap">
+          <img src="images/juliana-daleva.jpg" alt="Juliana Daleva" class="mentor-photo">
+          <div class="mentor-photo-border"></div>
+        </div>
+        <div class="mentor-info">
+          <div class="mentor-name">Juliana Daleva</div>
+          <div class="mentor-role">Co-fundadora · Clube dos Referidos</div>
+          <ul class="mentor-creds">
+            <li>
+              <svg class="cred-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+              Franqueada formada diretamente por Flávio Augusto
+            </li>
+            <li>
+              <svg class="cred-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+              Lidera mais de 2.500 agentes de vendas na WSP Digital – Wiser
+            </li>
+            <li>
+              <svg class="cred-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+              Especialista em escalabilidade de equipes comerciais
+            </li>
+            <li>
+              <svg class="cred-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+              Referência nacional em estruturação de processos e técnica de vendas
+            </li>
+          </ul>
+        </div>
+      </div>
+
+    </div><!-- /mentores-grid -->
+
+    <!-- Badge Flávio Augusto -->
+    <div class="fa-badge">
+      <div class="fa-badge-inner">
+        <svg style="width:1.1em;height:1.1em;color:var(--accent);flex-shrink:0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+        <span>Somos 2 dos 20 franqueados formados diretamente por <strong>Flávio Augusto da Silva</strong> — fundador da Wise Up e da Wiser Sales Platform</span>
+      </div>
+    </div>
+
   </div>
 </section>
 
