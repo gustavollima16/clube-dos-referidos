@@ -1159,21 +1159,6 @@
     applySpinner.style.display = 'inline-block';
 
     try {
-      // Verificar email duplicado
-      const { data: existing } = await supabase
-        .from('candidatos')
-        .select('id')
-        .eq('email', dados.email)
-        .maybeSingle();
-
-      if (existing) {
-        alertEl.textContent = 'Este email já realizou uma aplicação. Entre em contato pelo WhatsApp caso tenha dúvidas.';
-        alertEl.className = 'alert alert-warning show';
-        applyBtn.disabled = false;
-        applySpinner.style.display = 'none';
-        return;
-      }
-
       const { error } = await supabase.from('candidatos').insert([dados]);
       if (error) throw error;
 
