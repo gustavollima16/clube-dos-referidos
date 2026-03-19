@@ -1037,7 +1037,7 @@
     setLoading('login', false);
 
     if (result.error === 'pending_approval') {
-      showAlert('Sua conta está aguardando aprovação. Entraremos em contato em breve.', 'warning');
+      showAlert('Você receberá um e-mail em breve com a liberação do seu acesso.', 'warning');
     } else if (result.error) {
       showAlert(result.error);
     } else {

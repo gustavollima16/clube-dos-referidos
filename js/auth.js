@@ -21,11 +21,16 @@ async function checkApproved(userId) {
   return data.approved === true;
 }
 
+const ADMIN_EMAIL = 'grupoalpha.alphaville@gmail.com';
+
 // --- Login ---
 async function authLogin(email, password) {
   try {
     const { data, error } = await supabaseClient.auth.signInWithPassword({ email, password });
     if (error) throw error;
+
+    // Admin bypassa aprovação
+    if (data.user.email === ADMIN_EMAIL) return { data };
 
     const approved = await checkApproved(data.user.id);
     if (!approved) {
@@ -100,6 +105,9 @@ async function requireAuth() {
     window.location.href = 'index.html';
     return null;
   }
+  // Admin sempre tem acesso
+  if (session.user.email === ADMIN_EMAIL) return session;
+
   const approved = await checkApproved(session.user.id);
   if (!approved) {
     await supabaseClient.auth.signOut();

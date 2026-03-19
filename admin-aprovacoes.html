@@ -85,7 +85,8 @@
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 <script src="js/supabase-config.js"></script>
 <script>
-  const ADMIN_EMAIL = 'gustavolima@wiseuponline.com.br'; // troque pelo seu email de admin
+  const ADMIN_EMAIL = 'grupoalpha.alphaville@gmail.com';
+  const RESEND_API_KEY = ''; // cole aqui sua chave do Resend após criar a conta
 
   async function adminLogin() {
     const email = document.getElementById('adminEmail').value.trim();
@@ -140,13 +141,13 @@
         <td>
           ${u.approved
             ? '<span style="color:var(--text-muted);font-size:0.8rem;">✓ Liberado</span>'
-            : `<button class="btn-approve" onclick="approveUser('${u.id}', this)">Aprovar acesso</button>`}
+            : `<button class="btn-approve" onclick="approveUser('${u.id}', '${u.email}', this)">Aprovar acesso</button>`}
         </td>
       </tr>
     `).join('');
   }
 
-  async function approveUser(userId, btn) {
+  async function approveUser(userId, email, btn) {
     btn.disabled = true;
     btn.textContent = 'Aprovando...';
     const { error } = await supabaseClient.from('profiles').update({ approved: true }).eq('id', userId);
@@ -156,9 +157,48 @@
       alert('Erro ao aprovar. Tente novamente.');
       return;
     }
+    // Enviar email de aprovação via Resend
+    if (RESEND_API_KEY && email) {
+      await sendApprovalEmail(email);
+    }
     const row = document.getElementById('row-' + userId);
     row.cells[2].innerHTML = '<span class="badge-approved">Aprovado</span>';
     row.cells[3].innerHTML = '<span style="color:var(--text-muted);font-size:0.8rem;">✓ Liberado</span>';
+  }
+
+  async function sendApprovalEmail(toEmail) {
+    try {
+      await fetch('https://api.resend.com/emails', {
+        method: 'POST',
+        headers: {
+          'Authorization': 'Bearer ' + RESEND_API_KEY,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          from: 'Clube dos Referidos <noreply@clubedosreferidos.com>',
+          to: [toEmail],
+          subject: 'Clube dos Referidos — Seu acesso foi liberado! 🎉',
+          html: `
+            <div style="background:#0A0A0A;padding:40px;font-family:Arial,sans-serif;color:#fff;max-width:560px;margin:0 auto;border-radius:12px;">
+              <img src="https://clubedosreferidos.com/images/logo.png" alt="Clube dos Referidos" style="height:80px;margin-bottom:32px;">
+              <h1 style="color:#00E5FF;font-size:24px;margin-bottom:16px;">Seu acesso foi liberado!</h1>
+              <p style="color:#9CA3AF;line-height:1.7;margin-bottom:24px;">
+                Parabéns! Sua solicitação de acesso ao <strong style="color:#fff;">Clube dos Referidos</strong> foi aprovada.<br>
+                Agora você pode entrar na plataforma e acessar todo o conteúdo exclusivo.
+              </p>
+              <a href="https://clubedosreferidos.com" style="display:inline-block;background:#00E5FF;color:#000;font-weight:700;padding:14px 28px;border-radius:8px;text-decoration:none;font-size:15px;">
+                Acessar minha conta →
+              </a>
+              <p style="color:#555;font-size:12px;margin-top:32px;border-top:1px solid #222;padding-top:16px;">
+                Clube dos Referidos · clubedosreferidos.com
+              </p>
+            </div>
+          `
+        })
+      });
+    } catch(e) {
+      console.error('Erro ao enviar email:', e);
+    }
   }
 </script>
 </body>
