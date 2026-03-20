@@ -431,29 +431,36 @@
 
   // Stemmer leve para português: reduz plural → singular por palavra
   function stemPT(word) {
-    if (word.endsWith('ais') && word.length > 4) return word.slice(0, -3) + 'al'; // comerciais→comercial
-    if (word.endsWith('eis') && word.length > 4) return word.slice(0, -3) + 'el'; // papéis→papel
-    if (word.endsWith('ns')  && word.length > 3) return word.slice(0, -2) + 'm';  // bons→bom
-    if (word.endsWith('s')   && word.length > 3) return word.slice(0, -1);        // times→time, vendas→venda
+    if (word.endsWith('ais') && word.length > 4) return word.slice(0, -3) + 'al';
+    if (word.endsWith('eis') && word.length > 4) return word.slice(0, -3) + 'el';
+    if (word.endsWith('ns')  && word.length > 3) return word.slice(0, -2) + 'm';
+    if (word.endsWith('s')   && word.length > 3) return word.slice(0, -1);
     return word;
   }
 
-  // Normaliza uma tag inteira: lowercase + stemming por palavra
+  // Normaliza uma tag: lowercase + stem — "Times Comerciais" → "time comercial"
   function normalizeTag(tag) {
     return tag.trim().toLowerCase().split(/\s+/).map(stemPT).join(' ');
   }
 
+  // Expande tags que usam "/" como separador: "Wise Up / WSP" → ["Wise Up", "WSP"]
+  function expandTags(tags) {
+    return (tags || []).flatMap(tag =>
+      tag.split('/').map(t => t.trim()).filter(Boolean)
+    );
+  }
+
   function buildTagsFilter() {
-    // Agrupa por chave normalizada; usa a forma mais longa como label do botão
     const seen = new Map(); // chave normalizada → label de exibição
-    MEMBROS.flatMap(m => m.tags || []).forEach(tag => {
+    // Expande "/" antes de normalizar
+    MEMBROS.flatMap(m => expandTags(m.tags)).forEach(tag => {
       const raw = tag.trim();
       const key = normalizeTag(raw);
       if (!key) return;
       if (!seen.has(key)) {
         seen.set(key, raw);
       } else {
-        // Prefere a forma mais longa (ex: "Vendas Ativas" > "Venda Ativa")
+        // Prefere a forma mais longa como label
         if (raw.length > seen.get(key).length) seen.set(key, raw);
       }
     });
@@ -471,7 +478,7 @@
   }
 
   function filterTag(tagKey, btn) {
-    activeTag = tagKey; // null = todos, ou chave normalizada
+    activeTag = tagKey;
     document.querySelectorAll('.tag-btn').forEach(b => b.classList.remove('active'));
     btn.classList.add('active');
     renderMembers();
@@ -484,8 +491,9 @@
 
   function getFilteredMembers() {
     return MEMBROS.filter(m => {
-      // Compara tag normalizada — ignora capitalização e singular/plural
-      const matchesTag = !activeTag || (m.tags || []).some(t => normalizeTag(t) === activeTag);
+      // Expande "/" e compara cada sub-tag normalizada
+      const matchesTag = !activeTag ||
+        expandTags(m.tags).some(t => normalizeTag(t) === activeTag);
       const matchesSearch = !searchQuery || [
         m.name, m.role, m.company, m.city, m.bio, ...(m.tags || [])
       ].join(' ').toLowerCase().includes(searchQuery);
