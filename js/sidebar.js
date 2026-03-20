@@ -75,11 +75,12 @@ function buildSidebar(user, photoUrl) {
             : `<span class="sidebar-member-photo-initials">${initials}</span>`
           }
         </a>
-        <!-- Logo -->
-        <a href="dashboard.html">
-          <img src="images/logo.png" alt="Clube dos Referidos" style="height:52px;width:auto;max-width:150px;">
-        </a>
       </div>
+
+    <!-- Logo fixada no canto superior direito da tela -->
+    <a href="dashboard.html" class="site-logo-fixed">
+      <img src="images/logo.png" alt="Clube dos Referidos">
+    </a>
 
       <nav class="sidebar-nav">
         ${navHTML}

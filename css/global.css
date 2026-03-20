@@ -153,22 +153,21 @@ p {
   display: none;
 }
 
-/* ── Sidebar header: foto do membro (esq) + logo (dir) ── */
+/* ── Sidebar header: só foto do membro ── */
 .sidebar-header {
-  padding: var(--space-md) var(--space-lg);
+  padding: var(--space-lg) var(--space-lg) var(--space-md);
   border-bottom: 1px solid var(--border-subtle);
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  gap: var(--space-sm);
+  justify-content: center;
 }
 
 .sidebar-member-photo {
-  width: 46px;
-  height: 46px;
+  width: 72px;
+  height: 72px;
   border-radius: 50%;
   overflow: hidden;
-  border: 2px solid var(--border-subtle);
+  border: 2.5px solid var(--border-subtle);
   background: var(--bg-secondary);
   display: flex;
   align-items: center;
@@ -180,7 +179,7 @@ p {
 
 .sidebar-member-photo:hover {
   border-color: var(--accent);
-  box-shadow: 0 0 0 3px rgba(0,200,232,0.15);
+  box-shadow: 0 0 0 4px rgba(0,200,232,0.15);
 }
 
 .sidebar-member-photo img {
@@ -191,9 +190,26 @@ p {
 
 .sidebar-member-photo-initials {
   font-family: var(--font-display);
-  font-size: 1.05rem;
+  font-size: 1.6rem;
   color: var(--accent);
   line-height: 1;
+}
+
+/* ── Logo fixa no canto superior direito da tela ── */
+.site-logo-fixed {
+  position: fixed;
+  top: 18px;
+  right: 24px;
+  z-index: 90;
+  opacity: 0.9;
+  transition: opacity var(--transition);
+}
+
+.site-logo-fixed:hover { opacity: 1; }
+
+.site-logo-fixed img {
+  height: 52px;
+  width: auto;
 }
 
 /* mantido por compatibilidade — não usado no novo layout */
