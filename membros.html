@@ -163,9 +163,10 @@
     }
 
     .member-avatar img {
-      width: 100%;
-      height: 100%;
+      width: 150%;
+      height: 150%;
       object-fit: cover;
+      position: absolute;
     }
 
     .member-avatar-initials {
@@ -408,7 +409,7 @@
 
     const { data, error } = await supabaseClient
       .from('profiles')
-      .select('id, full_name, email, role, company, city, bio, photo_url, instagram, linkedin, whatsapp, tags, show_in_directory, approved')
+      .select('id, full_name, email, role, company, city, bio, photo_url, photo_offset_x, photo_offset_y, instagram, linkedin, whatsapp, tags, show_in_directory, approved')
       .eq('approved', true)
       .eq('show_in_directory', true)
       .order('full_name', { ascending: true });
@@ -418,6 +419,8 @@
           id: p.id, name: p.full_name, role: p.role || 'Membro',
           company: p.company || '', city: p.city || '—', bio: p.bio || '',
           photo: p.photo_url || '',
+          photoOffsetX: p.photo_offset_x ?? 50,
+          photoOffsetY: p.photo_offset_y ?? 50,
           socials: { instagram: p.instagram || '', linkedin: p.linkedin || '', whatsapp: p.whatsapp || '' },
           tags: p.tags || [], featured: false,
         }))
@@ -494,9 +497,16 @@
   function renderMemberCard(membro) {
     const initials = membro.name.split(' ').map(w => w[0]).slice(0, 2).join('').toUpperCase();
 
-    const avatarHTML = membro.photo
-      ? `<img src="${membro.photo}" alt="${membro.name}" loading="lazy">`
-      : `<div class="member-avatar-initials">${initials}</div>`;
+    let avatarHTML;
+    if (membro.photo) {
+      const ox = membro.photoOffsetX ?? 50;
+      const oy = membro.photoOffsetY ?? 50;
+      const tx = ((ox - 50) / 50) * 25;
+      const ty = ((oy - 50) / 50) * 25;
+      avatarHTML = `<img src="${membro.photo}" alt="${membro.name}" loading="lazy" style="transform:translate(${tx}%,${ty}%)">`;
+    } else {
+      avatarHTML = `<div class="member-avatar-initials">${initials}</div>`;
+    }
 
     const featuredBadge = membro.featured
       ? `<div class="featured-badge" title="Membro fundador"><svg viewBox="0 0 24 24" fill="currentColor" stroke="none"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></div>`

@@ -13,7 +13,6 @@
       align-items: start;
     }
 
-    /* ── Coluna esquerda: foto + preview ── */
     .perfil-sidebar-card {
       background: var(--bg-card);
       border: 1px solid var(--border-subtle);
@@ -24,19 +23,18 @@
       top: var(--space-xl);
     }
 
-    .avatar-upload-wrapper {
+    /* ── Foto: upload + arrastar ── */
+    .avatar-area {
       position: relative;
-      width: 100px;
-      height: 100px;
-      margin: 0 auto var(--space-lg);
-      cursor: pointer;
+      width: 110px;
+      height: 110px;
+      margin: 0 auto var(--space-md);
+      user-select: none;
     }
 
-    .avatar-upload-wrapper:hover .avatar-overlay { opacity: 1; }
-
     .avatar-circle {
-      width: 100px;
-      height: 100px;
+      width: 110px;
+      height: 110px;
       border-radius: 50%;
       overflow: hidden;
       border: 3px solid var(--border);
@@ -44,36 +42,79 @@
       display: flex;
       align-items: center;
       justify-content: center;
+      position: relative;
     }
 
     .avatar-circle img {
-      width: 100%; height: 100%; object-fit: cover;
+      width: 150%;
+      height: 150%;
+      object-fit: cover;
+      position: absolute;
+      cursor: grab;
+      transition: none;
     }
+
+    .avatar-circle img.dragging { cursor: grabbing; }
 
     .avatar-initials {
       font-family: var(--font-display);
-      font-size: 2.2rem;
+      font-size: 2.4rem;
       color: var(--accent);
     }
 
+    /* Overlay: hover mostra opções */
     .avatar-overlay {
       position: absolute;
       inset: 0;
       border-radius: 50%;
-      background: rgba(0,0,0,0.6);
+      background: rgba(0,0,0,0.65);
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
       opacity: 0;
-      transition: opacity var(--transition);
+      transition: opacity 0.2s;
       gap: 4px;
       color: #fff;
-      font-size: 0.7rem;
+      font-size: 0.68rem;
+      pointer-events: none;
     }
+
+    .avatar-area:hover .avatar-overlay { opacity: 1; }
+
+    .avatar-btn-row {
+      display: flex;
+      gap: 6px;
+      margin-bottom: var(--space-sm);
+    }
+
+    .avatar-action-btn {
+      background: rgba(255,255,255,0.15);
+      border: 1px solid rgba(255,255,255,0.3);
+      color: #fff;
+      border-radius: 50%;
+      width: 30px; height: 30px;
+      display: flex; align-items: center; justify-content: center;
+      cursor: pointer;
+      transition: background 0.2s;
+      pointer-events: all;
+      font-size: 0;
+    }
+
+    .avatar-action-btn:hover { background: rgba(255,255,255,0.3); }
+
+    .avatar-drag-hint {
+      font-size: 0.65rem;
+      color: var(--text-muted);
+      margin-top: 6px;
+      display: none;
+    }
+
+    .avatar-drag-hint.visible { display: block; }
 
     #photoInput { display: none; }
 
+    /* Preview */
     .preview-name {
       font-family: var(--font-display);
       font-size: 1.2rem;
@@ -115,12 +156,8 @@
       text-align: left;
     }
 
-    /* ── Coluna direita: formulários ── */
-    .perfil-forms {
-      display: flex;
-      flex-direction: column;
-      gap: var(--space-xl);
-    }
+    /* Formulários */
+    .perfil-forms { display: flex; flex-direction: column; gap: var(--space-xl); }
 
     .perfil-section {
       background: var(--bg-card);
@@ -154,10 +191,6 @@
       gap: var(--space-md);
     }
 
-    .tags-input-wrapper {
-      position: relative;
-    }
-
     .tags-preview {
       display: flex;
       flex-wrap: wrap;
@@ -177,50 +210,6 @@
       color: var(--accent);
     }
 
-    .directory-toggle {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: var(--space-md);
-      background: var(--bg-secondary);
-      border: 1px solid var(--border-subtle);
-      border-radius: var(--radius-md);
-      cursor: pointer;
-      transition: all var(--transition);
-    }
-
-    .directory-toggle:hover {
-      border-color: var(--accent);
-      background: var(--accent-dim);
-    }
-
-    .toggle-switch {
-      width: 40px; height: 22px;
-      background: var(--border-subtle);
-      border-radius: 11px;
-      position: relative;
-      transition: background var(--transition);
-      flex-shrink: 0;
-    }
-
-    .toggle-switch::after {
-      content: '';
-      position: absolute;
-      width: 16px; height: 16px;
-      background: #fff;
-      border-radius: 50%;
-      top: 3px; left: 3px;
-      transition: transform var(--transition);
-    }
-
-    .toggle-switch.on {
-      background: var(--accent);
-    }
-
-    .toggle-switch.on::after {
-      transform: translateX(18px);
-    }
-
     .input-password-wrap { position: relative; }
     .input-password-wrap .form-control { padding-right: 2.8rem; }
     .toggle-pw {
@@ -233,6 +222,7 @@
     .save-row {
       display: flex;
       justify-content: flex-end;
+      align-items: center;
       gap: var(--space-md);
       margin-top: var(--space-xl);
       padding-top: var(--space-lg);
@@ -255,27 +245,32 @@
 
     <div class="page-header">
       <h1>Meu Perfil</h1>
-      <p>Atualize seus dados, foto e informações de contato.</p>
+      <p>Atualize seus dados, foto e informações de contato. Ao salvar, seu card aparece automaticamente no Painel de Membros.</p>
     </div>
 
     <div class="page-body">
-
       <div class="perfil-grid">
 
-        <!-- ── Coluna esquerda: preview ── -->
+        <!-- ── Preview ── -->
         <div class="perfil-sidebar-card">
 
-          <!-- Upload de foto -->
-          <div class="avatar-upload-wrapper" onclick="document.getElementById('photoInput').click()">
+          <div class="avatar-area" id="avatarArea">
             <div class="avatar-circle" id="avatarCircle">
               <span class="avatar-initials" id="avatarInitials"></span>
             </div>
-            <div class="avatar-overlay">
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>
-              Trocar foto
+            <div class="avatar-overlay" id="avatarOverlay">
+              <div class="avatar-btn-row">
+                <!-- Trocar foto -->
+                <button class="avatar-action-btn" title="Trocar foto" onclick="document.getElementById('photoInput').click()">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>
+                </button>
+              </div>
+              <span style="font-size:0.65rem;">Trocar foto</span>
+              <span id="dragHintOverlay" style="font-size:0.6rem; margin-top:2px; display:none;">Arraste para ajustar</span>
             </div>
           </div>
           <input type="file" id="photoInput" accept="image/*" onchange="handlePhotoSelect(event)">
+          <div class="avatar-drag-hint" id="dragHint">↕ Arraste a foto para ajustar a posição</div>
 
           <div class="preview-name" id="previewName">—</div>
           <div class="preview-role" id="previewRole">—</div>
@@ -289,10 +284,12 @@
 
           <p class="preview-bio" id="previewBio" style="color:var(--text-muted); font-style:italic;">Sua bio aparecerá aqui...</p>
 
-          <div id="uploadProgress" style="display:none; margin-top:var(--space-md); font-size:0.78rem; color:var(--accent);">Fazendo upload...</div>
+          <div id="uploadProgress" style="display:none; margin-top:var(--space-md); font-size:0.78rem; color:var(--accent);">
+            Fazendo upload da foto...
+          </div>
         </div>
 
-        <!-- ── Coluna direita: formulários ── -->
+        <!-- ── Formulários ── -->
         <div class="perfil-forms">
 
           <!-- Dados pessoais -->
@@ -301,7 +298,7 @@
               <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
               Dados do Perfil
             </div>
-            <p class="perfil-section-sub">Suas informações que aparecerão no diretório de membros.</p>
+            <p class="perfil-section-sub">Suas informações aparecerão automaticamente no Painel de Membros ao salvar.</p>
 
             <div class="form-row">
               <div class="form-group">
@@ -336,15 +333,6 @@
               <div class="tags-preview" id="tagsPreview"></div>
             </div>
 
-            <!-- Visibilidade no diretório -->
-            <div class="directory-toggle" onclick="toggleDirectory()">
-              <div>
-                <div style="font-size:0.9rem; font-weight:600; color:var(--text-primary);">Aparecer no diretório de membros</div>
-                <div style="font-size:0.78rem; color:var(--text-muted); margin-top:2px;">Outros membros poderão ver seu perfil na página Membros</div>
-              </div>
-              <div class="toggle-switch on" id="directoryToggle"></div>
-            </div>
-
             <div class="save-row">
               <div id="profileAlert" class="alert" style="flex:1;"></div>
               <button class="btn btn-primary" onclick="saveProfile()">
@@ -360,7 +348,7 @@
               <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
               Redes Sociais
             </div>
-            <p class="perfil-section-sub">Seus links aparecerão no seu card no diretório de membros.</p>
+            <p class="perfil-section-sub">Seus links aparecerão no seu card no Painel de Membros.</p>
 
             <div class="form-group">
               <label class="form-label">
@@ -407,7 +395,6 @@
               <label class="form-label">E-mail atual</label>
               <input class="form-control" type="email" id="currentEmail" disabled style="opacity:0.5; cursor:default;">
             </div>
-
             <div class="form-group">
               <label class="form-label">Novo e-mail</label>
               <input class="form-control" type="email" id="fieldNewEmail" placeholder="novo@email.com">
@@ -436,7 +423,6 @@
                 </button>
               </div>
             </div>
-
             <div class="form-group">
               <label class="form-label">Confirmar nova senha</label>
               <div class="input-password-wrap">
@@ -455,10 +441,9 @@
 
         </div><!-- /perfil-forms -->
       </div><!-- /perfil-grid -->
-
     </div><!-- /page-body -->
-  </div><!-- /main-content -->
-</div><!-- /app-layout -->
+  </div>
+</div>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 <script src="js/supabase-config.js"></script>
@@ -466,27 +451,24 @@
 <script src="js/sidebar.js"></script>
 <script>
   let currentUser = null;
-  let showInDirectory = true;
   let newPhotoFile = null;
+  // Posição da foto no círculo (0–100%)
+  let photoOffsetX = 50;
+  let photoOffsetY = 50;
 
+  // ── Inicialização ──
   document.addEventListener('DOMContentLoaded', async () => {
     const session = await requireAuth();
     if (!session) return;
     currentUser = session.user;
 
-    // Email atual
     document.getElementById('currentEmail').value = currentUser.email || '';
 
-    // Carregar perfil do Supabase
     const { data: profile } = await supabaseClient
-      .from('profiles')
-      .select('*')
-      .eq('id', currentUser.id)
-      .single();
+      .from('profiles').select('*').eq('id', currentUser.id).single();
 
     if (profile) {
-      const name = profile.full_name || currentUser.user_metadata?.full_name || '';
-      document.getElementById('fieldName').value      = name;
+      document.getElementById('fieldName').value      = profile.full_name || currentUser.user_metadata?.full_name || '';
       document.getElementById('fieldRole').value      = profile.role || '';
       document.getElementById('fieldCompany').value   = profile.company || '';
       document.getElementById('fieldCity').value      = profile.city || '';
@@ -495,20 +477,21 @@
       document.getElementById('fieldInstagram').value = profile.instagram || '';
       document.getElementById('fieldLinkedin').value  = profile.linkedin || '';
       document.getElementById('fieldWhatsapp').value  = profile.whatsapp || '';
-      showInDirectory = profile.show_in_directory !== false;
+
+      photoOffsetX = profile.photo_offset_x ?? 50;
+      photoOffsetY = profile.photo_offset_y ?? 50;
 
       if (profile.photo_url) {
-        document.getElementById('avatarCircle').innerHTML = `<img src="${profile.photo_url}" alt="${name}">`;
+        setAvatarImg(profile.photo_url);
       }
     }
 
-    // Inicializar sidebar e então atualizar com dados do perfil
     await initSidebar();
     updatePreview();
     updateTags();
-    updateDirectoryToggle();
   });
 
+  // ── Preview ──
   function updatePreview() {
     const name    = document.getElementById('fieldName').value.trim() || '—';
     const role    = document.getElementById('fieldRole').value.trim() || '—';
@@ -524,7 +507,6 @@
     document.getElementById('previewBio').style.fontStyle = bio ? 'normal' : 'italic';
     document.getElementById('previewBio').style.color     = bio ? 'var(--text-secondary)' : 'var(--text-muted)';
 
-    // Iniciais do avatar (se não tem foto)
     if (!document.getElementById('avatarCircle').querySelector('img')) {
       const initials = name.split(' ').filter(Boolean).map(w => w[0]).slice(0,2).join('').toUpperCase() || '?';
       document.getElementById('avatarInitials').textContent = initials;
@@ -532,39 +514,108 @@
   }
 
   function updateTags() {
-    const raw  = document.getElementById('fieldTags').value;
-    const tags = raw.split(',').map(t => t.trim()).filter(Boolean);
-    document.getElementById('tagsPreview').innerHTML = tags.map(t =>
-      `<span class="tag-chip">${t}</span>`
-    ).join('');
+    const tags = document.getElementById('fieldTags').value.split(',').map(t => t.trim()).filter(Boolean);
+    document.getElementById('tagsPreview').innerHTML = tags.map(t => `<span class="tag-chip">${t}</span>`).join('');
   }
 
-  function toggleDirectory() {
-    showInDirectory = !showInDirectory;
-    updateDirectoryToggle();
-  }
-
-  function updateDirectoryToggle() {
-    const el = document.getElementById('directoryToggle');
-    el.classList.toggle('on', showInDirectory);
-  }
-
-  // ── Trocar foto ──
+  // ── Foto: selecionar ──
   function handlePhotoSelect(e) {
     const file = e.target.files[0];
     if (!file) return;
     newPhotoFile = file;
+    photoOffsetX = 50;
+    photoOffsetY = 50;
 
     const reader = new FileReader();
     reader.onload = (ev) => {
-      document.getElementById('avatarCircle').innerHTML = `<img src="${ev.target.result}" alt="preview">`;
+      setAvatarImg(ev.target.result);
+      document.getElementById('dragHint').classList.add('visible');
+      document.getElementById('dragHintOverlay').style.display = 'block';
     };
     reader.readAsDataURL(file);
   }
 
+  function setAvatarImg(src) {
+    const circle = document.getElementById('avatarCircle');
+    // Remove initials, add img
+    circle.innerHTML = '';
+    const img = document.createElement('img');
+    img.src = src;
+    img.alt = 'Foto de perfil';
+    applyImgPosition(img);
+    circle.appendChild(img);
+    initDrag(img);
+
+    document.getElementById('dragHint').classList.add('visible');
+    document.getElementById('dragHintOverlay').style.display = 'block';
+  }
+
+  function applyImgPosition(img) {
+    // Usa translate para mover a imagem dentro do círculo
+    // Imagem é 150% do container, então pode mover ±25% do tamanho do container
+    const maxOffset = 25; // % do container
+    const tx = (photoOffsetX - 50) / 50 * maxOffset;
+    const ty = (photoOffsetY - 50) / 50 * maxOffset;
+    img.style.transform = `translate(${tx}%, ${ty}%)`;
+  }
+
+  // ── Foto: arrastar para reposicionar (como WhatsApp) ──
+  function initDrag(img) {
+    let dragging = false;
+    let startX, startY, startOffX, startOffY;
+
+    img.addEventListener('mousedown', (e) => {
+      e.preventDefault();
+      dragging = true;
+      startX = e.clientX;
+      startY = e.clientY;
+      startOffX = photoOffsetX;
+      startOffY = photoOffsetY;
+      img.classList.add('dragging');
+    });
+
+    document.addEventListener('mousemove', (e) => {
+      if (!dragging) return;
+      const circle = document.getElementById('avatarCircle');
+      const size = circle.offsetWidth;
+      const dx = (e.clientX - startX) / size * 100;
+      const dy = (e.clientY - startY) / size * 100;
+      photoOffsetX = Math.max(0, Math.min(100, startOffX + dx));
+      photoOffsetY = Math.max(0, Math.min(100, startOffY + dy));
+      applyImgPosition(img);
+    });
+
+    document.addEventListener('mouseup', () => {
+      if (dragging) {
+        dragging = false;
+        img.classList.remove('dragging');
+      }
+    });
+
+    // Touch support
+    img.addEventListener('touchstart', (e) => {
+      const t = e.touches[0];
+      startX = t.clientX; startY = t.clientY;
+      startOffX = photoOffsetX; startOffY = photoOffsetY;
+    });
+
+    img.addEventListener('touchmove', (e) => {
+      e.preventDefault();
+      const t = e.touches[0];
+      const circle = document.getElementById('avatarCircle');
+      const size = circle.offsetWidth;
+      const dx = (t.clientX - startX) / size * 100;
+      const dy = (t.clientY - startY) / size * 100;
+      photoOffsetX = Math.max(0, Math.min(100, startOffX + dx));
+      photoOffsetY = Math.max(0, Math.min(100, startOffY + dy));
+      applyImgPosition(img);
+    }, { passive: false });
+  }
+
+  // ── Upload da foto ──
   async function uploadPhoto() {
     if (!newPhotoFile) return null;
-    const ext  = newPhotoFile.name.split('.').pop();
+    const ext  = newPhotoFile.name.split('.').pop().toLowerCase();
     const path = `perfis/${currentUser.id}.${ext}`;
 
     document.getElementById('uploadProgress').style.display = 'block';
@@ -584,53 +635,47 @@
   // ── Salvar perfil ──
   async function saveProfile() {
     const alertEl = document.getElementById('profileAlert');
-    alertEl.className = 'alert';
-    alertEl.textContent = '';
+    alertEl.className = 'alert'; alertEl.textContent = '';
 
-    const name    = document.getElementById('fieldName').value.trim();
-    const role    = document.getElementById('fieldRole').value.trim();
-    const company = document.getElementById('fieldCompany').value.trim();
-    const city    = document.getElementById('fieldCity').value.trim();
-    const bio     = document.getElementById('fieldBio').value.trim();
-    const tags    = document.getElementById('fieldTags').value.split(',').map(t => t.trim()).filter(Boolean);
-
-    // Upload de foto (se selecionada)
     let photoUrl = null;
     if (newPhotoFile) {
       photoUrl = await uploadPhoto();
+      if (!photoUrl) {
+        alertEl.textContent = 'Erro ao fazer upload da foto.';
+        alertEl.className = 'alert alert-error show'; return;
+      }
     }
+
+    const name = document.getElementById('fieldName').value.trim();
+    const tags = document.getElementById('fieldTags').value.split(',').map(t => t.trim()).filter(Boolean);
 
     const updates = {
       full_name:         name,
-      role,
-      company,
-      city,
-      bio,
+      role:              document.getElementById('fieldRole').value.trim(),
+      company:           document.getElementById('fieldCompany').value.trim(),
+      city:              document.getElementById('fieldCity').value.trim(),
+      bio:               document.getElementById('fieldBio').value.trim(),
       tags,
-      show_in_directory: showInDirectory,
+      show_in_directory: true,   // sempre aparece no painel
+      photo_offset_x:    Math.round(photoOffsetX),
+      photo_offset_y:    Math.round(photoOffsetY),
       updated_at:        new Date().toISOString(),
     };
 
     if (photoUrl) updates.photo_url = photoUrl;
 
-    const { error } = await supabaseClient
-      .from('profiles')
-      .update(updates)
-      .eq('id', currentUser.id);
+    const { error } = await supabaseClient.from('profiles').update(updates).eq('id', currentUser.id);
 
     if (error) {
       alertEl.textContent = 'Erro ao salvar. Tente novamente.';
-      alertEl.className = 'alert alert-error show';
-      return;
+      alertEl.className = 'alert alert-error show'; return;
     }
 
-    // Atualizar metadados do auth também
     await supabaseClient.auth.updateUser({ data: { full_name: name } });
-
     newPhotoFile = null;
-    alertEl.textContent = 'Perfil salvo com sucesso!';
+    alertEl.textContent = '✓ Perfil salvo! Você já aparece no Painel de Membros.';
     alertEl.className = 'alert alert-success show';
-    setTimeout(() => { alertEl.className = 'alert'; }, 3000);
+    setTimeout(() => { alertEl.className = 'alert'; }, 4000);
   }
 
   // ── Salvar redes sociais ──
@@ -638,22 +683,17 @@
     const alertEl = document.getElementById('socialsAlert');
     alertEl.className = 'alert';
 
-    const { error } = await supabaseClient
-      .from('profiles')
-      .update({
-        instagram: document.getElementById('fieldInstagram').value.trim(),
-        linkedin:  document.getElementById('fieldLinkedin').value.trim(),
-        whatsapp:  document.getElementById('fieldWhatsapp').value.trim(),
-      })
-      .eq('id', currentUser.id);
+    const { error } = await supabaseClient.from('profiles').update({
+      instagram: document.getElementById('fieldInstagram').value.trim(),
+      linkedin:  document.getElementById('fieldLinkedin').value.trim(),
+      whatsapp:  document.getElementById('fieldWhatsapp').value.trim(),
+    }).eq('id', currentUser.id);
 
     if (error) {
       alertEl.textContent = 'Erro ao salvar. Tente novamente.';
-      alertEl.className = 'alert alert-error show';
-      return;
+      alertEl.className = 'alert alert-error show'; return;
     }
-
-    alertEl.textContent = 'Redes sociais salvas!';
+    alertEl.textContent = '✓ Redes sociais salvas!';
     alertEl.className = 'alert alert-success show';
     setTimeout(() => { alertEl.className = 'alert'; }, 3000);
   }
@@ -666,18 +706,14 @@
 
     if (!newEmail) {
       alertEl.textContent = 'Digite o novo e-mail.';
-      alertEl.className = 'alert alert-error show';
-      return;
+      alertEl.className = 'alert alert-error show'; return;
     }
 
     const { error } = await supabaseClient.auth.updateUser({ email: newEmail });
-
     if (error) {
       alertEl.textContent = 'Erro: ' + error.message;
-      alertEl.className = 'alert alert-error show';
-      return;
+      alertEl.className = 'alert alert-error show'; return;
     }
-
     alertEl.textContent = 'Confirmação enviada para ' + newEmail + '. Verifique sua caixa de entrada.';
     alertEl.className = 'alert alert-success show';
     document.getElementById('fieldNewEmail').value = '';
@@ -685,32 +721,26 @@
 
   // ── Trocar senha ──
   async function changePassword() {
-    const alertEl  = document.getElementById('pwAlert');
-    const pw       = document.getElementById('fieldNewPw').value;
-    const confirm  = document.getElementById('fieldConfirmPw').value;
+    const alertEl = document.getElementById('pwAlert');
+    const pw      = document.getElementById('fieldNewPw').value;
+    const confirm = document.getElementById('fieldConfirmPw').value;
     alertEl.className = 'alert';
 
     if (pw.length < 8) {
       alertEl.textContent = 'A senha deve ter pelo menos 8 caracteres.';
-      alertEl.className = 'alert alert-error show';
-      return;
+      alertEl.className = 'alert alert-error show'; return;
     }
-
     if (pw !== confirm) {
       alertEl.textContent = 'As senhas não coincidem.';
-      alertEl.className = 'alert alert-error show';
-      return;
+      alertEl.className = 'alert alert-error show'; return;
     }
 
     const { error } = await supabaseClient.auth.updateUser({ password: pw });
-
     if (error) {
       alertEl.textContent = 'Erro: ' + error.message;
-      alertEl.className = 'alert alert-error show';
-      return;
+      alertEl.className = 'alert alert-error show'; return;
     }
-
-    alertEl.textContent = 'Senha alterada com sucesso!';
+    alertEl.textContent = '✓ Senha alterada com sucesso!';
     alertEl.className = 'alert alert-success show';
     document.getElementById('fieldNewPw').value = '';
     document.getElementById('fieldConfirmPw').value = '';
