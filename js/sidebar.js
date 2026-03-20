@@ -123,16 +123,13 @@ async function initSidebar() {
     mount.innerHTML = buildSidebar(user, photoUrl);
   }
 
-  // Logo sempre visível no canto superior direito
-  // sticky+height:0 não depende de position:fixed (que falha com overflow no body)
-  if (!document.getElementById('logo-barra')) {
-    const barra = document.createElement('div');
-    barra.id = 'logo-barra';
-    barra.style.cssText = 'position:sticky;top:0;height:0;overflow:visible;z-index:9999;pointer-events:none;';
-
+  // Logo fixa no canto superior direito — position:fixed funciona agora que
+  // overflow-x está no <html> (não no <body>), sem criar novo containing block
+  if (!document.getElementById('logo-fixa')) {
     const a = document.createElement('a');
+    a.id = 'logo-fixa';
     a.href = 'dashboard.html';
-    a.style.cssText = 'position:absolute;top:16px;right:20px;display:block;line-height:0;pointer-events:all;';
+    a.style.cssText = 'position:fixed;top:16px;right:20px;z-index:99999;display:block;line-height:0;';
 
     const img = document.createElement('img');
     img.src = 'images/logo.png';
@@ -140,10 +137,7 @@ async function initSidebar() {
     img.style.cssText = 'height:104px;width:auto;display:block;';
 
     a.appendChild(img);
-    barra.appendChild(a);
-
-    const main = document.querySelector('.main-content');
-    if (main) main.insertBefore(barra, main.firstChild);
+    document.body.appendChild(a);
   }
 
   // Mobile menu toggle

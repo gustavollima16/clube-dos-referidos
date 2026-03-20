@@ -69,6 +69,7 @@ html {
   scroll-behavior: smooth;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  overflow-x: hidden; /* controla scroll horizontal no nível do html, não interfere com position:fixed */
 }
 
 body {
@@ -77,7 +78,7 @@ body {
   color: var(--text-primary);
   line-height: 1.6;
   min-height: 100vh;
-  overflow-x: clip; /* clip não quebra position:fixed (hidden quebra) */
+  /* sem overflow-x aqui — body com overflow visível preserva position:fixed */
 }
 
 img {
