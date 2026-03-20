@@ -1,0 +1,438 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Newsletter — Clube dos Referidos</title>
+  <link rel="stylesheet" href="css/global.css">
+  <style>
+
+    /* ── Filtros ── */
+    .filter-row {
+      display: flex;
+      gap: var(--space-sm);
+      flex-wrap: wrap;
+      margin-bottom: var(--space-xl);
+    }
+
+    .filter-btn {
+      padding: 0.38rem 1rem;
+      background: var(--bg-card);
+      border: 1px solid var(--border-subtle);
+      border-radius: 2rem;
+      color: var(--text-secondary);
+      font-size: 0.8rem;
+      font-weight: 500;
+      font-family: var(--font-body);
+      cursor: pointer;
+      transition: all var(--transition);
+    }
+
+    .filter-btn:hover,
+    .filter-btn.active {
+      background: var(--accent-dim);
+      border-color: var(--accent);
+      color: var(--accent);
+    }
+
+    /* ── Grid de artigos ── */
+    .articles-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+      gap: var(--space-xl);
+    }
+
+    /* ── Card de artigo ── */
+    .article-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-xl);
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      transition: all var(--transition);
+    }
+
+    .article-card:hover {
+      border-color: var(--accent);
+      transform: translateY(-4px);
+      box-shadow: 0 0 0 1px rgba(0,200,232,0.3), 0 12px 40px rgba(0,200,232,0.12);
+    }
+
+    /* Faixa de cor no topo do card */
+    .article-cover {
+      height: 6px;
+      background: var(--accent);
+    }
+
+    .article-cover.mentor    { background: linear-gradient(90deg, #00C8E8, #0099b3); }
+    .article-cover.mentorado { background: linear-gradient(90deg, #7c3aed, #a855f7); }
+    .article-cover.convidado { background: linear-gradient(90deg, #f59e0b, #f97316); }
+
+    /* Corpo do card */
+    .article-body {
+      padding: var(--space-xl);
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* Cabeçalho: badge + data */
+    .article-meta-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: var(--space-md);
+    }
+
+    .article-badge {
+      font-size: 0.68rem;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      padding: 3px 10px;
+      border-radius: 2rem;
+    }
+
+    .article-badge.mentor    { background: rgba(0,200,232,0.12);  color: var(--accent); }
+    .article-badge.mentorado { background: rgba(124,58,237,0.12); color: #a855f7; }
+    .article-badge.convidado { background: rgba(245,158,11,0.12); color: #f59e0b; }
+
+    .article-date {
+      font-size: 0.72rem;
+      color: var(--text-muted);
+    }
+
+    /* Título */
+    .article-title {
+      font-family: var(--font-display);
+      font-size: 1.15rem;
+      font-weight: 700;
+      line-height: 1.35;
+      margin-bottom: var(--space-sm);
+      color: var(--text-primary);
+    }
+
+    /* Excerpt */
+    .article-excerpt {
+      font-size: 0.85rem;
+      color: var(--text-secondary);
+      line-height: 1.65;
+      flex: 1;
+      margin-bottom: var(--space-lg);
+    }
+
+    /* Divisor */
+    .article-divider {
+      height: 1px;
+      background: linear-gradient(90deg, transparent, var(--border-subtle), transparent);
+      margin-bottom: var(--space-lg);
+    }
+
+    /* Rodapé: autor + botão */
+    .article-footer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: var(--space-md);
+    }
+
+    .article-author {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      min-width: 0;
+    }
+
+    .author-avatar {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      overflow: hidden;
+      flex-shrink: 0;
+      background: var(--bg-secondary);
+      border: 2px solid var(--border-subtle);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .author-avatar img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .author-initials {
+      font-family: var(--font-display);
+      font-size: 0.8rem;
+      color: var(--accent);
+    }
+
+    .author-info { min-width: 0; }
+
+    .author-name {
+      font-size: 0.82rem;
+      font-weight: 600;
+      color: var(--text-primary);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .author-role {
+      font-size: 0.71rem;
+      color: var(--text-muted);
+    }
+
+    .article-read-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      padding: 0.42rem 0.9rem;
+      background: var(--accent-dim);
+      border: 1px solid rgba(0,200,232,0.3);
+      border-radius: var(--radius-md);
+      color: var(--accent);
+      font-size: 0.78rem;
+      font-weight: 600;
+      text-decoration: none;
+      white-space: nowrap;
+      transition: all var(--transition);
+      flex-shrink: 0;
+    }
+
+    .article-read-btn:hover {
+      background: var(--accent);
+      color: #000;
+      border-color: var(--accent);
+    }
+
+    /* ── Empty state ── */
+    .no-articles {
+      grid-column: 1 / -1;
+      text-align: center;
+      padding: var(--space-3xl);
+      color: var(--text-muted);
+    }
+
+    /* ── Banner de contribuição ── */
+    .contribute-banner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: var(--space-lg);
+      background: var(--accent-dim);
+      border: 1px solid rgba(0,200,232,0.2);
+      border-radius: var(--radius-xl);
+      padding: var(--space-lg) var(--space-xl);
+      margin-bottom: var(--space-2xl);
+      flex-wrap: wrap;
+    }
+
+    .contribute-banner-text {
+      display: flex;
+      align-items: center;
+      gap: var(--space-md);
+    }
+
+    .contribute-banner p {
+      font-size: 0.88rem;
+      color: var(--text-primary);
+      line-height: 1.5;
+    }
+
+    .contribute-banner p span {
+      color: var(--accent);
+      font-weight: 600;
+    }
+
+    @media (max-width: 768px) {
+      .articles-grid { grid-template-columns: 1fr; }
+      .contribute-banner { flex-direction: column; align-items: flex-start; }
+    }
+  </style>
+</head>
+<body>
+
+<div id="sidebar-mount"></div>
+
+<div class="app-layout">
+  <div class="main-content">
+
+    <div class="page-header">
+      <h1>Newsletter</h1>
+      <p>Conteúdos semanais escritos pelos mentores, mentorados e convidados especiais do Clube.</p>
+    </div>
+
+    <div class="page-body">
+
+      <!-- Banner contribuição -->
+      <div class="contribute-banner">
+        <div class="contribute-banner-text">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
+          <p>Quer publicar na newsletter? <span>Mentores e mentorados</span> podem submeter artigos — fale com a equipe do Clube.</p>
+        </div>
+        <a href="https://wa.me/5511991439098" target="_blank" rel="noopener" class="btn btn-primary btn-sm">Quero contribuir</a>
+      </div>
+
+      <!-- Filtros por categoria -->
+      <div class="filter-row" id="filterRow">
+        <button class="filter-btn active" onclick="filterBy(null, this)">Todos</button>
+        <button class="filter-btn" onclick="filterBy('mentor', this)">Mentores</button>
+        <button class="filter-btn" onclick="filterBy('mentorado', this)">Mentorados</button>
+        <button class="filter-btn" onclick="filterBy('convidado', this)">Convidados</button>
+      </div>
+
+      <!-- Grid de artigos -->
+      <div class="articles-grid" id="articlesGrid"></div>
+
+    </div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+<script src="js/supabase-config.js"></script>
+<script src="js/auth.js"></script>
+<script src="js/sidebar.js"></script>
+<script>
+  let activeFilter = null;
+
+  // ── Dados de demonstração ──────────────────────────────────────────────────
+  const ARTIGOS = [
+    {
+      id: 1,
+      tipo: 'mentor',
+      titulo: 'Como dobrei minha conversão em 30 dias com uma mudança simples no script',
+      excerpt: 'Durante anos achei que o problema estava no produto ou no preço. Quando entendi que o real gargalo era o meu script de abordagem — e mudei uma única coisa — os resultados vieram rápido. Aqui explico o que foi.',
+      autor: 'Gustavo Lima',
+      autorFoto: 'images/gustavo-lima.jpg',
+      autorRole: 'Co-Fundador · Mentor',
+      data: '19 Mar 2026',
+      leitura: '5 min',
+    },
+    {
+      id: 2,
+      tipo: 'mentor',
+      titulo: 'Os 5 erros que todo vendedor iniciante comete (e como evitá-los)',
+      excerpt: 'Depois de treinar dezenas de times comerciais, percebi que os erros se repetem. Não importa o segmento, cidade ou experiência prévia — são sempre os mesmos 5. Conheça cada um e saia na frente.',
+      autor: 'Juliana Daleva',
+      autorFoto: 'images/juliana-daleva.jpg',
+      autorRole: 'Co-Fundadora · Mentora',
+      data: '12 Mar 2026',
+      leitura: '7 min',
+    },
+    {
+      id: 3,
+      tipo: 'mentorado',
+      titulo: 'Minha jornada: de 0 a 50 alunos Wise Up em apenas 6 meses',
+      excerpt: 'Quando entrei no Clube dos Referidos não tinha nenhum aluno e nem ideia de como vender de forma ativa. Hoje tenho uma carteira sólida e um processo que funciona. Vou compartilhar tudo que aprendi.',
+      autor: 'Carlos Mendes',
+      autorFoto: '',
+      autorRole: 'Mentorado · Franqueado Wise Up',
+      data: '05 Mar 2026',
+      leitura: '6 min',
+    },
+    {
+      id: 4,
+      tipo: 'convidado',
+      titulo: 'O futuro do franchising educacional no Brasil em 2026',
+      excerpt: 'O mercado de franquias educacionais cresceu 18% no último ano e a tendência é de aceleração. Neste artigo analiso os principais vetores desse crescimento e onde estão as maiores oportunidades para quem está começando agora.',
+      autor: 'Rafael Souza',
+      autorFoto: '',
+      autorRole: 'Convidado · Especialista em Franchising',
+      data: '28 Fev 2026',
+      leitura: '8 min',
+    },
+    {
+      id: 5,
+      tipo: 'mentorado',
+      titulo: 'Como organizo minha semana para prospectar sem perder o foco',
+      excerpt: 'Prospecção ativa exige disciplina e rotina. Depois de testar vários métodos, encontrei uma estrutura semanal que me permite prospectar consistentemente sem deixar de lado os alunos que já tenho. Compartilho aqui meu modelo.',
+      autor: 'Ana Paula Rocha',
+      autorFoto: '',
+      autorRole: 'Mentorada · Franqueada Wise Up',
+      data: '21 Fev 2026',
+      leitura: '4 min',
+    },
+    {
+      id: 6,
+      tipo: 'convidado',
+      titulo: 'Liderança de times de vendas: o que os números não contam',
+      excerpt: 'Métricas são essenciais, mas liderança é sobre pessoas. Depois de 15 anos gerenciando equipes comerciais, aprendi que os maiores resultados vêm quando você entende o que motiva cada um do seu time individualmente.',
+      autor: 'Marcos Ferreira',
+      autorFoto: '',
+      autorRole: 'Convidado · Diretor Comercial',
+      data: '14 Fev 2026',
+      leitura: '9 min',
+    },
+  ];
+
+  // ── Renderização ───────────────────────────────────────────────────────────
+  document.addEventListener('DOMContentLoaded', async () => {
+    await initSidebar();
+    renderArtigos();
+  });
+
+  function filterBy(tipo, btn) {
+    activeFilter = tipo;
+    document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    renderArtigos();
+  }
+
+  function renderArtigos() {
+    const grid = document.getElementById('articlesGrid');
+    const lista = activeFilter
+      ? ARTIGOS.filter(a => a.tipo === activeFilter)
+      : ARTIGOS;
+
+    if (!lista.length) {
+      grid.innerHTML = `<div class="no-articles"><p>Nenhum artigo encontrado.</p></div>`;
+      return;
+    }
+
+    grid.innerHTML = lista.map(artigo => {
+      const initials = artigo.autor.split(' ').map(w => w[0]).slice(0,2).join('').toUpperCase();
+      const avatarHTML = artigo.autorFoto
+        ? `<img src="${artigo.autorFoto}" alt="${artigo.autor}">`
+        : `<span class="author-initials">${initials}</span>`;
+
+      const badgeLabel = { mentor: 'Mentor', mentorado: 'Mentorado', convidado: 'Convidado' }[artigo.tipo];
+
+      return `
+        <article class="article-card" data-tipo="${artigo.tipo}">
+          <div class="article-cover ${artigo.tipo}"></div>
+
+          <div class="article-body">
+            <div class="article-meta-top">
+              <span class="article-badge ${artigo.tipo}">${badgeLabel}</span>
+              <span class="article-date">${artigo.data} · ${artigo.leitura} de leitura</span>
+            </div>
+
+            <h2 class="article-title">${artigo.titulo}</h2>
+            <p class="article-excerpt">${artigo.excerpt}</p>
+
+            <div class="article-divider"></div>
+
+            <div class="article-footer">
+              <div class="article-author">
+                <div class="author-avatar">${avatarHTML}</div>
+                <div class="author-info">
+                  <div class="author-name">${artigo.autor}</div>
+                  <div class="author-role">${artigo.autorRole}</div>
+                </div>
+              </div>
+              <a href="#" class="article-read-btn" onclick="return false;">
+                Ler
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+              </a>
+            </div>
+          </div>
+        </article>
+      `;
+    }).join('');
+  }
+</script>
+</body>
+</html>
