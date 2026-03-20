@@ -29,7 +29,7 @@ const NAV_ITEMS = [
   { href: 'sobre.html',       icon: SVG.sobre,       label: 'Sobre o Clube',    section: null },
 ];
 
-function buildSidebar(user) {
+function buildSidebar(user, photoUrl) {
   const name = user?.user_metadata?.full_name || user?.email?.split('@')[0] || 'Membro';
   const initials = name.split(' ').map(w => w[0]).slice(0, 2).join('').toUpperCase();
   const currentPage = window.location.pathname.split('/').pop() || 'dashboard.html';
@@ -67,8 +67,18 @@ function buildSidebar(user) {
 
     <!-- Sidebar -->
     <aside class="sidebar" id="sidebar">
-      <div class="sidebar-logo">
-        <img src="images/logo.png" alt="Clube dos Referidos" style="height:87px;width:auto;max-width:100%;">
+      <div class="sidebar-header">
+        <!-- Foto do membro (clica → perfil) -->
+        <a href="perfil.html" class="sidebar-member-photo" title="Meu Perfil">
+          ${photoUrl
+            ? `<img src="${photoUrl}" alt="${name}">`
+            : `<span class="sidebar-member-photo-initials">${initials}</span>`
+          }
+        </a>
+        <!-- Logo -->
+        <a href="dashboard.html">
+          <img src="images/logo.png" alt="Clube dos Referidos" style="height:52px;width:auto;max-width:150px;">
+        </a>
       </div>
 
       <nav class="sidebar-nav">
@@ -100,9 +110,21 @@ async function initSidebar() {
   if (!session) return;
 
   const user = session.user;
+
+  // Busca foto de perfil do Supabase (não bloqueia se falhar)
+  let photoUrl = null;
+  try {
+    const { data: profile } = await supabaseClient
+      .from('profiles')
+      .select('photo_url')
+      .eq('id', user.id)
+      .single();
+    photoUrl = profile?.photo_url || null;
+  } catch (_) {}
+
   const mount = document.getElementById('sidebar-mount');
   if (mount) {
-    mount.innerHTML = buildSidebar(user);
+    mount.innerHTML = buildSidebar(user, photoUrl);
   }
 
   // Mobile menu toggle
