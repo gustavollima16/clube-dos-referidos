@@ -123,15 +123,20 @@ async function initSidebar() {
     mount.innerHTML = buildSidebar(user, photoUrl);
   }
 
-  // Logo injetada direto no <body> — único jeito de position:fixed funcionar
-  // quando o body tem overflow-x:hidden
-  if (!document.getElementById('site-logo-fixed')) {
-    const logo = document.createElement('a');
-    logo.id        = 'site-logo-fixed';
-    logo.className = 'site-logo-fixed';
-    logo.href      = 'dashboard.html';
-    logo.innerHTML = '<img src="images/logo.png" alt="Clube dos Referidos">';
-    document.body.appendChild(logo);
+  // Injeta logo no page-header (sticky) — sem position:fixed, sem problemas
+  const pageHeader = document.querySelector('.page-header');
+  if (pageHeader && !pageHeader.querySelector('.page-header-logo')) {
+    // Envolve o conteúdo existente num div
+    const text = document.createElement('div');
+    text.className = 'page-header-text';
+    while (pageHeader.firstChild) text.appendChild(pageHeader.firstChild);
+    pageHeader.appendChild(text);
+    // Adiciona a logo à direita
+    const logoWrap = document.createElement('a');
+    logoWrap.href      = 'dashboard.html';
+    logoWrap.className = 'page-header-logo';
+    logoWrap.innerHTML = '<img src="images/logo.png" alt="Clube dos Referidos">';
+    pageHeader.appendChild(logoWrap);
   }
 
   // Mobile menu toggle
