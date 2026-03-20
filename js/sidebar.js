@@ -123,23 +123,6 @@ async function initSidebar() {
     mount.innerHTML = buildSidebar(user, photoUrl);
   }
 
-  // Logo fixa no canto superior direito — position:fixed funciona agora que
-  // overflow-x está no <html> (não no <body>), sem criar novo containing block
-  if (!document.getElementById('logo-fixa')) {
-    const a = document.createElement('a');
-    a.id = 'logo-fixa';
-    a.href = 'dashboard.html';
-    a.style.cssText = 'position:fixed;top:16px;right:20px;z-index:99999;display:block;line-height:0;';
-
-    const img = document.createElement('img');
-    img.src = 'images/logo.png';
-    img.alt = 'Clube dos Referidos';
-    img.style.cssText = 'height:104px;width:auto;display:block;';
-
-    a.appendChild(img);
-    document.body.appendChild(a);
-  }
-
   // Mobile menu toggle
   const toggle = document.getElementById('menuToggle');
   const sidebar = document.getElementById('sidebar');
