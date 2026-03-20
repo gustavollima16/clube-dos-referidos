@@ -123,20 +123,13 @@ async function initSidebar() {
     mount.innerHTML = buildSidebar(user, photoUrl);
   }
 
-  // Injeta logo no page-header (sticky) — sem position:fixed, sem problemas
-  const pageHeader = document.querySelector('.page-header');
-  if (pageHeader && !pageHeader.querySelector('.page-header-logo')) {
-    // Envolve o conteúdo existente num div
-    const text = document.createElement('div');
-    text.className = 'page-header-text';
-    while (pageHeader.firstChild) text.appendChild(pageHeader.firstChild);
-    pageHeader.appendChild(text);
-    // Adiciona a logo à direita
-    const logoWrap = document.createElement('a');
-    logoWrap.href      = 'dashboard.html';
-    logoWrap.className = 'page-header-logo';
-    logoWrap.innerHTML = '<img src="images/logo.png" alt="Clube dos Referidos">';
-    pageHeader.appendChild(logoWrap);
+  // Injeta barra de altura 0 com logo sticky — não empurra conteúdo
+  const mainContent = document.querySelector('.main-content');
+  if (mainContent && !mainContent.querySelector('.logo-sticky-bar')) {
+    const bar = document.createElement('div');
+    bar.className = 'logo-sticky-bar';
+    bar.innerHTML = '<a href="dashboard.html"><img src="images/logo.png" alt="Clube dos Referidos"></a>';
+    mainContent.insertBefore(bar, mainContent.firstChild);
   }
 
   // Mobile menu toggle
