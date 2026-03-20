@@ -133,7 +133,8 @@ p {
 .sidebar {
   width: var(--sidebar-width);
   background: var(--bg-secondary);
-  border-right: 1px solid var(--border-subtle);
+  border-right: 1px solid rgba(0, 200, 232, 0.25);
+  box-shadow: 2px 0 16px rgba(0, 200, 232, 0.06);
   position: fixed;
   top: 0;
   left: 0;
@@ -146,7 +147,7 @@ p {
 }
 
 .sidebar-logo {
-  padding: var(--space-xl) var(--space-lg);
+  padding: var(--space-md) var(--space-lg);
   border-bottom: 1px solid var(--border-subtle);
   display: flex;
   align-items: center;
@@ -187,7 +188,7 @@ p {
 
 .sidebar-nav {
   flex: 1;
-  padding: var(--space-lg) 0;
+  padding: var(--space-sm) 0;
 }
 
 .nav-section-label {
