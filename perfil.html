@@ -1,0 +1,730 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Meu Perfil — Clube dos Referidos</title>
+  <link rel="stylesheet" href="css/global.css">
+  <style>
+    .perfil-grid {
+      display: grid;
+      grid-template-columns: 280px 1fr;
+      gap: var(--space-2xl);
+      align-items: start;
+    }
+
+    /* ── Coluna esquerda: foto + preview ── */
+    .perfil-sidebar-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-xl);
+      padding: var(--space-xl);
+      text-align: center;
+      position: sticky;
+      top: var(--space-xl);
+    }
+
+    .avatar-upload-wrapper {
+      position: relative;
+      width: 100px;
+      height: 100px;
+      margin: 0 auto var(--space-lg);
+      cursor: pointer;
+    }
+
+    .avatar-upload-wrapper:hover .avatar-overlay { opacity: 1; }
+
+    .avatar-circle {
+      width: 100px;
+      height: 100px;
+      border-radius: 50%;
+      overflow: hidden;
+      border: 3px solid var(--border);
+      background: var(--bg-secondary);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .avatar-circle img {
+      width: 100%; height: 100%; object-fit: cover;
+    }
+
+    .avatar-initials {
+      font-family: var(--font-display);
+      font-size: 2.2rem;
+      color: var(--accent);
+    }
+
+    .avatar-overlay {
+      position: absolute;
+      inset: 0;
+      border-radius: 50%;
+      background: rgba(0,0,0,0.6);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      transition: opacity var(--transition);
+      gap: 4px;
+      color: #fff;
+      font-size: 0.7rem;
+    }
+
+    #photoInput { display: none; }
+
+    .preview-name {
+      font-family: var(--font-display);
+      font-size: 1.2rem;
+      margin-bottom: 4px;
+    }
+
+    .preview-role {
+      font-size: 0.78rem;
+      color: var(--accent);
+      font-weight: 600;
+    }
+
+    .preview-company {
+      font-size: 0.73rem;
+      color: var(--text-muted);
+      margin-top: 2px;
+    }
+
+    .preview-city {
+      font-size: 0.73rem;
+      color: var(--text-muted);
+      margin-top: var(--space-sm);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 4px;
+    }
+
+    .preview-divider {
+      height: 1px;
+      background: var(--border-subtle);
+      margin: var(--space-lg) 0;
+    }
+
+    .preview-bio {
+      font-size: 0.8rem;
+      color: var(--text-secondary);
+      line-height: 1.6;
+      text-align: left;
+    }
+
+    /* ── Coluna direita: formulários ── */
+    .perfil-forms {
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-xl);
+    }
+
+    .perfil-section {
+      background: var(--bg-card);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-xl);
+      padding: var(--space-2xl);
+    }
+
+    .perfil-section-title {
+      font-family: var(--font-display);
+      font-size: 1.1rem;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      color: var(--text-primary);
+      margin-bottom: var(--space-xs);
+    }
+
+    .perfil-section-title svg { color: var(--accent); }
+
+    .perfil-section-sub {
+      font-size: 0.82rem;
+      color: var(--text-muted);
+      margin-bottom: var(--space-xl);
+    }
+
+    .form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: var(--space-md);
+    }
+
+    .tags-input-wrapper {
+      position: relative;
+    }
+
+    .tags-preview {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-top: var(--space-sm);
+    }
+
+    .tag-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      padding: 3px 10px;
+      background: var(--accent-dim);
+      border: 1px solid var(--border);
+      border-radius: 2rem;
+      font-size: 0.72rem;
+      color: var(--accent);
+    }
+
+    .directory-toggle {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: var(--space-md);
+      background: var(--bg-secondary);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-md);
+      cursor: pointer;
+      transition: all var(--transition);
+    }
+
+    .directory-toggle:hover {
+      border-color: var(--accent);
+      background: var(--accent-dim);
+    }
+
+    .toggle-switch {
+      width: 40px; height: 22px;
+      background: var(--border-subtle);
+      border-radius: 11px;
+      position: relative;
+      transition: background var(--transition);
+      flex-shrink: 0;
+    }
+
+    .toggle-switch::after {
+      content: '';
+      position: absolute;
+      width: 16px; height: 16px;
+      background: #fff;
+      border-radius: 50%;
+      top: 3px; left: 3px;
+      transition: transform var(--transition);
+    }
+
+    .toggle-switch.on {
+      background: var(--accent);
+    }
+
+    .toggle-switch.on::after {
+      transform: translateX(18px);
+    }
+
+    .input-password-wrap { position: relative; }
+    .input-password-wrap .form-control { padding-right: 2.8rem; }
+    .toggle-pw {
+      position: absolute; right: 0.9rem; top: 50%; transform: translateY(-50%);
+      background: none; border: none; cursor: pointer; padding: 0;
+      color: var(--text-muted); transition: color 0.2s; display: flex; align-items: center;
+    }
+    .toggle-pw:hover { color: var(--accent); }
+
+    .save-row {
+      display: flex;
+      justify-content: flex-end;
+      gap: var(--space-md);
+      margin-top: var(--space-xl);
+      padding-top: var(--space-lg);
+      border-top: 1px solid var(--border-subtle);
+    }
+
+    @media (max-width: 900px) {
+      .perfil-grid { grid-template-columns: 1fr; }
+      .perfil-sidebar-card { position: static; }
+      .form-row { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<div id="sidebar-mount"></div>
+
+<div class="app-layout">
+  <div class="main-content">
+
+    <div class="page-header">
+      <h1>Meu Perfil</h1>
+      <p>Atualize seus dados, foto e informações de contato.</p>
+    </div>
+
+    <div class="page-body">
+
+      <div class="perfil-grid">
+
+        <!-- ── Coluna esquerda: preview ── -->
+        <div class="perfil-sidebar-card">
+
+          <!-- Upload de foto -->
+          <div class="avatar-upload-wrapper" onclick="document.getElementById('photoInput').click()">
+            <div class="avatar-circle" id="avatarCircle">
+              <span class="avatar-initials" id="avatarInitials"></span>
+            </div>
+            <div class="avatar-overlay">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>
+              Trocar foto
+            </div>
+          </div>
+          <input type="file" id="photoInput" accept="image/*" onchange="handlePhotoSelect(event)">
+
+          <div class="preview-name" id="previewName">—</div>
+          <div class="preview-role" id="previewRole">—</div>
+          <div class="preview-company" id="previewCompany"></div>
+          <div class="preview-city" id="previewCity">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+            —
+          </div>
+
+          <div class="preview-divider"></div>
+
+          <p class="preview-bio" id="previewBio" style="color:var(--text-muted); font-style:italic;">Sua bio aparecerá aqui...</p>
+
+          <div id="uploadProgress" style="display:none; margin-top:var(--space-md); font-size:0.78rem; color:var(--accent);">Fazendo upload...</div>
+        </div>
+
+        <!-- ── Coluna direita: formulários ── -->
+        <div class="perfil-forms">
+
+          <!-- Dados pessoais -->
+          <div class="perfil-section">
+            <div class="perfil-section-title">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+              Dados do Perfil
+            </div>
+            <p class="perfil-section-sub">Suas informações que aparecerão no diretório de membros.</p>
+
+            <div class="form-row">
+              <div class="form-group">
+                <label class="form-label">Nome completo</label>
+                <input class="form-control" type="text" id="fieldName" placeholder="Seu nome" oninput="updatePreview()">
+              </div>
+              <div class="form-group">
+                <label class="form-label">Cargo / Função</label>
+                <input class="form-control" type="text" id="fieldRole" placeholder="Ex: Diretor Comercial" oninput="updatePreview()">
+              </div>
+            </div>
+
+            <div class="form-row">
+              <div class="form-group">
+                <label class="form-label">Empresa</label>
+                <input class="form-control" type="text" id="fieldCompany" placeholder="Empresa atual" oninput="updatePreview()">
+              </div>
+              <div class="form-group">
+                <label class="form-label">Cidade / Estado</label>
+                <input class="form-control" type="text" id="fieldCity" placeholder="Ex: São Paulo, SP" oninput="updatePreview()">
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">Bio (apresentação curta)</label>
+              <textarea class="form-control" id="fieldBio" rows="3" placeholder="Fale um pouco sobre você, sua experiência e especialidade..." style="resize:vertical;" oninput="updatePreview()"></textarea>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">Especialidades (tags)</label>
+              <input class="form-control" type="text" id="fieldTags" placeholder="Ex: Vendas B2B, Liderança, Inbound Sales (separe por vírgula)" oninput="updateTags()">
+              <div class="tags-preview" id="tagsPreview"></div>
+            </div>
+
+            <!-- Visibilidade no diretório -->
+            <div class="directory-toggle" onclick="toggleDirectory()">
+              <div>
+                <div style="font-size:0.9rem; font-weight:600; color:var(--text-primary);">Aparecer no diretório de membros</div>
+                <div style="font-size:0.78rem; color:var(--text-muted); margin-top:2px;">Outros membros poderão ver seu perfil na página Membros</div>
+              </div>
+              <div class="toggle-switch on" id="directoryToggle"></div>
+            </div>
+
+            <div class="save-row">
+              <div id="profileAlert" class="alert" style="flex:1;"></div>
+              <button class="btn btn-primary" onclick="saveProfile()">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="margin-right:0.4rem;vertical-align:-0.15rem;"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
+                Salvar perfil
+              </button>
+            </div>
+          </div>
+
+          <!-- Redes sociais -->
+          <div class="perfil-section">
+            <div class="perfil-section-title">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
+              Redes Sociais
+            </div>
+            <p class="perfil-section-sub">Seus links aparecerão no seu card no diretório de membros.</p>
+
+            <div class="form-group">
+              <label class="form-label">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-0.1em;margin-right:0.3em;color:var(--accent)"><rect x="2" y="2" width="20" height="20" rx="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>
+                Instagram
+              </label>
+              <input class="form-control" type="url" id="fieldInstagram" placeholder="https://instagram.com/seu_usuario">
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-0.1em;margin-right:0.3em;color:var(--accent)"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg>
+                LinkedIn
+              </label>
+              <input class="form-control" type="url" id="fieldLinkedin" placeholder="https://linkedin.com/in/seu_usuario">
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-0.1em;margin-right:0.3em;color:var(--accent)"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg>
+                WhatsApp
+              </label>
+              <input class="form-control" type="url" id="fieldWhatsapp" placeholder="https://wa.me/5511999999999">
+            </div>
+
+            <div class="save-row">
+              <div id="socialsAlert" class="alert" style="flex:1;"></div>
+              <button class="btn btn-primary" onclick="saveSocials()">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="margin-right:0.4rem;vertical-align:-0.15rem;"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
+                Salvar redes sociais
+              </button>
+            </div>
+          </div>
+
+          <!-- Trocar e-mail -->
+          <div class="perfil-section">
+            <div class="perfil-section-title">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+              Trocar E-mail
+            </div>
+            <p class="perfil-section-sub">Um e-mail de confirmação será enviado para o novo endereço.</p>
+
+            <div class="form-group">
+              <label class="form-label">E-mail atual</label>
+              <input class="form-control" type="email" id="currentEmail" disabled style="opacity:0.5; cursor:default;">
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">Novo e-mail</label>
+              <input class="form-control" type="email" id="fieldNewEmail" placeholder="novo@email.com">
+            </div>
+
+            <div class="save-row">
+              <div id="emailAlert" class="alert" style="flex:1;"></div>
+              <button class="btn btn-primary" onclick="changeEmail()">Confirmar troca de e-mail</button>
+            </div>
+          </div>
+
+          <!-- Trocar senha -->
+          <div class="perfil-section">
+            <div class="perfil-section-title">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+              Trocar Senha
+            </div>
+            <p class="perfil-section-sub">Mínimo de 8 caracteres. Você continuará logado após a troca.</p>
+
+            <div class="form-group">
+              <label class="form-label">Nova senha</label>
+              <div class="input-password-wrap">
+                <input class="form-control" type="password" id="fieldNewPw" placeholder="Mínimo 8 caracteres" minlength="8">
+                <button type="button" class="toggle-pw" onclick="togglePw('fieldNewPw', this)" tabindex="-1">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                </button>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">Confirmar nova senha</label>
+              <div class="input-password-wrap">
+                <input class="form-control" type="password" id="fieldConfirmPw" placeholder="Repita a nova senha">
+                <button type="button" class="toggle-pw" onclick="togglePw('fieldConfirmPw', this)" tabindex="-1">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                </button>
+              </div>
+            </div>
+
+            <div class="save-row">
+              <div id="pwAlert" class="alert" style="flex:1;"></div>
+              <button class="btn btn-primary" onclick="changePassword()">Trocar senha</button>
+            </div>
+          </div>
+
+        </div><!-- /perfil-forms -->
+      </div><!-- /perfil-grid -->
+
+    </div><!-- /page-body -->
+  </div><!-- /main-content -->
+</div><!-- /app-layout -->
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+<script src="js/supabase-config.js"></script>
+<script src="js/auth.js"></script>
+<script src="js/sidebar.js"></script>
+<script>
+  let currentUser = null;
+  let showInDirectory = true;
+  let newPhotoFile = null;
+
+  document.addEventListener('DOMContentLoaded', async () => {
+    const session = await requireAuth();
+    if (!session) return;
+    currentUser = session.user;
+
+    // Email atual
+    document.getElementById('currentEmail').value = currentUser.email || '';
+
+    // Carregar perfil do Supabase
+    const { data: profile } = await supabaseClient
+      .from('profiles')
+      .select('*')
+      .eq('id', currentUser.id)
+      .single();
+
+    if (profile) {
+      const name = profile.full_name || currentUser.user_metadata?.full_name || '';
+      document.getElementById('fieldName').value      = name;
+      document.getElementById('fieldRole').value      = profile.role || '';
+      document.getElementById('fieldCompany').value   = profile.company || '';
+      document.getElementById('fieldCity').value      = profile.city || '';
+      document.getElementById('fieldBio').value       = profile.bio || '';
+      document.getElementById('fieldTags').value      = (profile.tags || []).join(', ');
+      document.getElementById('fieldInstagram').value = profile.instagram || '';
+      document.getElementById('fieldLinkedin').value  = profile.linkedin || '';
+      document.getElementById('fieldWhatsapp').value  = profile.whatsapp || '';
+      showInDirectory = profile.show_in_directory !== false;
+
+      if (profile.photo_url) {
+        document.getElementById('avatarCircle').innerHTML = `<img src="${profile.photo_url}" alt="${name}">`;
+      }
+    }
+
+    // Inicializar sidebar e então atualizar com dados do perfil
+    await initSidebar();
+    updatePreview();
+    updateTags();
+    updateDirectoryToggle();
+  });
+
+  function updatePreview() {
+    const name    = document.getElementById('fieldName').value.trim() || '—';
+    const role    = document.getElementById('fieldRole').value.trim() || '—';
+    const company = document.getElementById('fieldCompany').value.trim();
+    const city    = document.getElementById('fieldCity').value.trim() || '—';
+    const bio     = document.getElementById('fieldBio').value.trim();
+
+    document.getElementById('previewName').textContent    = name;
+    document.getElementById('previewRole').textContent    = role;
+    document.getElementById('previewCompany').textContent = company;
+    document.getElementById('previewCity').innerHTML      = `<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>${city}`;
+    document.getElementById('previewBio').textContent     = bio || 'Sua bio aparecerá aqui...';
+    document.getElementById('previewBio').style.fontStyle = bio ? 'normal' : 'italic';
+    document.getElementById('previewBio').style.color     = bio ? 'var(--text-secondary)' : 'var(--text-muted)';
+
+    // Iniciais do avatar (se não tem foto)
+    if (!document.getElementById('avatarCircle').querySelector('img')) {
+      const initials = name.split(' ').filter(Boolean).map(w => w[0]).slice(0,2).join('').toUpperCase() || '?';
+      document.getElementById('avatarInitials').textContent = initials;
+    }
+  }
+
+  function updateTags() {
+    const raw  = document.getElementById('fieldTags').value;
+    const tags = raw.split(',').map(t => t.trim()).filter(Boolean);
+    document.getElementById('tagsPreview').innerHTML = tags.map(t =>
+      `<span class="tag-chip">${t}</span>`
+    ).join('');
+  }
+
+  function toggleDirectory() {
+    showInDirectory = !showInDirectory;
+    updateDirectoryToggle();
+  }
+
+  function updateDirectoryToggle() {
+    const el = document.getElementById('directoryToggle');
+    el.classList.toggle('on', showInDirectory);
+  }
+
+  // ── Trocar foto ──
+  function handlePhotoSelect(e) {
+    const file = e.target.files[0];
+    if (!file) return;
+    newPhotoFile = file;
+
+    const reader = new FileReader();
+    reader.onload = (ev) => {
+      document.getElementById('avatarCircle').innerHTML = `<img src="${ev.target.result}" alt="preview">`;
+    };
+    reader.readAsDataURL(file);
+  }
+
+  async function uploadPhoto() {
+    if (!newPhotoFile) return null;
+    const ext  = newPhotoFile.name.split('.').pop();
+    const path = `perfis/${currentUser.id}.${ext}`;
+
+    document.getElementById('uploadProgress').style.display = 'block';
+
+    const { error } = await supabaseClient.storage
+      .from('fotos')
+      .upload(path, newPhotoFile, { upsert: true });
+
+    document.getElementById('uploadProgress').style.display = 'none';
+
+    if (error) { console.error(error); return null; }
+
+    const { data } = supabaseClient.storage.from('fotos').getPublicUrl(path);
+    return data.publicUrl;
+  }
+
+  // ── Salvar perfil ──
+  async function saveProfile() {
+    const alertEl = document.getElementById('profileAlert');
+    alertEl.className = 'alert';
+    alertEl.textContent = '';
+
+    const name    = document.getElementById('fieldName').value.trim();
+    const role    = document.getElementById('fieldRole').value.trim();
+    const company = document.getElementById('fieldCompany').value.trim();
+    const city    = document.getElementById('fieldCity').value.trim();
+    const bio     = document.getElementById('fieldBio').value.trim();
+    const tags    = document.getElementById('fieldTags').value.split(',').map(t => t.trim()).filter(Boolean);
+
+    // Upload de foto (se selecionada)
+    let photoUrl = null;
+    if (newPhotoFile) {
+      photoUrl = await uploadPhoto();
+    }
+
+    const updates = {
+      full_name:         name,
+      role,
+      company,
+      city,
+      bio,
+      tags,
+      show_in_directory: showInDirectory,
+      updated_at:        new Date().toISOString(),
+    };
+
+    if (photoUrl) updates.photo_url = photoUrl;
+
+    const { error } = await supabaseClient
+      .from('profiles')
+      .update(updates)
+      .eq('id', currentUser.id);
+
+    if (error) {
+      alertEl.textContent = 'Erro ao salvar. Tente novamente.';
+      alertEl.className = 'alert alert-error show';
+      return;
+    }
+
+    // Atualizar metadados do auth também
+    await supabaseClient.auth.updateUser({ data: { full_name: name } });
+
+    newPhotoFile = null;
+    alertEl.textContent = 'Perfil salvo com sucesso!';
+    alertEl.className = 'alert alert-success show';
+    setTimeout(() => { alertEl.className = 'alert'; }, 3000);
+  }
+
+  // ── Salvar redes sociais ──
+  async function saveSocials() {
+    const alertEl = document.getElementById('socialsAlert');
+    alertEl.className = 'alert';
+
+    const { error } = await supabaseClient
+      .from('profiles')
+      .update({
+        instagram: document.getElementById('fieldInstagram').value.trim(),
+        linkedin:  document.getElementById('fieldLinkedin').value.trim(),
+        whatsapp:  document.getElementById('fieldWhatsapp').value.trim(),
+      })
+      .eq('id', currentUser.id);
+
+    if (error) {
+      alertEl.textContent = 'Erro ao salvar. Tente novamente.';
+      alertEl.className = 'alert alert-error show';
+      return;
+    }
+
+    alertEl.textContent = 'Redes sociais salvas!';
+    alertEl.className = 'alert alert-success show';
+    setTimeout(() => { alertEl.className = 'alert'; }, 3000);
+  }
+
+  // ── Trocar e-mail ──
+  async function changeEmail() {
+    const alertEl  = document.getElementById('emailAlert');
+    const newEmail = document.getElementById('fieldNewEmail').value.trim();
+    alertEl.className = 'alert';
+
+    if (!newEmail) {
+      alertEl.textContent = 'Digite o novo e-mail.';
+      alertEl.className = 'alert alert-error show';
+      return;
+    }
+
+    const { error } = await supabaseClient.auth.updateUser({ email: newEmail });
+
+    if (error) {
+      alertEl.textContent = 'Erro: ' + error.message;
+      alertEl.className = 'alert alert-error show';
+      return;
+    }
+
+    alertEl.textContent = 'Confirmação enviada para ' + newEmail + '. Verifique sua caixa de entrada.';
+    alertEl.className = 'alert alert-success show';
+    document.getElementById('fieldNewEmail').value = '';
+  }
+
+  // ── Trocar senha ──
+  async function changePassword() {
+    const alertEl  = document.getElementById('pwAlert');
+    const pw       = document.getElementById('fieldNewPw').value;
+    const confirm  = document.getElementById('fieldConfirmPw').value;
+    alertEl.className = 'alert';
+
+    if (pw.length < 8) {
+      alertEl.textContent = 'A senha deve ter pelo menos 8 caracteres.';
+      alertEl.className = 'alert alert-error show';
+      return;
+    }
+
+    if (pw !== confirm) {
+      alertEl.textContent = 'As senhas não coincidem.';
+      alertEl.className = 'alert alert-error show';
+      return;
+    }
+
+    const { error } = await supabaseClient.auth.updateUser({ password: pw });
+
+    if (error) {
+      alertEl.textContent = 'Erro: ' + error.message;
+      alertEl.className = 'alert alert-error show';
+      return;
+    }
+
+    alertEl.textContent = 'Senha alterada com sucesso!';
+    alertEl.className = 'alert alert-success show';
+    document.getElementById('fieldNewPw').value = '';
+    document.getElementById('fieldConfirmPw').value = '';
+    setTimeout(() => { alertEl.className = 'alert'; }, 3000);
+  }
+
+  function togglePw(inputId, btn) {
+    const input = document.getElementById(inputId);
+    const isHidden = input.type === 'password';
+    input.type = isHidden ? 'text' : 'password';
+    btn.innerHTML = isHidden
+      ? '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94"/><path d="M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19"/><line x1="1" y1="1" x2="23" y2="23"/></svg>'
+      : '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>';
+  }
+</script>
+</body>
+</html>

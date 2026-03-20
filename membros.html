@@ -355,10 +355,10 @@
 <script src="js/supabase-config.js"></script>
 <script src="js/auth.js"></script>
 <script src="js/sidebar.js"></script>
-<script src="js/data/membros.js"></script>
 <script>
   let activeTag = null;
   let searchQuery = '';
+  let MEMBROS = [];
 
   const SOCIAL_META = {
     instagram: { icon: '<svg style="width:0.9em;height:0.9em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>', label: 'Instagram' },
@@ -369,9 +369,47 @@
 
   document.addEventListener('DOMContentLoaded', async () => {
     await initSidebar();
+    await loadMembros();
+  });
+
+  async function loadMembros() {
+    document.getElementById('membersCount').textContent = 'Carregando...';
+
+    const { data, error } = await supabaseClient
+      .from('profiles')
+      .select('id, full_name, email, role, company, city, bio, photo_url, instagram, linkedin, whatsapp, tags, show_in_directory, approved')
+      .eq('approved', true)
+      .eq('show_in_directory', true)
+      .order('full_name', { ascending: true });
+
+    if (error || !data) {
+      document.getElementById('membersCount').textContent = 'Erro ao carregar membros.';
+      return;
+    }
+
+    // Mapeia para o formato esperado pelo renderMemberCard
+    MEMBROS = data
+      .filter(p => p.full_name) // só quem preencheu o nome
+      .map(p => ({
+        id:       p.id,
+        name:     p.full_name,
+        role:     p.role || 'Membro',
+        company:  p.company || '',
+        city:     p.city || '—',
+        bio:      p.bio || '',
+        photo:    p.photo_url || '',
+        socials: {
+          instagram: p.instagram || '',
+          linkedin:  p.linkedin  || '',
+          whatsapp:  p.whatsapp  || '',
+        },
+        tags:     p.tags || [],
+        featured: false,
+      }));
+
     buildTagsFilter();
     renderMembers();
-  });
+  }
 
   function buildTagsFilter() {
     const allTags = [...new Set(MEMBROS.flatMap(m => m.tags || []))].sort();

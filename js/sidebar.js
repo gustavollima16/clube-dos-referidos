@@ -74,13 +74,13 @@ function buildSidebar(user) {
       </nav>
 
       <div class="sidebar-footer">
-        <div class="sidebar-user">
+        <a href="perfil.html" class="sidebar-user" style="text-decoration:none; cursor:pointer; border-radius:var(--radius-md); padding:0.5rem; margin:-0.5rem; transition:background var(--transition);" onmouseover="this.style.background='var(--accent-dim)'" onmouseout="this.style.background='transparent'">
           <div class="sidebar-avatar">${initials}</div>
           <div class="sidebar-user-info">
             <div class="sidebar-user-name">${name}</div>
-            <div class="sidebar-user-role">Membro</div>
+            <div class="sidebar-user-role" style="display:flex;align-items:center;gap:4px;">Meu Perfil <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18l6-6-6-6"/></svg></div>
           </div>
-        </div>
+        </a>
         <button class="btn btn-danger btn-sm" onclick="authLogout()" style="display:flex;align-items:center;gap:0.4rem;">
           ${SVG.sair} Sair
         </button>
