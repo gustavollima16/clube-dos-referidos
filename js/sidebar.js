@@ -77,11 +77,6 @@ function buildSidebar(user, photoUrl) {
         </a>
       </div>
 
-    <!-- Logo fixada no canto superior direito da tela -->
-    <a href="dashboard.html" class="site-logo-fixed">
-      <img src="images/logo.png" alt="Clube dos Referidos">
-    </a>
-
       <nav class="sidebar-nav">
         ${navHTML}
       </nav>
@@ -102,6 +97,11 @@ function buildSidebar(user, photoUrl) {
         </button>
       </div>
     </aside>
+
+    <!-- Logo fora da sidebar — position:fixed funciona corretamente aqui -->
+    <a href="dashboard.html" class="site-logo-fixed">
+      <img src="images/logo.png" alt="Clube dos Referidos">
+    </a>
   `;
 }
 
