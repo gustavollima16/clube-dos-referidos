@@ -123,13 +123,18 @@ async function initSidebar() {
     mount.innerHTML = buildSidebar(user, photoUrl);
   }
 
-  // Injeta barra de altura 0 com logo sticky — não empurra conteúdo
-  const mainContent = document.querySelector('.main-content');
-  if (mainContent && !mainContent.querySelector('.logo-sticky-bar')) {
-    const bar = document.createElement('div');
-    bar.className = 'logo-sticky-bar';
-    bar.innerHTML = '<a href="dashboard.html"><img src="images/logo.png" alt="Clube dos Referidos"></a>';
-    mainContent.insertBefore(bar, mainContent.firstChild);
+  // Logo fixa no canto superior direito — inline styles para garantir
+  if (!document.getElementById('logo-fixa')) {
+    const a = document.createElement('a');
+    a.id   = 'logo-fixa';
+    a.href = 'dashboard.html';
+    a.style.cssText = 'position:fixed;top:16px;right:20px;z-index:99999;display:block;line-height:0;';
+    const img = document.createElement('img');
+    img.src   = 'images/logo.png';
+    img.alt   = 'Clube dos Referidos';
+    img.style.cssText = 'height:104px;width:auto;display:block;';
+    a.appendChild(img);
+    document.body.appendChild(a);
   }
 
   // Mobile menu toggle
