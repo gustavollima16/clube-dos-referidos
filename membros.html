@@ -425,8 +425,15 @@
         }))
       : [];
 
-    // Usa dados reais se existirem, senão mostra demos como prévia
-    MEMBROS = reais.length > 0 ? reais : DEMO_MEMBROS;
+    // Mistura reais + demos enquanto houver menos de 5 membros reais
+    if (reais.length >= 5) {
+      MEMBROS = reais;
+    } else {
+      // Evita duplicar pelo nome
+      const nomesReais = new Set(reais.map(m => m.name.toLowerCase()));
+      const demosFiltrados = DEMO_MEMBROS.filter(d => !nomesReais.has(d.name.toLowerCase()));
+      MEMBROS = [...reais, ...demosFiltrados];
+    }
 
     // Banner "complete seu perfil" se não há dados reais
     const banner = document.getElementById('completarPerfilBanner');

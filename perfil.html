@@ -243,7 +243,6 @@
       background: #000;
       touch-action: none;
       user-select: none;
-      box-shadow: 0 0 0 9999px rgba(0,0,0,0.85);
     }
 
     .crop-frame:active { cursor: grabbing; }
@@ -282,31 +281,33 @@
     .crop-btn-cancel {
       flex: 1;
       padding: 0.65rem 1rem;
-      background: var(--bg-secondary);
-      border: 1px solid var(--border-subtle);
-      border-radius: var(--radius-md);
-      color: var(--text-secondary);
+      background: #1a1a1a;
+      border: 1px solid #333;
+      border-radius: 10px;
+      color: #aaa;
       font-size: 0.88rem;
+      font-family: inherit;
       cursor: pointer;
-      transition: background 0.2s;
+      transition: background 0.2s, color 0.2s;
     }
 
-    .crop-btn-cancel:hover { background: var(--bg-card); }
+    .crop-btn-cancel:hover { background: #222; color: #fff; }
 
     .crop-btn-confirm {
       flex: 1;
       padding: 0.65rem 1rem;
-      background: var(--accent);
+      background: #00C8E8;
       border: none;
-      border-radius: var(--radius-md);
+      border-radius: 10px;
       color: #000;
       font-size: 0.88rem;
       font-weight: 700;
+      font-family: inherit;
       cursor: pointer;
-      transition: opacity 0.2s;
+      transition: background 0.2s;
     }
 
-    .crop-btn-confirm:hover { opacity: 0.88; }
+    .crop-btn-confirm:hover { background: #33d6f0; }
 
     @media (max-width: 900px) {
       .perfil-grid { grid-template-columns: 1fr; }
