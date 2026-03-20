@@ -144,6 +144,13 @@ p {
   z-index: 100;
   transition: transform var(--transition-slow);
   overflow-y: auto;
+  scrollbar-width: none;        /* Firefox */
+  -ms-overflow-style: none;     /* IE / Edge */
+}
+
+/* Esconde scrollbar nativa da sidebar no Chrome/Safari */
+.sidebar::-webkit-scrollbar {
+  display: none;
 }
 
 .sidebar-logo {
