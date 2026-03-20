@@ -15,7 +15,12 @@ serve(async (req) => {
   }
 
   try {
-    const { nome, whatsapp, email, faturamento } = await req.json();
+    const { nome, whatsapp, email, empresa, faturamento } = await req.json();
+
+    // Template aprovado tem 4 variáveis — empresa é combinada com faturamento
+    const faturamentoCompleto = empresa
+      ? `${empresa} · ${faturamento || "Não informado"}`
+      : (faturamento || "Não informado");
 
     const body = {
       messaging_product: "whatsapp",
@@ -31,7 +36,7 @@ serve(async (req) => {
               { type: "text", text: nome || "Não informado" },
               { type: "text", text: whatsapp || "Não informado" },
               { type: "text", text: email || "Não informado" },
-              { type: "text", text: faturamento || "Não informado" },
+              { type: "text", text: faturamentoCompleto },
             ],
           },
         ],

@@ -1215,6 +1215,13 @@
             <input class="form-control" type="text" id="applyCargo" placeholder="Ex: Gerente Comercial">
           </div>
           <div class="form-group">
+            <label class="form-label" for="applyEmpresa">Nome da empresa *</label>
+            <input class="form-control" type="text" id="applyEmpresa" placeholder="Ex: Wise Up Alphaville" required>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
             <label class="form-label" for="applyFaturamento">Faturamento anual *</label>
             <input class="form-control" type="text" id="applyFaturamento" placeholder="Ex: R$ 500 mil" required>
           </div>
@@ -1462,6 +1469,7 @@
       email: document.getElementById('applyEmail').value.trim(),
       instagram: document.getElementById('applyInstagram').value.trim() || null,
       cargo: document.getElementById('applyCargo').value.trim() || null,
+      empresa: document.getElementById('applyEmpresa').value.trim(),
       faturamento: document.getElementById('applyFaturamento').value.trim(),
     };
 
@@ -1486,6 +1494,7 @@
           instagram:   dados.instagram || '—',
           cargo:       dados.cargo || '—',
           faturamento: dados.faturamento,
+          empresa: dados.empresa,
         });
       } catch(e) { console.error('Erro email:', e); }
 
@@ -1501,6 +1510,7 @@
             nome: dados.nome,
             whatsapp: dados.telefone,
             email: dados.email,
+            empresa: dados.empresa,
             faturamento: dados.faturamento,
           })
         });
