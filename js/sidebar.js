@@ -123,18 +123,27 @@ async function initSidebar() {
     mount.innerHTML = buildSidebar(user, photoUrl);
   }
 
-  // Logo fixa no canto superior direito — inline styles para garantir
-  if (!document.getElementById('logo-fixa')) {
+  // Logo sempre visível no canto superior direito
+  // sticky+height:0 não depende de position:fixed (que falha com overflow no body)
+  if (!document.getElementById('logo-barra')) {
+    const barra = document.createElement('div');
+    barra.id = 'logo-barra';
+    barra.style.cssText = 'position:sticky;top:0;height:0;overflow:visible;z-index:9999;pointer-events:none;';
+
     const a = document.createElement('a');
-    a.id   = 'logo-fixa';
     a.href = 'dashboard.html';
-    a.style.cssText = 'position:fixed;top:16px;right:20px;z-index:99999;display:block;line-height:0;';
+    a.style.cssText = 'position:absolute;top:16px;right:20px;display:block;line-height:0;pointer-events:all;';
+
     const img = document.createElement('img');
-    img.src   = 'images/logo.png';
-    img.alt   = 'Clube dos Referidos';
+    img.src = 'images/logo.png';
+    img.alt = 'Clube dos Referidos';
     img.style.cssText = 'height:104px;width:auto;display:block;';
+
     a.appendChild(img);
-    document.body.appendChild(a);
+    barra.appendChild(a);
+
+    const main = document.querySelector('.main-content');
+    if (main) main.insertBefore(barra, main.firstChild);
   }
 
   // Mobile menu toggle
