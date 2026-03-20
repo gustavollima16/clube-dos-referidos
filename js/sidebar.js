@@ -97,11 +97,6 @@ function buildSidebar(user, photoUrl) {
         </button>
       </div>
     </aside>
-
-    <!-- Logo fora da sidebar — position:fixed funciona corretamente aqui -->
-    <a href="dashboard.html" class="site-logo-fixed">
-      <img src="images/logo.png" alt="Clube dos Referidos">
-    </a>
   `;
 }
 
@@ -126,6 +121,17 @@ async function initSidebar() {
   const mount = document.getElementById('sidebar-mount');
   if (mount) {
     mount.innerHTML = buildSidebar(user, photoUrl);
+  }
+
+  // Logo injetada direto no <body> — único jeito de position:fixed funcionar
+  // quando o body tem overflow-x:hidden
+  if (!document.getElementById('site-logo-fixed')) {
+    const logo = document.createElement('a');
+    logo.id        = 'site-logo-fixed';
+    logo.className = 'site-logo-fixed';
+    logo.href      = 'dashboard.html';
+    logo.innerHTML = '<img src="images/logo.png" alt="Clube dos Referidos">';
+    document.body.appendChild(logo);
   }
 
   // Mobile menu toggle
