@@ -429,21 +429,33 @@
     renderMembers();
   }
 
+  function normalizeTag(t) {
+    return t.trim().toLowerCase();
+  }
+
   function buildTagsFilter() {
-    const allTags = [...new Set(MEMBROS.flatMap(m => m.tags || []))].sort();
+    // Deduplica por lowercase — evita "Wise Up" e "wise up" como botões separados
+    const seen = new Map(); // key=lowercase → label=primeira aparição
+    MEMBROS.flatMap(m => m.tags || [])
+      .forEach(tag => {
+        const key = normalizeTag(tag);
+        if (key && !seen.has(key)) seen.set(key, tag.trim());
+      });
+
+    const sorted = [...seen.entries()].sort((a, b) => a[0].localeCompare(b[0], 'pt'));
     const bar = document.getElementById('tagsFilter');
 
-    allTags.forEach(tag => {
+    sorted.forEach(([key, label]) => {
       const btn = document.createElement('button');
       btn.className = 'tag-btn';
-      btn.textContent = tag;
-      btn.onclick = () => filterTag(tag, btn);
+      btn.textContent = label;
+      btn.onclick = () => filterTag(key, btn);
       bar.appendChild(btn);
     });
   }
 
-  function filterTag(tag, btn) {
-    activeTag = tag;
+  function filterTag(tagKey, btn) {
+    activeTag = tagKey; // null = todos, ou lowercase normalizado
     document.querySelectorAll('.tag-btn').forEach(b => b.classList.remove('active'));
     btn.classList.add('active');
     renderMembers();
@@ -456,7 +468,8 @@
 
   function getFilteredMembers() {
     return MEMBROS.filter(m => {
-      const matchesTag = !activeTag || (m.tags || []).includes(activeTag);
+      // Compara tags em lowercase para não depender de capitalização
+      const matchesTag = !activeTag || (m.tags || []).some(t => normalizeTag(t) === activeTag);
       const matchesSearch = !searchQuery || [
         m.name, m.role, m.company, m.city, m.bio, ...(m.tags || [])
       ].join(' ').toLowerCase().includes(searchQuery);
