@@ -429,18 +429,34 @@
     renderMembers();
   }
 
-  function normalizeTag(t) {
-    return t.trim().toLowerCase();
+  // Stemmer leve para português: reduz plural → singular por palavra
+  function stemPT(word) {
+    if (word.endsWith('ais') && word.length > 4) return word.slice(0, -3) + 'al'; // comerciais→comercial
+    if (word.endsWith('eis') && word.length > 4) return word.slice(0, -3) + 'el'; // papéis→papel
+    if (word.endsWith('ns')  && word.length > 3) return word.slice(0, -2) + 'm';  // bons→bom
+    if (word.endsWith('s')   && word.length > 3) return word.slice(0, -1);        // times→time, vendas→venda
+    return word;
+  }
+
+  // Normaliza uma tag inteira: lowercase + stemming por palavra
+  function normalizeTag(tag) {
+    return tag.trim().toLowerCase().split(/\s+/).map(stemPT).join(' ');
   }
 
   function buildTagsFilter() {
-    // Deduplica por lowercase — evita "Wise Up" e "wise up" como botões separados
-    const seen = new Map(); // key=lowercase → label=primeira aparição
-    MEMBROS.flatMap(m => m.tags || [])
-      .forEach(tag => {
-        const key = normalizeTag(tag);
-        if (key && !seen.has(key)) seen.set(key, tag.trim());
-      });
+    // Agrupa por chave normalizada; usa a forma mais longa como label do botão
+    const seen = new Map(); // chave normalizada → label de exibição
+    MEMBROS.flatMap(m => m.tags || []).forEach(tag => {
+      const raw = tag.trim();
+      const key = normalizeTag(raw);
+      if (!key) return;
+      if (!seen.has(key)) {
+        seen.set(key, raw);
+      } else {
+        // Prefere a forma mais longa (ex: "Vendas Ativas" > "Venda Ativa")
+        if (raw.length > seen.get(key).length) seen.set(key, raw);
+      }
+    });
 
     const sorted = [...seen.entries()].sort((a, b) => a[0].localeCompare(b[0], 'pt'));
     const bar = document.getElementById('tagsFilter');
@@ -455,7 +471,7 @@
   }
 
   function filterTag(tagKey, btn) {
-    activeTag = tagKey; // null = todos, ou lowercase normalizado
+    activeTag = tagKey; // null = todos, ou chave normalizada
     document.querySelectorAll('.tag-btn').forEach(b => b.classList.remove('active'));
     btn.classList.add('active');
     renderMembers();
@@ -468,7 +484,7 @@
 
   function getFilteredMembers() {
     return MEMBROS.filter(m => {
-      // Compara tags em lowercase para não depender de capitalização
+      // Compara tag normalizada — ignora capitalização e singular/plural
       const matchesTag = !activeTag || (m.tags || []).some(t => normalizeTag(t) === activeTag);
       const matchesSearch = !searchQuery || [
         m.name, m.role, m.company, m.city, m.bio, ...(m.tags || [])
