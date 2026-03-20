@@ -1489,31 +1489,19 @@
         });
       } catch(e) { console.error('Erro email:', e); }
 
-      // Notificação por WhatsApp para o admin (template nova_aplicacao)
+      // Notificação por WhatsApp via Edge Function segura
       try {
-        await fetch('https://graph.facebook.com/v18.0/1016285141569023/messages', {
+        await fetch('https://zjdiwjmmnjigikhehamo.supabase.co/functions/v1/notify-whatsapp', {
           method: 'POST',
           headers: {
-            'Authorization': 'Bearer EAAR4o2HIXgQBQ69epCBboLHXRoL4glQNZAnZCj3OqUXBTk4erEfyvjoZCX8f6Qq0A5xWJSQKfv9oQhkMmoFvXnIMykoZAIcVdknHzJrqLhZAlmK0ylmNCQUs46SRnxcuW7oRRcXc9uwwjpJpj6CyFCfJxBPnzLInzy1Uw36Ys5JTOcLwXuUZBjrhsQRLhbZALHCBXBi6zZAxDzUeewxtmZAq9iYizGSXZA3NyWFhdnxAacScGOxjNfSPRevF0ra7zeaZA2JGaDguwxvNu7vwlO724nX7CYZCuQp7oZCcZD',
             'Content-Type': 'application/json',
+            'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InpqZGl3am1tbmppZ2lraGVoYW1vIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzM4ODMzODcsImV4cCI6MjA4OTQ1OTM4N30.wQ8JiSIXIpLPJtw0Tp_DYrZFgUfp0j3rJPYwZ54cgDA',
           },
           body: JSON.stringify({
-            messaging_product: 'whatsapp',
-            to: '5511991439098',
-            type: 'template',
-            template: {
-              name: 'nova_aplicacao',
-              language: { code: 'pt_BR' },
-              components: [{
-                type: 'body',
-                parameters: [
-                  { type: 'text', text: dados.nome },
-                  { type: 'text', text: dados.telefone },
-                  { type: 'text', text: dados.email },
-                  { type: 'text', text: dados.faturamento }
-                ]
-              }]
-            }
+            nome: dados.nome,
+            whatsapp: dados.telefone,
+            email: dados.email,
+            faturamento: dados.faturamento,
           })
         });
       } catch(e) {
