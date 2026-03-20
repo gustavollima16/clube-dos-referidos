@@ -21,7 +21,7 @@ async function checkApproved(userId) {
   return data.approved === true;
 }
 
-const ADMIN_EMAIL = 'grupoalpha.alphaville@gmail.com';
+const ADMIN_EMAIL = 'gustavo@clubedosreferidos.com';
 
 // --- Login ---
 async function authLogin(email, password) {
