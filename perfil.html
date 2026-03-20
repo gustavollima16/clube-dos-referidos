@@ -23,13 +23,13 @@
       top: var(--space-xl);
     }
 
-    /* ── Foto: upload + arrastar ── */
-    .avatar-area {
+    /* ── Avatar ── */
+    .avatar-wrap {
       position: relative;
       width: 110px;
       height: 110px;
-      margin: 0 auto var(--space-md);
-      user-select: none;
+      margin: 0 auto var(--space-sm);
+      cursor: pointer;
     }
 
     .avatar-circle {
@@ -42,19 +42,16 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      position: relative;
+      transition: border-color 0.2s;
     }
+
+    .avatar-wrap:hover .avatar-circle { border-color: var(--accent); }
 
     .avatar-circle img {
-      width: 150%;
-      height: 150%;
+      width: 100%;
+      height: 100%;
       object-fit: cover;
-      position: absolute;
-      cursor: grab;
-      transition: none;
     }
-
-    .avatar-circle img.dragging { cursor: grabbing; }
 
     .avatar-initials {
       font-family: var(--font-display);
@@ -62,55 +59,23 @@
       color: var(--accent);
     }
 
-    /* Overlay: hover mostra opções */
-    .avatar-overlay {
+    /* Ícone de câmera sobre o avatar */
+    .avatar-cam {
       position: absolute;
-      inset: 0;
+      bottom: 2px; right: 2px;
+      width: 28px; height: 28px;
       border-radius: 50%;
-      background: rgba(0,0,0,0.65);
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      opacity: 0;
-      transition: opacity 0.2s;
-      gap: 4px;
-      color: #fff;
-      font-size: 0.68rem;
+      background: var(--accent);
+      display: flex; align-items: center; justify-content: center;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.5);
       pointer-events: none;
     }
 
-    .avatar-area:hover .avatar-overlay { opacity: 1; }
-
-    .avatar-btn-row {
-      display: flex;
-      gap: 6px;
-      margin-bottom: var(--space-sm);
-    }
-
-    .avatar-action-btn {
-      background: rgba(255,255,255,0.15);
-      border: 1px solid rgba(255,255,255,0.3);
-      color: #fff;
-      border-radius: 50%;
-      width: 30px; height: 30px;
-      display: flex; align-items: center; justify-content: center;
-      cursor: pointer;
-      transition: background 0.2s;
-      pointer-events: all;
-      font-size: 0;
-    }
-
-    .avatar-action-btn:hover { background: rgba(255,255,255,0.3); }
-
-    .avatar-drag-hint {
-      font-size: 0.65rem;
+    .avatar-change-hint {
+      font-size: 0.72rem;
       color: var(--text-muted);
-      margin-top: 6px;
-      display: none;
+      margin-bottom: var(--space-md);
     }
-
-    .avatar-drag-hint.visible { display: block; }
 
     #photoInput { display: none; }
 
@@ -229,6 +194,120 @@
       border-top: 1px solid var(--border-subtle);
     }
 
+    /* ── Crop Modal (estilo WhatsApp) ── */
+    .crop-modal {
+      display: none;
+      position: fixed;
+      inset: 0;
+      z-index: 9999;
+      background: rgba(0,0,0,0.93);
+      align-items: center;
+      justify-content: center;
+    }
+
+    .crop-modal.open { display: flex; }
+
+    .crop-box {
+      background: #111;
+      border-radius: 20px;
+      padding: 28px 24px 24px;
+      width: 340px;
+      max-width: 95vw;
+      text-align: center;
+      box-shadow: 0 24px 80px rgba(0,0,0,0.9);
+    }
+
+    .crop-title {
+      font-family: var(--font-display);
+      font-size: 1.1rem;
+      font-weight: 700;
+      margin-bottom: 5px;
+    }
+
+    .crop-subtitle {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      margin-bottom: 22px;
+    }
+
+    /* O frame circular onde o usuário arrasta */
+    .crop-frame {
+      position: relative;
+      width: 272px;
+      height: 272px;
+      margin: 0 auto 18px;
+      border-radius: 50%;
+      overflow: hidden;
+      border: 2.5px solid rgba(0, 200, 232, 0.75);
+      cursor: grab;
+      background: #000;
+      touch-action: none;
+      user-select: none;
+      box-shadow: 0 0 0 9999px rgba(0,0,0,0.85);
+    }
+
+    .crop-frame:active { cursor: grabbing; }
+
+    .crop-frame img {
+      position: absolute;
+      max-width: none;
+      max-height: none;
+      user-select: none;
+      -webkit-user-drag: none;
+      pointer-events: none;
+    }
+
+    /* Slider de zoom */
+    .crop-zoom-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 22px;
+      padding: 0 4px;
+    }
+
+    .crop-zoom-row input[type=range] {
+      flex: 1;
+      accent-color: var(--accent);
+      height: 4px;
+    }
+
+    .crop-zoom-row svg { color: var(--text-muted); flex-shrink: 0; }
+
+    .crop-actions {
+      display: flex;
+      gap: 10px;
+    }
+
+    .crop-btn-cancel {
+      flex: 1;
+      padding: 0.65rem 1rem;
+      background: var(--bg-secondary);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-md);
+      color: var(--text-secondary);
+      font-size: 0.88rem;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+
+    .crop-btn-cancel:hover { background: var(--bg-card); }
+
+    .crop-btn-confirm {
+      flex: 1;
+      padding: 0.65rem 1rem;
+      background: var(--accent);
+      border: none;
+      border-radius: var(--radius-md);
+      color: #000;
+      font-size: 0.88rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: opacity 0.2s;
+    }
+
+    .crop-btn-confirm:hover { opacity: 0.88; }
+
     @media (max-width: 900px) {
       .perfil-grid { grid-template-columns: 1fr; }
       .perfil-sidebar-card { position: static; }
@@ -251,26 +330,20 @@
     <div class="page-body">
       <div class="perfil-grid">
 
-        <!-- ── Preview ── -->
+        <!-- ── Preview / Avatar ── -->
         <div class="perfil-sidebar-card">
 
-          <div class="avatar-area" id="avatarArea">
+          <div class="avatar-wrap" onclick="document.getElementById('photoInput').click()" title="Clique para trocar foto">
             <div class="avatar-circle" id="avatarCircle">
               <span class="avatar-initials" id="avatarInitials"></span>
             </div>
-            <div class="avatar-overlay" id="avatarOverlay">
-              <div class="avatar-btn-row">
-                <!-- Trocar foto -->
-                <button class="avatar-action-btn" title="Trocar foto" onclick="document.getElementById('photoInput').click()">
-                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>
-                </button>
-              </div>
-              <span style="font-size:0.65rem;">Trocar foto</span>
-              <span id="dragHintOverlay" style="font-size:0.6rem; margin-top:2px; display:none;">Arraste para ajustar</span>
+            <div class="avatar-cam">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#000" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>
             </div>
           </div>
           <input type="file" id="photoInput" accept="image/*" onchange="handlePhotoSelect(event)">
-          <div class="avatar-drag-hint" id="dragHint">↕ Arraste a foto para ajustar a posição</div>
+
+          <div class="avatar-change-hint">Clique na foto para trocar</div>
 
           <div class="preview-name" id="previewName">—</div>
           <div class="preview-role" id="previewRole">—</div>
@@ -445,18 +518,44 @@
   </div>
 </div>
 
+<!-- ══════════════════════════════════════════
+     CROP MODAL — estilo WhatsApp
+══════════════════════════════════════════ -->
+<div id="cropModal" class="crop-modal" role="dialog" aria-modal="true" aria-label="Ajustar foto de perfil">
+  <div class="crop-box">
+    <div class="crop-title">Ajustar foto de perfil</div>
+    <div class="crop-subtitle">Arraste para reposicionar &nbsp;·&nbsp; Role para dar zoom</div>
+
+    <!-- Frame circular onde a foto fica -->
+    <div class="crop-frame" id="cropFrame">
+      <img id="cropImgEl" alt="">
+    </div>
+
+    <!-- Slider de zoom -->
+    <div class="crop-zoom-row">
+      <!-- ícone minus -->
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/><line x1="8" y1="11" x2="14" y2="11"/></svg>
+      <input type="range" id="cropZoom" min="100" max="400" value="100" oninput="onCropZoom()">
+      <!-- ícone plus -->
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/><line x1="11" y1="8" x2="11" y2="14"/><line x1="8" y1="11" x2="14" y2="11"/></svg>
+    </div>
+
+    <div class="crop-actions">
+      <button class="crop-btn-cancel" onclick="cancelCrop()">Cancelar</button>
+      <button class="crop-btn-confirm" onclick="confirmCrop()">Usar esta foto</button>
+    </div>
+  </div>
+</div>
+
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 <script src="js/supabase-config.js"></script>
 <script src="js/auth.js"></script>
 <script src="js/sidebar.js"></script>
 <script>
-  let currentUser = null;
-  let newPhotoFile = null;
-  // Posição da foto no círculo (0–100%)
-  let photoOffsetX = 50;
-  let photoOffsetY = 50;
+  let currentUser  = null;
+  let newPhotoFile = null; // blob final (já cropado via canvas)
 
-  // ── Inicialização ──
+  // ── Inicialização ──────────────────────────────────────────────────────────
   document.addEventListener('DOMContentLoaded', async () => {
     const session = await requireAuth();
     if (!session) return;
@@ -469,17 +568,14 @@
 
     if (profile) {
       document.getElementById('fieldName').value      = profile.full_name || currentUser.user_metadata?.full_name || '';
-      document.getElementById('fieldRole').value      = profile.role || '';
-      document.getElementById('fieldCompany').value   = profile.company || '';
-      document.getElementById('fieldCity').value      = profile.city || '';
-      document.getElementById('fieldBio').value       = profile.bio || '';
+      document.getElementById('fieldRole').value      = profile.role     || '';
+      document.getElementById('fieldCompany').value   = profile.company  || '';
+      document.getElementById('fieldCity').value      = profile.city     || '';
+      document.getElementById('fieldBio').value       = profile.bio      || '';
       document.getElementById('fieldTags').value      = (profile.tags || []).join(', ');
       document.getElementById('fieldInstagram').value = profile.instagram || '';
-      document.getElementById('fieldLinkedin').value  = profile.linkedin || '';
-      document.getElementById('fieldWhatsapp').value  = profile.whatsapp || '';
-
-      photoOffsetX = profile.photo_offset_x ?? 50;
-      photoOffsetY = profile.photo_offset_y ?? 50;
+      document.getElementById('fieldLinkedin').value  = profile.linkedin  || '';
+      document.getElementById('fieldWhatsapp').value  = profile.whatsapp  || '';
 
       if (profile.photo_url) {
         setAvatarImg(profile.photo_url);
@@ -489,20 +585,24 @@
     await initSidebar();
     updatePreview();
     updateTags();
+
+    // Eventos do crop modal (registrados uma vez)
+    initCropEvents();
   });
 
-  // ── Preview ──
+  // ── Preview ────────────────────────────────────────────────────────────────
   function updatePreview() {
-    const name    = document.getElementById('fieldName').value.trim() || '—';
-    const role    = document.getElementById('fieldRole').value.trim() || '—';
+    const name    = document.getElementById('fieldName').value.trim()    || '—';
+    const role    = document.getElementById('fieldRole').value.trim()    || '—';
     const company = document.getElementById('fieldCompany').value.trim();
-    const city    = document.getElementById('fieldCity').value.trim() || '—';
+    const city    = document.getElementById('fieldCity').value.trim()    || '—';
     const bio     = document.getElementById('fieldBio').value.trim();
 
     document.getElementById('previewName').textContent    = name;
     document.getElementById('previewRole').textContent    = role;
     document.getElementById('previewCompany').textContent = company;
-    document.getElementById('previewCity').innerHTML      = `<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>${city}`;
+    document.getElementById('previewCity').innerHTML = `
+      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>${city}`;
     document.getElementById('previewBio').textContent     = bio || 'Sua bio aparecerá aqui...';
     document.getElementById('previewBio').style.fontStyle = bio ? 'normal' : 'italic';
     document.getElementById('previewBio').style.color     = bio ? 'var(--text-secondary)' : 'var(--text-muted)';
@@ -518,121 +618,226 @@
     document.getElementById('tagsPreview').innerHTML = tags.map(t => `<span class="tag-chip">${t}</span>`).join('');
   }
 
-  // ── Foto: selecionar ──
+  function setAvatarImg(src) {
+    const circle = document.getElementById('avatarCircle');
+    circle.innerHTML = `<img src="${src}" alt="Foto de perfil">`;
+  }
+
+  // ── Seleção de foto → abre modal ──────────────────────────────────────────
   function handlePhotoSelect(e) {
     const file = e.target.files[0];
     if (!file) return;
-    newPhotoFile = file;
-    photoOffsetX = 50;
-    photoOffsetY = 50;
+    // Reseta o input para permitir selecionar o mesmo arquivo novamente
+    e.target.value = '';
 
     const reader = new FileReader();
-    reader.onload = (ev) => {
-      setAvatarImg(ev.target.result);
-      document.getElementById('dragHint').classList.add('visible');
-      document.getElementById('dragHintOverlay').style.display = 'block';
-    };
+    reader.onload = (ev) => openCropModal(ev.target.result);
     reader.readAsDataURL(file);
   }
 
-  function setAvatarImg(src) {
-    const circle = document.getElementById('avatarCircle');
-    // Remove initials, add img
-    circle.innerHTML = '';
-    const img = document.createElement('img');
+  // ════════════════════════════════════════════════════════════════════════
+  //  CROP MODAL
+  // ════════════════════════════════════════════════════════════════════════
+  const ZONE = 272;   // tamanho do frame circular em px
+  const OUT  = 400;   // tamanho do canvas de saída em px
+
+  let cropNatW = 0, cropNatH = 0;
+  let cropMinScale = 1;   // escala mínima: imagem cobre o círculo
+  let cropScale    = 1;
+  let cropTx = 0, cropTy = 0;  // offset do centro, em px
+  let cropDragging   = false;
+  let cropStartX, cropStartY, cropStartTx, cropStartTy;
+  let cropLastPinchDist = null;
+
+  function openCropModal(src) {
+    const img = document.getElementById('cropImgEl');
+    img.onload = () => {
+      cropNatW = img.naturalWidth;
+      cropNatH = img.naturalHeight;
+
+      // Escala mínima: imagem cobre o círculo inteiro
+      cropMinScale = Math.max(ZONE / cropNatW, ZONE / cropNatH);
+      cropScale    = cropMinScale;
+      cropTx = 0;
+      cropTy = 0;
+
+      document.getElementById('cropZoom').value = 100;
+      updateCropImg();
+    };
     img.src = src;
-    img.alt = 'Foto de perfil';
-    applyImgPosition(img);
-    circle.appendChild(img);
-    initDrag(img);
-
-    document.getElementById('dragHint').classList.add('visible');
-    document.getElementById('dragHintOverlay').style.display = 'block';
+    document.getElementById('cropModal').classList.add('open');
   }
 
-  function applyImgPosition(img) {
-    // Usa translate para mover a imagem dentro do círculo
-    // Imagem é 150% do container, então pode mover ±25% do tamanho do container
-    const maxOffset = 25; // % do container
-    const tx = (photoOffsetX - 50) / 50 * maxOffset;
-    const ty = (photoOffsetY - 50) / 50 * maxOffset;
-    img.style.transform = `translate(${tx}%, ${ty}%)`;
+  function updateCropImg() {
+    const img = document.getElementById('cropImgEl');
+    const w   = cropNatW * cropScale;
+    const h   = cropNatH * cropScale;
+    // Centraliza e aplica offset
+    img.style.left   = ((ZONE - w) / 2 + cropTx) + 'px';
+    img.style.top    = ((ZONE - h) / 2 + cropTy) + 'px';
+    img.style.width  = w + 'px';
+    img.style.height = h + 'px';
   }
 
-  // ── Foto: arrastar para reposicionar (como WhatsApp) ──
-  function initDrag(img) {
-    let dragging = false;
-    let startX, startY, startOffX, startOffY;
+  function clampCrop() {
+    const w = cropNatW * cropScale;
+    const h = cropNatH * cropScale;
+    const maxTx = Math.max(0, (w - ZONE) / 2);
+    const maxTy = Math.max(0, (h - ZONE) / 2);
+    cropTx = Math.max(-maxTx, Math.min(maxTx, cropTx));
+    cropTy = Math.max(-maxTy, Math.min(maxTy, cropTy));
+  }
 
-    img.addEventListener('mousedown', (e) => {
+  function onCropZoom() {
+    const val = parseInt(document.getElementById('cropZoom').value); // 100–400
+    cropScale = cropMinScale * (val / 100);
+    clampCrop();
+    updateCropImg();
+  }
+
+  function initCropEvents() {
+    const frame = document.getElementById('cropFrame');
+
+    /* ── Mouse ── */
+    frame.addEventListener('mousedown', (e) => {
       e.preventDefault();
-      dragging = true;
-      startX = e.clientX;
-      startY = e.clientY;
-      startOffX = photoOffsetX;
-      startOffY = photoOffsetY;
-      img.classList.add('dragging');
+      cropDragging = true;
+      cropStartX  = e.clientX; cropStartY  = e.clientY;
+      cropStartTx = cropTx;    cropStartTy = cropTy;
     });
 
     document.addEventListener('mousemove', (e) => {
-      if (!dragging) return;
-      const circle = document.getElementById('avatarCircle');
-      const size = circle.offsetWidth;
-      const dx = (e.clientX - startX) / size * 100;
-      const dy = (e.clientY - startY) / size * 100;
-      photoOffsetX = Math.max(0, Math.min(100, startOffX + dx));
-      photoOffsetY = Math.max(0, Math.min(100, startOffY + dy));
-      applyImgPosition(img);
+      if (!cropDragging) return;
+      cropTx = cropStartTx + (e.clientX - cropStartX);
+      cropTy = cropStartTy + (e.clientY - cropStartY);
+      clampCrop();
+      updateCropImg();
     });
 
-    document.addEventListener('mouseup', () => {
-      if (dragging) {
-        dragging = false;
-        img.classList.remove('dragging');
-      }
-    });
+    document.addEventListener('mouseup', () => { cropDragging = false; });
 
-    // Touch support
-    img.addEventListener('touchstart', (e) => {
-      const t = e.touches[0];
-      startX = t.clientX; startY = t.clientY;
-      startOffX = photoOffsetX; startOffY = photoOffsetY;
-    });
-
-    img.addEventListener('touchmove', (e) => {
+    /* ── Scroll para zoom ── */
+    frame.addEventListener('wheel', (e) => {
       e.preventDefault();
-      const t = e.touches[0];
-      const circle = document.getElementById('avatarCircle');
-      const size = circle.offsetWidth;
-      const dx = (t.clientX - startX) / size * 100;
-      const dy = (t.clientY - startY) / size * 100;
-      photoOffsetX = Math.max(0, Math.min(100, startOffX + dx));
-      photoOffsetY = Math.max(0, Math.min(100, startOffY + dy));
-      applyImgPosition(img);
+      const delta = e.deltaY > 0 ? -0.06 : 0.06;
+      cropScale = Math.max(cropMinScale, cropScale * (1 + delta));
+      clampCrop();
+      updateCropImg();
+      // Sincroniza slider
+      document.getElementById('cropZoom').value =
+        Math.round((cropScale / cropMinScale) * 100);
     }, { passive: false });
+
+    /* ── Touch (arrastar + pinch zoom) ── */
+    frame.addEventListener('touchstart', (e) => {
+      e.preventDefault();
+      if (e.touches.length === 1) {
+        cropDragging = true;
+        const t = e.touches[0];
+        cropStartX = t.clientX; cropStartY = t.clientY;
+        cropStartTx = cropTx;   cropStartTy = cropTy;
+        cropLastPinchDist = null;
+      } else if (e.touches.length === 2) {
+        cropDragging = false;
+        cropLastPinchDist = pinchDist(e.touches);
+      }
+    }, { passive: false });
+
+    frame.addEventListener('touchmove', (e) => {
+      e.preventDefault();
+      if (e.touches.length === 1 && cropDragging) {
+        const t = e.touches[0];
+        cropTx = cropStartTx + (t.clientX - cropStartX);
+        cropTy = cropStartTy + (t.clientY - cropStartY);
+        clampCrop();
+        updateCropImg();
+      } else if (e.touches.length === 2 && cropLastPinchDist) {
+        const d = pinchDist(e.touches);
+        const ratio = d / cropLastPinchDist;
+        cropScale = Math.max(cropMinScale, cropScale * ratio);
+        clampCrop();
+        updateCropImg();
+        document.getElementById('cropZoom').value =
+          Math.round((cropScale / cropMinScale) * 100);
+        cropLastPinchDist = d;
+      }
+    }, { passive: false });
+
+    frame.addEventListener('touchend', () => {
+      cropDragging = false;
+      cropLastPinchDist = null;
+    });
   }
 
-  // ── Upload da foto ──
+  function pinchDist(touches) {
+    const dx = touches[0].clientX - touches[1].clientX;
+    const dy = touches[0].clientY - touches[1].clientY;
+    return Math.sqrt(dx * dx + dy * dy);
+  }
+
+  function cancelCrop() {
+    document.getElementById('cropModal').classList.remove('open');
+  }
+
+  function confirmCrop() {
+    // Canvas 400×400 com a imagem cropada
+    const canvas = document.createElement('canvas');
+    canvas.width  = OUT;
+    canvas.height = OUT;
+    const ctx = canvas.getContext('2d');
+
+    // Fundo preto (evita transparência no JPEG)
+    ctx.fillStyle = '#000';
+    ctx.fillRect(0, 0, OUT, OUT);
+
+    // Calcula posição/tamanho no canvas de saída (escala ZONE → OUT)
+    const factor = OUT / ZONE;
+    const imgEl  = document.getElementById('cropImgEl');
+    const drawW  = cropNatW * cropScale * factor;
+    const drawH  = cropNatH * cropScale * factor;
+    const drawX  = ((ZONE - cropNatW * cropScale) / 2 + cropTx) * factor;
+    const drawY  = ((ZONE - cropNatH * cropScale) / 2 + cropTy) * factor;
+
+    ctx.drawImage(imgEl, drawX, drawY, drawW, drawH);
+
+    canvas.toBlob((blob) => {
+      newPhotoFile = new File([blob], 'profile.jpg', { type: 'image/jpeg' });
+
+      // Exibe no avatar preview
+      setAvatarImg(URL.createObjectURL(blob));
+
+      // Fecha modal
+      document.getElementById('cropModal').classList.remove('open');
+    }, 'image/jpeg', 0.92);
+  }
+
+  // ── Upload da foto ─────────────────────────────────────────────────────────
   async function uploadPhoto() {
     if (!newPhotoFile) return null;
-    const ext  = newPhotoFile.name.split('.').pop().toLowerCase();
-    const path = `perfis/${currentUser.id}.${ext}`;
 
+    const path = `perfis/${currentUser.id}.jpg`;
     document.getElementById('uploadProgress').style.display = 'block';
 
     const { error } = await supabaseClient.storage
       .from('fotos')
-      .upload(path, newPhotoFile, { upsert: true });
+      .upload(path, newPhotoFile, {
+        upsert: true,
+        contentType: 'image/jpeg',
+      });
 
     document.getElementById('uploadProgress').style.display = 'none';
 
-    if (error) { console.error(error); return null; }
+    if (error) {
+      console.error('Upload error:', error);
+      return null;
+    }
 
+    // Adiciona cache-buster para forçar reload da imagem
     const { data } = supabaseClient.storage.from('fotos').getPublicUrl(path);
-    return data.publicUrl;
+    return data.publicUrl + '?t=' + Date.now();
   }
 
-  // ── Salvar perfil ──
+  // ── Salvar perfil ──────────────────────────────────────────────────────────
   async function saveProfile() {
     const alertEl = document.getElementById('profileAlert');
     alertEl.className = 'alert'; alertEl.textContent = '';
@@ -641,7 +846,7 @@
     if (newPhotoFile) {
       photoUrl = await uploadPhoto();
       if (!photoUrl) {
-        alertEl.textContent = 'Erro ao fazer upload da foto.';
+        alertEl.textContent = 'Erro ao fazer upload da foto. Verifique sua conexão.';
         alertEl.className = 'alert alert-error show'; return;
       }
     }
@@ -656,17 +861,17 @@
       city:              document.getElementById('fieldCity').value.trim(),
       bio:               document.getElementById('fieldBio').value.trim(),
       tags,
-      show_in_directory: true,   // sempre aparece no painel
-      photo_offset_x:    Math.round(photoOffsetX),
-      photo_offset_y:    Math.round(photoOffsetY),
+      show_in_directory: true,
       updated_at:        new Date().toISOString(),
     };
 
     if (photoUrl) updates.photo_url = photoUrl;
 
-    const { error } = await supabaseClient.from('profiles').update(updates).eq('id', currentUser.id);
+    const { error } = await supabaseClient
+      .from('profiles').update(updates).eq('id', currentUser.id);
 
     if (error) {
+      console.error('Profile save error:', error);
       alertEl.textContent = 'Erro ao salvar. Tente novamente.';
       alertEl.className = 'alert alert-error show'; return;
     }
@@ -678,7 +883,7 @@
     setTimeout(() => { alertEl.className = 'alert'; }, 4000);
   }
 
-  // ── Salvar redes sociais ──
+  // ── Salvar redes sociais ───────────────────────────────────────────────────
   async function saveSocials() {
     const alertEl = document.getElementById('socialsAlert');
     alertEl.className = 'alert';
@@ -690,7 +895,7 @@
     }).eq('id', currentUser.id);
 
     if (error) {
-      alertEl.textContent = 'Erro ao salvar. Tente novamente.';
+      alertEl.textContent = 'Erro ao salvar.';
       alertEl.className = 'alert alert-error show'; return;
     }
     alertEl.textContent = '✓ Redes sociais salvas!';
@@ -698,7 +903,7 @@
     setTimeout(() => { alertEl.className = 'alert'; }, 3000);
   }
 
-  // ── Trocar e-mail ──
+  // ── Trocar e-mail ──────────────────────────────────────────────────────────
   async function changeEmail() {
     const alertEl  = document.getElementById('emailAlert');
     const newEmail = document.getElementById('fieldNewEmail').value.trim();
@@ -719,7 +924,7 @@
     document.getElementById('fieldNewEmail').value = '';
   }
 
-  // ── Trocar senha ──
+  // ── Trocar senha ───────────────────────────────────────────────────────────
   async function changePassword() {
     const alertEl = document.getElementById('pwAlert');
     const pw      = document.getElementById('fieldNewPw').value;
