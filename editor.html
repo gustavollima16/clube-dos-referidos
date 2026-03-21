@@ -589,8 +589,8 @@
       if (!res.ok) throw new Error('Erro ao buscar arquivo: ' + res.status);
       const data = await res.json();
       const sha = data.sha;
-      const rawBytes = Uint8Array.from(atob(data.content.replace(/\n/g, '')), c => c.charCodeAt(0));
-      const html = new TextDecoder('utf-8').decode(rawBytes);
+      // Opera na string binária diretamente — sem conversão UTF-8 (CSS é puro ASCII)
+      const html = atob(data.content.replace(/\n/g, ''));
 
       // Gera o novo bloco CSS
       const novoCSS = `/* EDITOR-START */
@@ -621,11 +621,8 @@
       if (novoHTML === html) throw new Error('Marcadores não encontrados no index.html');
 
       // Commita no GitHub
-      // Encode UTF-8 corretamente
-      const bytes = new TextEncoder().encode(novoHTML);
-      let binary = '';
-      bytes.forEach(b => binary += String.fromCharCode(b));
-      const encoded = btoa(binary);
+      // Re-encode sem alterar bytes originais (string binária → base64)
+      const encoded = btoa(novoHTML);
 
       const put = await fetch(`https://api.github.com/repos/${GH_OWNER}/${GH_REPO}/contents/${GH_FILE}`, {
         method: 'PUT',
