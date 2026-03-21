@@ -605,6 +605,64 @@
 
   iframe.addEventListener('load', injectStyle);
 
+  /* ── CARREGA VALORES REAIS DO INDEX.HTML ── */
+  function setSlider(id, v) {
+    const el = document.getElementById(id);
+    if (el) el.value = v;
+  }
+
+  async function carregarValoresReais() {
+    try {
+      const res = await fetch('/index.html?' + Date.now());
+      const html = await res.text();
+      const m = html.match(/\/\* EDITOR-START \*\/([\s\S]*?)\/\* EDITOR-END \*\//);
+      if (!m) return;
+      const css = m[1];
+
+      const get = (pattern) => { const r = css.match(pattern); return r ? parseFloat(r[1]) : null; };
+
+      const wmTop    = get(/\.hero-watermark[\s\S]*?top:\s*([\d.]+)%/);
+      const wmLeft   = get(/\.hero-watermark[\s\S]*?left:\s*([\d.]+)%/);
+      const wmSize   = get(/max-width:\s*([\d.]+)px/);
+      const wmOp     = get(/opacity:\s*([\d.]+)/);
+      const subMtD   = get(/\.hero-subtitle\s*\{[^}]*margin-top:\s*([\d.]+)rem/);
+      const navLogoD = get(/\.nav-logo img\s*\{[^}]*height:\s*([\d.]+)px/);
+      const footerD  = get(/\.footer-logo\s*\{[^}]*height:\s*([\d.]+)px/);
+
+      // Mobile — dentro do @media
+      const mobile = css.match(/@media[\s\S]*?\{([\s\S]*)\}/);
+      const mob = mobile ? mobile[1] : '';
+      const getM = (pattern) => { const r = mob.match(pattern); return r ? parseFloat(r[1]) : null; };
+
+      const mwmTop  = getM(/\.hero-watermark[^}]*top:\s*([\d.]+)%/);
+      const mwmLeft = getM(/\.hero-watermark[^}]*left:\s*([\d.]+)%/);
+      const mwmSize = getM(/\.hero-watermark[^}]*width:\s*([\d.]+)%/);
+      const subMt   = getM(/\.hero-subtitle[^}]*margin-top:\s*([\d.]+)rem/);
+      const navLogo = getM(/\.nav-logo img[^}]*height:\s*([\d.]+)px/);
+      const footer  = getM(/\.footer-logo[^}]*height:\s*([\d.]+)px/);
+      const footerMt= getM(/\.footer-logo[^}]*margin-top:\s*(-?[\d.]+)rem/);
+
+      if (wmTop   !== null) setSlider('wm-top',        wmTop);
+      if (wmLeft  !== null) setSlider('wm-left',       wmLeft);
+      if (wmSize  !== null) setSlider('wm-size',       wmSize);
+      if (wmOp    !== null) setSlider('wm-op',         Math.round(wmOp * 100));
+      if (subMtD  !== null) setSlider('sub-mt-d',      subMtD);
+      if (navLogoD!== null) setSlider('nav-logo-d',    navLogoD);
+      if (footerD !== null) setSlider('footer-logo-d', footerD);
+      if (mwmTop  !== null) setSlider('mwm-top',       mwmTop);
+      if (mwmLeft !== null) setSlider('mwm-left',      mwmLeft);
+      if (mwmSize !== null) setSlider('mwm-size',      mwmSize);
+      if (subMt   !== null) setSlider('sub-mt',        subMt);
+      if (navLogo !== null) setSlider('nav-logo',      navLogo);
+      if (footer  !== null) setSlider('footer-logo',   footer);
+      if (footerMt!== null) setSlider('footer-mt',     footerMt);
+
+      update();
+    } catch(e) {}
+  }
+
+  carregarValoresReais();
+
   // ── DRAG TO MOVE ──
   const header = document.getElementById('panel-header');
   let isDragging = false, startX, startY, startLeft, startTop;
