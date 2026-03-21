@@ -399,7 +399,20 @@
     <button class="view-btn" id="btn-mobile" onclick="setView('mobile')"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="2" width="14" height="20" rx="2"/><line x1="12" y1="18" x2="12.01" y2="18" stroke-width="3"/></svg> Mobile</button>
   </div>
 
-  <div id="panel-body">
+  <div id="highlight-label" style="
+  display:flex;align-items:center;gap:8px;
+  padding:8px 14px;margin:0 12px 8px;
+  background:rgba(0,200,232,0.08);
+  border:1px solid rgba(0,200,232,0.25);
+  border-radius:8px;
+  font-size:0.72rem;color:#00C8E8;
+  opacity:0;transition:opacity 0.2s;
+  min-height:32px;letter-spacing:0.02em;
+">
+  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#00C8E8" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+  <span id="highlight-label-text">Passe o mouse sobre um controle para ver o que ele edita</span>
+</div>
+<div id="panel-body">
 
     <!-- MARCA D'ÁGUA DESKTOP -->
     <div class="group only-desktop">
@@ -605,7 +618,7 @@
 
     <!-- ESPAÇAMENTOS -->
     <div class="group only-desktop">
-      <div class="group-title" onclick="toggleGroup(this)">⬜ Espaçamentos <span class="group-badge">Desktop</span><i class="toggle-arrow">▼</i></div>
+      <div class="group-title" onclick="toggleGroup(this)"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="21" y1="10" x2="3" y2="10"/><line x1="21" y1="6" x2="3" y2="6"/><line x1="21" y1="14" x2="3" y2="14"/><line x1="21" y1="18" x2="3" y2="18"/></svg> Espaçamentos <span class="group-badge">Desktop</span><i class="toggle-arrow">▼</i></div>
       <div class="group-body">
         <div class="control">
           <div class="control-label">Padding das seções <span class="control-value" id="v-section-pad-val">120px</span></div>
@@ -1085,6 +1098,156 @@ ${customCss}
     panel.style.transition = '';
     document.body.style.userSelect = '';
   });
+
+// ============================================================
+// HIGHLIGHT SYSTEM — mostra o elemento sendo editado no preview
+// ============================================================
+const TARGET_MAP = {
+  'wm-top':            { sel: '.hero-watermark', label: 'Marca d\'água do Hero' },
+  'wm-left':           { sel: '.hero-watermark', label: 'Marca d\'água do Hero' },
+  'wm-size':           { sel: '.hero-watermark', label: 'Marca d\'água do Hero' },
+  'wm-op':             { sel: '.hero-watermark', label: 'Marca d\'água — Opacidade' },
+  'mwm-top':           { sel: '.hero-watermark', label: 'Marca d\'água (Mobile)' },
+  'mwm-left':          { sel: '.hero-watermark', label: 'Marca d\'água (Mobile)' },
+  'mwm-size':          { sel: '.hero-watermark', label: 'Marca d\'água (Mobile)' },
+  'sub-mt-d':          { sel: '.hero-subtitle', label: 'Subtítulo do Hero' },
+  'sub-mt':            { sel: '.hero-subtitle', label: 'Subtítulo do Hero (Mobile)' },
+  'nav-logo-d':        { sel: '.nav-logo img', label: 'Logo da navegação' },
+  'nav-logo':          { sel: '.nav-logo img', label: 'Logo da navegação (Mobile)' },
+  'footer-logo-d':     { sel: '.footer-logo', label: 'Logo do rodapé' },
+  'footer-logo':       { sel: '.footer-logo', label: 'Logo do rodapé (Mobile)' },
+  'footer-mt':         { sel: '.footer-logo', label: 'Posição vertical do logo do rodapé' },
+  'c-accent':          { sel: '.hero-highlight', label: 'Cor de destaque (accent)' },
+  'neon-blur':         { sel: '.hero-highlight', label: 'Efeito neon "REFERIDOS"' },
+  'c-cta-bg':          { sel: 'nav .btn-primary', label: 'Botão "Área de Membros" na nav' },
+  'c-bg-section':      { sel: '#somos', label: 'Fundo das seções alternadas' },
+  'c-bg-footer':       { sel: '.site-footer', label: 'Fundo do rodapé' },
+  'c-bg-card':         { sel: '.benefit-card', label: 'Cards de benefícios' },
+  'c-stars':           { sel: '.depo-stars', label: 'Estrelas dos depoimentos' },
+  'c-input-bg':        { sel: '.form-control', label: 'Campos do formulário de inscrição' },
+  'font-display':      { sel: '.hero-title', label: 'Fonte dos títulos' },
+  'font-body':         { sel: '.hero-subtitle', label: 'Fonte do texto corrido' },
+  'hero-title-size':   { sel: '.hero-title', label: 'Tamanho do título Hero' },
+  'hero-sub-size':     { sel: '.hero-subtitle', label: 'Tamanho do subtítulo Hero' },
+  'section-title-size':{ sel: '.lp-title', label: 'Tamanho dos títulos de seção' },
+  'heading-ls':        { sel: '.hero-title', label: 'Espaçamento entre letras (headings)' },
+  'body-lh':           { sel: '.lp-subtitle', label: 'Altura da linha do texto' },
+  'hero-min-h':        { sel: '.landing-hero', label: 'Altura da seção Hero' },
+  'navbar-h':          { sel: 'nav', label: 'Barra de navegação' },
+  'section-pad':       { sel: '.lp-section', label: 'Espaçamento interno das seções' },
+  'card-gap':          { sel: '.benefits-grid', label: 'Espaço entre os cards de benefícios' },
+  'btn-px':            { sel: '.btn-primary', label: 'Botões — padding horizontal' },
+  'btn-py':            { sel: '.btn-primary', label: 'Botões — padding vertical' },
+  'btn-radius':        { sel: '.btn-primary', label: 'Arredondamento dos botões' },
+  'card-radius':       { sel: '.benefit-card', label: 'Arredondamento dos cards' },
+  'card-shadow':       { sel: '.depo-card', label: 'Sombra dos cards de depoimentos' },
+  'mentor-radius':     { sel: '.mentor-photo', label: 'Fotos dos mentores' },
+  'anim-speed':        { sel: 'body', label: 'Velocidade das animações' },
+  'hero-title-m':      { sel: '.hero-title', label: 'Título Hero — tamanho mobile' },
+  'hero-sub-m':        { sel: '.hero-subtitle', label: 'Subtítulo Hero — tamanho mobile' },
+  'c-scrollbar':       { sel: 'body', label: 'Barra de rolagem' },
+  'c-selection':       { sel: 'body', label: 'Cor de seleção de texto' },
+  'custom-css':        { sel: 'body', label: 'CSS personalizado (afeta a página toda)' },
+};
+
+let _isDragging = false;
+
+function highlightElement(selector, label) {
+  const iframe = document.getElementById('preview-iframe');
+  if (!iframe) return;
+  const doc = iframe.contentDocument || iframe.contentWindow?.document;
+  if (!doc) return;
+
+  // Update label bar
+  const lbl = document.getElementById('highlight-label');
+  const lblTxt = document.getElementById('highlight-label-text');
+  if (lbl && lblTxt) {
+    lblTxt.textContent = label;
+    lbl.style.opacity = '1';
+  }
+
+  // Remove previous highlight style
+  const prev = doc.getElementById('_editor_highlight');
+  if (prev) prev.remove();
+
+  // Inject highlight style
+  const style = doc.createElement('style');
+  style.id = '_editor_highlight';
+  style.textContent = `
+    @keyframes _hl_pulse {
+      0%,100% { box-shadow: 0 0 0 2px #00C8E8, 0 0 16px rgba(0,200,232,0.5); }
+      50%      { box-shadow: 0 0 0 2px rgba(0,200,232,0.4), 0 0 6px rgba(0,200,232,0.2); }
+    }
+    ${selector} {
+      outline: 2px solid #00C8E8 !important;
+      outline-offset: 3px !important;
+      animation: _hl_pulse 1.4s ease-in-out infinite !important;
+    }
+  `;
+  doc.head.appendChild(style);
+
+  // Scroll to element in iframe
+  try {
+    const el = doc.querySelector(selector);
+    if (el) el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  } catch(e) {}
+}
+
+function clearHighlight() {
+  if (_isDragging) return;
+  const lbl = document.getElementById('highlight-label');
+  if (lbl) lbl.style.opacity = '0';
+  const iframe = document.getElementById('preview-iframe');
+  if (!iframe) return;
+  const doc = iframe.contentDocument || iframe.contentWindow?.document;
+  if (!doc) return;
+  const prev = doc.getElementById('_editor_highlight');
+  if (prev) prev.remove();
+}
+
+function initHighlightListeners() {
+  const panel = document.getElementById('panel-body');
+  if (!panel) return;
+
+  // Find the input ID inside a control/color-row wrapper
+  function getTargetFromEl(el) {
+    const row = el.closest('.control, .color-row, .select-row');
+    if (!row) return null;
+    const inp = row.querySelector('input[id], select[id], textarea[id]');
+    if (!inp) return null;
+    return TARGET_MAP[inp.id] || null;
+  }
+
+  panel.addEventListener('mouseenter', (e) => {
+    const t = getTargetFromEl(e.target);
+    if (t) highlightElement(t.sel, t.label);
+  }, true);
+
+  panel.addEventListener('mouseleave', (e) => {
+    const row = e.target.closest?.('.control, .color-row, .select-row');
+    if (row) {
+      const related = e.relatedTarget;
+      if (!row.contains(related)) clearHighlight();
+    }
+  }, true);
+
+  // Keep highlight while dragging
+  panel.addEventListener('mousedown', (e) => {
+    const t = getTargetFromEl(e.target);
+    if (t) { _isDragging = true; highlightElement(t.sel, t.label); }
+  }, true);
+
+  document.addEventListener('mouseup', () => {
+    _isDragging = false;
+    clearHighlight();
+  });
+}
+
+// Init after DOM ready
+document.addEventListener('DOMContentLoaded', () => {
+  setTimeout(initHighlightListeners, 500);
+});
+
 </script>
 </body>
 </html>
