@@ -571,12 +571,18 @@
       if (novoHTML === html) throw new Error('Marcadores não encontrados no index.html');
 
       // Commita no GitHub
+      // Encode UTF-8 corretamente
+      const bytes = new TextEncoder().encode(novoHTML);
+      let binary = '';
+      bytes.forEach(b => binary += String.fromCharCode(b));
+      const encoded = btoa(binary);
+
       const put = await fetch(`https://api.github.com/repos/${GH_OWNER}/${GH_REPO}/contents/${GH_FILE}`, {
         method: 'PUT',
         headers: { 'Authorization': `token ${token}`, 'Content-Type': 'application/json' },
         body: JSON.stringify({
           message: 'Editor Visual: atualiza CSS',
-          content: btoa(unescape(encodeURIComponent(novoHTML))),
+          content: encoded,
           sha,
           branch: GH_BRANCH
         })
