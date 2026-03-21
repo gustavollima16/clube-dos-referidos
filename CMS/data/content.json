@@ -8,11 +8,11 @@
     "ctaText": "Quero fazer parte",
     "stats": [
       {
-        "number": "100+",
+        "number": "500+",
         "label": "Membros ativos"
       },
       {
-        "number": "50+",
+        "number": "80+",
         "label": "Videoaulas"
       },
       {
@@ -214,7 +214,7 @@
     "titulo": "Quero fazer parte",
     "subtitulo": "Preencha o formulário abaixo",
     "botaoTexto": "Enviar Aplicação",
-    "mensagemSucesso": "Recebemos sua aplicação! Entraremos em contato em até 48 horas.",
+    "mensagemSucesso": "Obrigado pelo seu interesse! Você receberá uma mensagem do nosso time em breve.",
     "campos": [
       {"label": "Nome completo", "placeholder": "Seu nome completo"},
       {"label": "Email", "placeholder": "seu@email.com"},
