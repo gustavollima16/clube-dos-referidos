@@ -1851,7 +1851,7 @@ function renderDepoimentos() {
         <div class="field">
           <label class="field-label">Avaliação (estrelas)</label>
           <div style="display:flex;gap:4px;margin-top:4px;" id="stars-${i}">
-            ${[1,2,3,4,5].map(s=>`<button type="button" onclick="setDepoStars(${i},${s})" style="background:none;border:none;cursor:pointer;font-size:1.3rem;color:${(d.estrelas||5)>=s?'#00C8E8':'#333'};padding:0 2px;transition:color 0.15s;" title="${s} estrela${s>1?'s':''}">★</button>`).join('')}
+            ${[1,2,3,4,5].map(s=>`<button type="button" onclick="setDepoStars(${i},${s})" style="background:none;border:none;cursor:pointer;padding:0 2px;transition:color 0.15s;" title="${s} estrela${s>1?'s':''}"><svg width="18" height="18" viewBox="0 0 24 24" fill="${(d.estrelas||5)>=s?'#00C8E8':'none'}" stroke="${(d.estrelas||5)>=s?'#00C8E8':'#444'}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></button>`).join('')}
           </div>
         </div>
         <div style="margin-top:12px;display:flex;justify-content:space-between;align-items:center;gap:8px;">
@@ -2651,13 +2651,13 @@ function saveHero() {
 function renderQsCards() {
   const el = document.getElementById('qs-cards-editor');
   if (!el) return;
-  const cards = content.quemSomos?.cards || [{icon:'🏆',title:'',text:''},{icon:'🤝',title:'',text:''},{icon:'📈',title:'',text:''}];
+  const cards = content.quemSomos?.cards || [{icon:'',title:'',text:''},{icon:'',title:'',text:''},{icon:'',title:'',text:''}];
   el.innerHTML = cards.map((c, i) => `
     <div style="background:var(--bg-card2);border:1px solid var(--border);border-radius:10px;padding:14px;margin-bottom:10px;">
       <div class="field-row-3">
         <div class="field">
           <label class="field-label">Ícone (emoji)</label>
-          <input type="text" value="${esc(c.icon)}" placeholder="🏆" oninput="updateQsCard(${i},'icon',this.value)" style="font-size:1.2rem;text-align:center;">
+          <input type="text" value="${esc(c.icon)}" placeholder="Ícone" oninput="updateQsCard(${i},'icon',this.value)" style="font-size:1.2rem;text-align:center;">
         </div>
         <div class="field">
           <label class="field-label">Título</label>
@@ -2814,11 +2814,11 @@ function renderSocialLinks() {
   const el = document.getElementById('social-links-editor');
   if (!el) return;
   const icons = {
-    instagram: '📷',
-    linkedin: '💼',
-    youtube: '▶️',
-    tiktok: '🎵',
-    twitter: '🐦'
+    instagram: `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#00C8E8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="#00C8E8" stroke="none"/></svg>`,
+    linkedin:  `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#00C8E8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="3"/><line x1="8" y1="11" x2="8" y2="17"/><line x1="8" y1="7" x2="8" y2="8"/><path d="M12 17v-6"/><path d="M16 17v-4a2 2 0 0 0-4 0"/></svg>`,
+    youtube:   `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#00C8E8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 8s-.3-2-1.2-2.8c-1.1-1.2-2.4-1.2-3-1.3C15.4 3.8 12 3.8 12 3.8s-3.4 0-5.8.1c-.6.1-1.9.1-3 1.3C2.3 6 2 8 2 8S1.8 10.3 1.8 12.5v2.1c0 2.2.2 4.5.2 4.5s.3 2 1.2 2.8c1.1 1.2 2.6 1.1 3.3 1.2C8.6 23.2 12 23.2 12 23.2s3.4 0 5.8-.2c.6-.1 1.9-.1 3-1.3.9-.8 1.2-2.8 1.2-2.8s.2-2.3.2-4.5v-2.1C22.2 10.3 22 8 22 8z"/><polygon points="10 15 15 12 10 9 10 15" fill="#00C8E8" stroke="none"/></svg>`,
+    tiktok:    `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#00C8E8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 12a4 4 0 1 0 4 4V4a5 5 0 0 0 5 5"/></svg>`,
+    twitter:   `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#00C8E8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4l16 16M4 20L20 4"/></svg>`
   };
   const redes = content.rodape?.redesSociais || [];
   el.innerHTML = redes.map((r, i) => `
@@ -3072,7 +3072,7 @@ function hideLoading() {
   document.getElementById('loading').classList.add('hidden');
 }
 function toast(msg, type = 'info') {
-  const icons = { success: '✅', error: '❌', info: 'ℹ️' };
+  const icons = { success: `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>`, error: `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>`, info: `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>` };
   const el = document.createElement('div');
   el.className = `toast ${type}`;
   el.innerHTML = `<span class="toast-icon">${icons[type]}</span><span>${msg}</span>`;
