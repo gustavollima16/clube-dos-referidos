@@ -540,7 +540,8 @@
       if (!res.ok) throw new Error('Erro ao buscar arquivo: ' + res.status);
       const data = await res.json();
       const sha = data.sha;
-      const html = atob(data.content.replace(/\n/g, ''));
+      const rawBytes = Uint8Array.from(atob(data.content.replace(/\n/g, '')), c => c.charCodeAt(0));
+      const html = new TextDecoder('utf-8').decode(rawBytes);
 
       // Gera o novo bloco CSS
       const novoCSS = `/* EDITOR-START */
@@ -613,8 +614,24 @@
 
   async function carregarValoresReais() {
     try {
-      const res = await fetch('/index.html?' + Date.now());
-      const html = await res.text();
+      let html;
+      const pat = localStorage.getItem('cms_gh_pat');
+      if (pat) {
+        // Busca sempre do GitHub (fonte da verdade)
+        const res = await fetch(`https://api.github.com/repos/${GH_OWNER}/${GH_REPO}/contents/${GH_FILE}?ref=${GH_BRANCH}`, {
+          headers: { 'Authorization': `token ${pat}`, 'Accept': 'application/vnd.github.v3+json' }
+        });
+        if (res.ok) {
+          const data = await res.json();
+          const rawBytes = Uint8Array.from(atob(data.content.replace(/\n/g, '')), c => c.charCodeAt(0));
+          html = new TextDecoder('utf-8').decode(rawBytes);
+        }
+      }
+      if (!html) {
+        // Fallback: arquivo local
+        const res = await fetch('/index.html?' + Date.now());
+        html = await res.text();
+      }
       const m = html.match(/\/\* EDITOR-START \*\/([\s\S]*?)\/\* EDITOR-END \*\//);
       if (!m) return;
       const css = m[1];
