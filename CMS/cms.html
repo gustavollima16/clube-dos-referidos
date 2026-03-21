@@ -894,10 +894,14 @@ function renderDepoimentos() {
             <input type="text" value="${esc(d.role)}" oninput="updateDepo(${i},'role',this.value)">
           </div>
         </div>
-        <div style="margin-top:12px;display:flex;justify-content:flex-end;">
+        <div style="margin-top:12px;display:flex;justify-content:space-between;align-items:center;gap:8px;">
           <button class="btn btn-danger" onclick="removeDepo(${i})">
             <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/><path d="M10 11v6M14 11v6"/><path d="M9 6V4h6v2"/></svg>
             Remover
+          </button>
+          <button class="btn btn-primary" onclick="saveDepo(${i})">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+            Salvar
           </button>
         </div>
       </div>
@@ -939,6 +943,13 @@ function removeDepo(i) {
   content.depoimentos.splice(i, 1);
   renderDepoimentos();
   markDirty();
+}
+
+function saveDepo(i) {
+  const item = document.getElementById(`depo-item-${i}`);
+  if (item) item.classList.remove('open');
+  markDirty();
+  toast('Depoimento salvo! Clique em "Publicar no Site" quando terminar todas as edições.', 'success');
 }
 
 /* ===== COLLECT CHANGES ===== */

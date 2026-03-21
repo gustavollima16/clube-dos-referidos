@@ -726,7 +726,13 @@
       display: flex; align-items: center;
     }
     .toggle-pw:hover { color: var(--accent); }
-    /* Marca d'água hero */
+    @media (max-width: 900px) {
+      .somos-wrapper { grid-template-columns: 1fr; }
+      .somos-img-placeholder { display: none; }
+      .apply-form .form-row { grid-template-columns: 1fr; }
+      .lp-section { padding: 70px var(--space-lg); }
+    }
+    /* EDITOR-START */
     .hero-watermark {
       position: absolute;
       width: 94%;
@@ -738,16 +744,16 @@
       pointer-events: none;
       z-index: 0;
     }
+    .hero-subtitle { margin-top: 0rem; }
+    .nav-logo img { height: 44px; }
+    .footer-logo { height: 56px; }
     @media (max-width: 900px) {
-      .somos-wrapper { grid-template-columns: 1fr; }
-      .somos-img-placeholder { display: none; }
-      .apply-form .form-row { grid-template-columns: 1fr; }
-      .lp-section { padding: 70px var(--space-lg); }
       .hero-watermark { top: 27%; left: 65%; width: 76%; }
       .hero-subtitle { margin-top: 3rem; }
       .nav-logo img { height: 35px; }
       .footer-logo { height: 240px; margin-top: -1.5rem; }
     }
+    /* EDITOR-END */
   </style>
 </head>
 <body class="auth-page">

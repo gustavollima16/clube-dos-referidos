@@ -205,19 +205,34 @@
       flex-shrink: 0;
       border-top: 1px solid rgba(255,255,255,0.08);
     }
-    #btn-gerar {
+    #btn-publicar {
       width: 100%;
-      padding: 10px;
+      padding: 11px;
       background: #00C8E8;
       color: #000;
       border: none;
       border-radius: 9px;
-      font-size: 0.82rem;
+      font-size: 0.85rem;
       font-weight: 700;
       cursor: pointer;
       transition: opacity 0.2s;
+      margin-bottom: 8px;
     }
-    #btn-gerar:hover { opacity: 0.85; }
+    #btn-publicar:hover { opacity: 0.85; }
+    #btn-publicar:disabled { opacity: 0.4; cursor: not-allowed; }
+    #btn-gerar {
+      width: 100%;
+      padding: 8px;
+      background: transparent;
+      color: #888;
+      border: 1px solid #333;
+      border-radius: 9px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: opacity 0.2s;
+    }
+    #btn-gerar:hover { color: #aaa; border-color: #555; }
     #css-output {
       display: none;
       margin-top: 10px;
@@ -362,6 +377,7 @@
   </div><!-- /panel-body -->
 
   <div id="btn-area">
+    <button id="btn-publicar" onclick="publicarCSS()">🚀 Publicar CSS no Site</button>
     <button id="btn-gerar" onclick="gerarCSS()">📋 Copiar valores para Claude</button>
     <div id="css-output"></div>
     <button id="copy-btn" onclick="copiarCSS()">✓ Copiar texto</button>
@@ -496,6 +512,89 @@
       document.getElementById('copy-btn').textContent = '✓ Copiado!';
       setTimeout(() => document.getElementById('copy-btn').textContent = '✓ Copiar texto', 2000);
     });
+  }
+
+  /* ── PUBLICAR CSS NO GITHUB ── */
+  const GH_OWNER = 'gustavollima16';
+  const GH_REPO  = 'clube-dos-referidos';
+  const GH_FILE  = 'index.html';
+  const GH_BRANCH = 'main';
+
+  async function publicarCSS() {
+    const pat = localStorage.getItem('cms_gh_pat');
+    if (!pat) {
+      const t = prompt('Cole seu token do GitHub (guardado automaticamente):');
+      if (!t) return;
+      localStorage.setItem('cms_gh_pat', t.trim());
+    }
+    const token = localStorage.getItem('cms_gh_pat');
+    const btn = document.getElementById('btn-publicar');
+    btn.disabled = true;
+    btn.textContent = 'Publicando...';
+
+    try {
+      // Busca o arquivo atual
+      const res = await fetch(`https://api.github.com/repos/${GH_OWNER}/${GH_REPO}/contents/${GH_FILE}?ref=${GH_BRANCH}`, {
+        headers: { 'Authorization': `token ${token}`, 'Accept': 'application/vnd.github.v3+json' }
+      });
+      if (!res.ok) throw new Error('Erro ao buscar arquivo: ' + res.status);
+      const data = await res.json();
+      const sha = data.sha;
+      const html = atob(data.content.replace(/\n/g, ''));
+
+      // Gera o novo bloco CSS
+      const novoCSS = `/* EDITOR-START */
+    .hero-watermark {
+      position: absolute;
+      width: 94%;
+      max-width: ${val('wm-size')}px;
+      top: ${val('wm-top')}%;
+      left: ${val('wm-left')}%;
+      transform: translate(-50%, -50%);
+      opacity: ${(val('wm-op')/100).toFixed(2)};
+      pointer-events: none;
+      z-index: 0;
+    }
+    .hero-subtitle { margin-top: ${val('sub-mt-d')}rem; }
+    .nav-logo img { height: ${val('nav-logo-d')}px; }
+    .footer-logo { height: ${val('footer-logo-d')}px; }
+    @media (max-width: 900px) {
+      .hero-watermark { top: ${val('mwm-top')}%; left: ${val('mwm-left')}%; width: ${val('mwm-size')}%; }
+      .hero-subtitle { margin-top: ${val('sub-mt')}rem; }
+      .nav-logo img { height: ${val('nav-logo')}px; }
+      .footer-logo { height: ${val('footer-logo')}px; margin-top: ${val('footer-mt')}rem; }
+    }
+    /* EDITOR-END */`;
+
+      // Substitui o bloco entre os marcadores
+      const novoHTML = html.replace(/\/\* EDITOR-START \*\/[\s\S]*?\/\* EDITOR-END \*\//,  novoCSS);
+      if (novoHTML === html) throw new Error('Marcadores não encontrados no index.html');
+
+      // Commita no GitHub
+      const put = await fetch(`https://api.github.com/repos/${GH_OWNER}/${GH_REPO}/contents/${GH_FILE}`, {
+        method: 'PUT',
+        headers: { 'Authorization': `token ${token}`, 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          message: 'Editor Visual: atualiza CSS',
+          content: btoa(unescape(encodeURIComponent(novoHTML))),
+          sha,
+          branch: GH_BRANCH
+        })
+      });
+      if (!put.ok) throw new Error('Erro ao publicar: ' + put.status);
+
+      btn.textContent = '✓ Publicado!';
+      btn.style.background = '#00e676';
+      setTimeout(() => {
+        btn.textContent = '🚀 Publicar CSS no Site';
+        btn.style.background = '#00C8E8';
+        btn.disabled = false;
+      }, 3000);
+    } catch(e) {
+      alert('Erro: ' + e.message);
+      btn.textContent = '🚀 Publicar CSS no Site';
+      btn.disabled = false;
+    }
   }
 
   iframe.addEventListener('load', injectStyle);
