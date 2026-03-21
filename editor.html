@@ -697,6 +697,48 @@
           <div class="control-label">Tamanho subtítulo mobile <span class="control-value" id="v-hero-sub-m-val">1rem</span></div>
           <input type="range" min="0.8" max="1.5" step="0.05" value="1" id="hero-sub-m" oninput="update()">
         </div>
+        <div class="control">
+          <div class="control-label">Tamanho títulos de seção mobile <span class="control-value" id="v-section-title-m-val">1.8rem</span></div>
+          <input type="range" min="1.2" max="3" step="0.1" value="1.8" id="section-title-m" oninput="update()">
+        </div>
+      </div>
+    </div>
+
+    <!-- MOBILE — LAYOUT -->
+    <div class="group only-mobile">
+      <div class="group-title" onclick="toggleGroup(this)"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="9" y1="21" x2="9" y2="9"/></svg> Layout <span class="group-badge mobile">Mobile</span><i class="toggle-arrow">▼</i></div>
+      <div class="group-body">
+        <div class="control">
+          <div class="control-label">Altura mínima hero mobile <span class="control-value" id="v-hero-min-h-m-val">600px</span></div>
+          <input type="range" min="300" max="900" step="10" value="600" id="hero-min-h-m" oninput="update()">
+        </div>
+        <div class="control">
+          <div class="control-label">Padding das seções mobile <span class="control-value" id="v-section-pad-m-val">70px</span></div>
+          <input type="range" min="20" max="150" step="5" value="70" id="section-pad-m" oninput="update()">
+        </div>
+        <div class="control">
+          <div class="control-label">Gap entre cards mobile <span class="control-value" id="v-card-gap-m-val">16px</span></div>
+          <input type="range" min="8" max="40" step="2" value="16" id="card-gap-m" oninput="update()">
+        </div>
+      </div>
+    </div>
+
+    <!-- MOBILE — BOTÕES -->
+    <div class="group only-mobile">
+      <div class="group-title" onclick="toggleGroup(this)"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="10" rx="5"/></svg> Botões <span class="group-badge mobile">Mobile</span><i class="toggle-arrow">▼</i></div>
+      <div class="group-body">
+        <div class="control">
+          <div class="control-label">Padding horizontal mobile <span class="control-value" id="v-btn-px-m-val">28px</span></div>
+          <input type="range" min="10" max="60" step="2" value="28" id="btn-px-m" oninput="update()">
+        </div>
+        <div class="control">
+          <div class="control-label">Padding vertical mobile <span class="control-value" id="v-btn-py-m-val">14px</span></div>
+          <input type="range" min="6" max="24" step="1" value="14" id="btn-py-m" oninput="update()">
+        </div>
+        <div class="control">
+          <div class="control-label">Border radius mobile <span class="control-value" id="v-btn-radius-m-val">50px</span></div>
+          <input type="range" min="0" max="60" step="1" value="50" id="btn-radius-m" oninput="update()">
+        </div>
       </div>
     </div>
 
@@ -795,6 +837,13 @@
     setLabel('anim-speed',      val('anim-speed') + 's');
     setLabel('hero-title-m',    val('hero-title-m') + 'rem');
     setLabel('hero-sub-m',      val('hero-sub-m') + 'rem');
+    setLabel('section-title-m', val('section-title-m') + 'rem');
+    setLabel('hero-min-h-m',    val('hero-min-h-m') + 'px');
+    setLabel('section-pad-m',   val('section-pad-m') + 'px');
+    setLabel('card-gap-m',      val('card-gap-m') + 'px');
+    setLabel('btn-px-m',        val('btn-px-m') + 'px');
+    setLabel('btn-py-m',        val('btn-py-m') + 'px');
+    setLabel('btn-radius-m',    val('btn-radius-m') + 'px');
     injectStyle();
   }
 
@@ -878,6 +927,11 @@ body { line-height: ${val('body-lh')}; font-family: var(--font-body); }
   .nav-logo img { height: ${val('nav-logo')}px; }
   .footer-logo { height: ${val('footer-logo')}px; margin-top: ${val('footer-mt')}rem; }
   .hero-title { font-size: ${val('hero-title-m')}rem; }
+  .lp-title { font-size: ${val('section-title-m')}rem; }
+  .landing-hero { min-height: ${val('hero-min-h-m')}px; }
+  .lp-section { padding-top: ${val('section-pad-m')}px; padding-bottom: ${val('section-pad-m')}px; }
+  .benefits-grid, .depo-grid, .mentores-grid { gap: ${val('card-gap-m')}px; }
+  .btn, .btn-primary { padding: ${val('btn-py-m')}px ${val('btn-px-m')}px; border-radius: ${val('btn-radius-m')}px; }
 }
 /* Custom CSS */
 ${customCss}
@@ -1145,6 +1199,13 @@ const TARGET_MAP = {
   'anim-speed':        { sel: 'body', label: 'Velocidade das animações' },
   'hero-title-m':      { sel: '.hero-title', label: 'Título Hero — tamanho mobile' },
   'hero-sub-m':        { sel: '.hero-subtitle', label: 'Subtítulo Hero — tamanho mobile' },
+  'section-title-m':   { sel: '.lp-title', label: 'Títulos de seção — tamanho mobile' },
+  'hero-min-h-m':      { sel: '.landing-hero', label: 'Altura mínima do Hero (Mobile)' },
+  'section-pad-m':     { sel: '.lp-section', label: 'Padding das seções (Mobile)' },
+  'card-gap-m':        { sel: '.benefits-grid', label: 'Espaço entre cards (Mobile)' },
+  'btn-px-m':          { sel: '.btn-primary', label: 'Botões — padding horizontal (Mobile)' },
+  'btn-py-m':          { sel: '.btn-primary', label: 'Botões — padding vertical (Mobile)' },
+  'btn-radius-m':      { sel: '.btn-primary', label: 'Arredondamento dos botões (Mobile)' },
   'c-scrollbar':       { sel: 'body', label: 'Barra de rolagem' },
   'c-selection':       { sel: 'body', label: 'Cor de seleção de texto' },
   'custom-css':        { sel: 'body', label: 'CSS personalizado (afeta a página toda)' },
