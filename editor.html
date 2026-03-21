@@ -1,0 +1,536 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>Editor Visual — Clube dos Referidos</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'Inter', sans-serif; background: #000; overflow: hidden; height: 100vh; }
+
+    /* ── IFRAME FULL WIDTH ── */
+    #preview {
+      position: fixed;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      border: none;
+      background: #000;
+    }
+    #preview.mobile {
+      width: 390px;
+      height: 844px;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      border-radius: 32px;
+      border: 6px solid #444;
+      box-shadow: 0 0 0 100vmax rgba(0,0,0,0.7);
+    }
+
+    /* ── PAINEL FLUTUANTE ── */
+    #panel {
+      position: fixed;
+      top: 16px;
+      left: 16px;
+      width: 280px;
+      max-height: calc(100vh - 32px);
+      background: rgba(10, 10, 14, 0.92);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid rgba(0,200,232,0.2);
+      border-radius: 14px;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      z-index: 1000;
+      transition: transform 0.3s ease, opacity 0.3s ease;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.6);
+    }
+    #panel.hidden {
+      transform: translateX(-110%);
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    /* Botão toggle do painel */
+    #toggle-btn {
+      position: fixed;
+      top: 16px;
+      left: 16px;
+      z-index: 1001;
+      width: 42px;
+      height: 42px;
+      background: rgba(0,200,232,0.9);
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.1rem;
+      box-shadow: 0 4px 12px rgba(0,200,232,0.4);
+      transition: all 0.2s;
+      color: #000;
+      font-weight: 700;
+    }
+    #toggle-btn:hover { background: #00C8E8; transform: scale(1.05); }
+    #toggle-btn.panel-open { opacity: 0; pointer-events: none; }
+
+    /* Cabeçalho do painel */
+    #panel-header {
+      padding: 12px 16px;
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-shrink: 0;
+      cursor: grab;
+      user-select: none;
+    }
+    #panel-header:active { cursor: grabbing; }
+    #panel-header-left {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    #panel-header img { height: 24px; }
+    #panel-header span { font-size: 0.8rem; font-weight: 700; color: #00C8E8; letter-spacing: 0.05em; }
+    #close-btn {
+      background: none;
+      border: none;
+      color: #555;
+      cursor: pointer;
+      font-size: 1.1rem;
+      padding: 2px 6px;
+      border-radius: 6px;
+      transition: all 0.2s;
+    }
+    #close-btn:hover { color: #fff; background: rgba(255,255,255,0.1); }
+
+    /* Toggle desktop/mobile */
+    #view-toggle {
+      display: flex;
+      gap: 6px;
+      padding: 10px 14px;
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+      flex-shrink: 0;
+    }
+    .view-btn {
+      flex: 1;
+      padding: 7px;
+      border: 1px solid #333;
+      border-radius: 8px;
+      background: transparent;
+      color: #666;
+      cursor: pointer;
+      font-size: 0.75rem;
+      font-weight: 600;
+      transition: all 0.2s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 5px;
+    }
+    .view-btn.active { background: #00C8E8; color: #000; border-color: #00C8E8; }
+
+    /* Scroll dos controles */
+    #panel-body {
+      overflow-y: auto;
+      flex: 1;
+    }
+    #panel-body::-webkit-scrollbar { width: 4px; }
+    #panel-body::-webkit-scrollbar-track { background: transparent; }
+    #panel-body::-webkit-scrollbar-thumb { background: #333; border-radius: 2px; }
+
+    /* Grupos */
+    .group { padding: 12px 14px; border-bottom: 1px solid rgba(255,255,255,0.05); }
+    .group-title {
+      font-size: 0.65rem;
+      font-weight: 700;
+      color: #00C8E8;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      margin-bottom: 10px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .group-badge {
+      font-size: 0.55rem;
+      background: #00C8E822;
+      color: #00C8E8;
+      border: 1px solid #00C8E844;
+      padding: 2px 5px;
+      border-radius: 4px;
+    }
+    .group-badge.mobile { background: #f59e0b22; color: #f59e0b; border-color: #f59e0b44; }
+
+    .control { margin-bottom: 10px; }
+    .control-label {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 4px;
+      font-size: 0.72rem;
+      color: #888;
+    }
+    .control-value { font-weight: 700; color: #fff; font-size: 0.72rem; min-width: 38px; text-align: right; }
+
+    input[type=range] {
+      width: 100%;
+      height: 3px;
+      -webkit-appearance: none;
+      background: #2a2a2a;
+      border-radius: 2px;
+      outline: none;
+      cursor: pointer;
+    }
+    input[type=range]::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      width: 13px;
+      height: 13px;
+      border-radius: 50%;
+      background: #00C8E8;
+      cursor: pointer;
+    }
+    input[type=range]:hover { background: #333; }
+
+    /* Mostrar/esconder grupos por modo */
+    #panel-body.mode-desktop .only-mobile { display: none; }
+    #panel-body.mode-mobile  .only-desktop { display: none; }
+
+    /* Área do botão */
+    #btn-area {
+      padding: 12px 14px;
+      flex-shrink: 0;
+      border-top: 1px solid rgba(255,255,255,0.08);
+    }
+    #btn-gerar {
+      width: 100%;
+      padding: 10px;
+      background: #00C8E8;
+      color: #000;
+      border: none;
+      border-radius: 9px;
+      font-size: 0.82rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: opacity 0.2s;
+    }
+    #btn-gerar:hover { opacity: 0.85; }
+    #css-output {
+      display: none;
+      margin-top: 10px;
+      background: rgba(0,0,0,0.5);
+      border: 1px solid #333;
+      border-radius: 8px;
+      padding: 10px;
+      font-size: 0.65rem;
+      color: #00C8E8;
+      font-family: monospace;
+      white-space: pre-wrap;
+      word-break: break-all;
+      max-height: 140px;
+      overflow-y: auto;
+    }
+    #copy-btn {
+      display: none;
+      width: 100%;
+      margin-top: 6px;
+      padding: 7px;
+      background: #1a1a1a;
+      color: #fff;
+      border: 1px solid #333;
+      border-radius: 8px;
+      font-size: 0.75rem;
+      cursor: pointer;
+    }
+    #copy-btn:hover { background: #222; }
+  </style>
+</head>
+<body>
+
+<!-- IFRAME FULL WIDTH — site real -->
+<iframe id="preview" class="desktop" src="index.html" onload="injectStyle()"></iframe>
+
+<!-- BOTÃO PARA ABRIR PAINEL -->
+<button id="toggle-btn" onclick="abrirPainel()" title="Abrir editor">⚙</button>
+
+<!-- PAINEL FLUTUANTE -->
+<div id="panel">
+  <div id="panel-header">
+    <div id="panel-header-left">
+      <img src="images/logo.png" alt="logo">
+      <span>EDITOR VISUAL</span>
+    </div>
+    <button id="close-btn" onclick="fecharPainel()" title="Fechar">✕</button>
+  </div>
+
+  <div id="view-toggle">
+    <button class="view-btn active" id="btn-desktop" onclick="setView('desktop')">🖥 Desktop</button>
+    <button class="view-btn" id="btn-mobile" onclick="setView('mobile')">📱 Mobile</button>
+  </div>
+
+  <div id="panel-body">
+
+    <!-- MARCA D'ÁGUA DESKTOP -->
+    <div class="group only-desktop">
+      <div class="group-title">Marca d'água — Hero <span class="group-badge">Desktop</span></div>
+      <div class="control">
+        <div class="control-label">Vertical (↕) <span class="control-value" id="v-wm-top-val">38%</span></div>
+        <input type="range" min="0" max="100" value="38" id="wm-top" oninput="update()">
+      </div>
+      <div class="control">
+        <div class="control-label">Horizontal (↔) <span class="control-value" id="v-wm-left-val">67%</span></div>
+        <input type="range" min="0" max="100" value="67" id="wm-left" oninput="update()">
+      </div>
+      <div class="control">
+        <div class="control-label">Tamanho (max-width) <span class="control-value" id="v-wm-size-val">691px</span></div>
+        <input type="range" min="200" max="1200" value="691" id="wm-size" oninput="update()">
+      </div>
+      <div class="control">
+        <div class="control-label">Opacidade <span class="control-value" id="v-wm-op-val">7%</span></div>
+        <input type="range" min="1" max="30" value="7" id="wm-op" oninput="update()">
+      </div>
+    </div>
+
+    <!-- MARCA D'ÁGUA MOBILE -->
+    <div class="group only-mobile">
+      <div class="group-title">Marca d'água — Hero <span class="group-badge mobile">Mobile</span></div>
+      <div class="control">
+        <div class="control-label">Vertical (↕) <span class="control-value" id="v-mwm-top-val">27%</span></div>
+        <input type="range" min="0" max="100" value="27" id="mwm-top" oninput="update()">
+      </div>
+      <div class="control">
+        <div class="control-label">Horizontal (↔) <span class="control-value" id="v-mwm-left-val">65%</span></div>
+        <input type="range" min="0" max="100" value="65" id="mwm-left" oninput="update()">
+      </div>
+      <div class="control">
+        <div class="control-label">Tamanho <span class="control-value" id="v-mwm-size-val">76%</span></div>
+        <input type="range" min="20" max="150" value="76" id="mwm-size" oninput="update()">
+      </div>
+    </div>
+
+    <!-- TEXTOS DESKTOP -->
+    <div class="group only-desktop">
+      <div class="group-title">Texto Hero <span class="group-badge">Desktop</span></div>
+      <div class="control">
+        <div class="control-label">Espaço acima do subtítulo <span class="control-value" id="v-sub-mt-d-val">0rem</span></div>
+        <input type="range" min="0" max="10" step="0.5" value="0" id="sub-mt-d" oninput="update()">
+      </div>
+    </div>
+
+    <!-- LOGOS DESKTOP -->
+    <div class="group only-desktop">
+      <div class="group-title">Logos <span class="group-badge">Desktop</span></div>
+      <div class="control">
+        <div class="control-label">Logo topo (nav) <span class="control-value" id="v-nav-logo-d-val">44px</span></div>
+        <input type="range" min="20" max="100" value="44" id="nav-logo-d" oninput="update()">
+      </div>
+      <div class="control">
+        <div class="control-label">Logo footer — Tamanho <span class="control-value" id="v-footer-logo-d-val">56px</span></div>
+        <input type="range" min="20" max="200" value="56" id="footer-logo-d" oninput="update()">
+      </div>
+    </div>
+
+    <!-- TEXTOS MOBILE -->
+    <div class="group only-mobile">
+      <div class="group-title">Texto Hero <span class="group-badge mobile">Mobile</span></div>
+      <div class="control">
+        <div class="control-label">Espaço acima do subtítulo <span class="control-value" id="v-sub-mt-val">3rem</span></div>
+        <input type="range" min="0" max="10" step="0.5" value="3" id="sub-mt" oninput="update()">
+      </div>
+    </div>
+
+    <!-- LOGOS MOBILE -->
+    <div class="group only-mobile">
+      <div class="group-title">Logos <span class="group-badge mobile">Mobile</span></div>
+      <div class="control">
+        <div class="control-label">Logo topo (nav) <span class="control-value" id="v-nav-logo-val">35px</span></div>
+        <input type="range" min="20" max="80" value="35" id="nav-logo" oninput="update()">
+      </div>
+      <div class="control">
+        <div class="control-label">Logo footer — Tamanho <span class="control-value" id="v-footer-logo-val">240px</span></div>
+        <input type="range" min="60" max="400" value="240" id="footer-logo" oninput="update()">
+      </div>
+      <div class="control">
+        <div class="control-label">Logo footer — Posição vertical <span class="control-value" id="v-footer-mt-val">-1.5rem</span></div>
+        <input type="range" min="-5" max="5" step="0.5" value="-1.5" id="footer-mt" oninput="update()">
+      </div>
+    </div>
+
+  </div><!-- /panel-body -->
+
+  <div id="btn-area">
+    <button id="btn-gerar" onclick="gerarCSS()">📋 Copiar valores para Claude</button>
+    <div id="css-output"></div>
+    <button id="copy-btn" onclick="copiarCSS()">✓ Copiar texto</button>
+  </div>
+</div>
+
+<script>
+  const iframe = document.getElementById('preview');
+  const panel  = document.getElementById('panel');
+  const toggleBtn = document.getElementById('toggle-btn');
+  let currentView = 'desktop';
+  let panelAberto = true;
+
+  function abrirPainel() {
+    panel.classList.remove('hidden');
+    toggleBtn.classList.add('panel-open');
+    panelAberto = true;
+  }
+
+  function fecharPainel() {
+    panel.classList.add('hidden');
+    toggleBtn.classList.remove('panel-open');
+    panelAberto = false;
+  }
+
+  function setView(view) {
+    currentView = view;
+    iframe.className = view;
+    document.getElementById('btn-desktop').classList.toggle('active', view === 'desktop');
+    document.getElementById('btn-mobile').classList.toggle('active', view === 'mobile');
+    const body = document.getElementById('panel-body');
+    body.className = view === 'desktop' ? 'mode-desktop' : 'mode-mobile';
+    update();
+  }
+
+  // Inicializa no modo desktop
+  document.getElementById('panel-body').className = 'mode-desktop';
+
+  function val(id) { return parseFloat(document.getElementById(id).value); }
+
+  function setLabel(id, text) {
+    document.getElementById('v-' + id + '-val').textContent = text;
+  }
+
+  function update() {
+    setLabel('wm-top',        val('wm-top') + '%');
+    setLabel('wm-left',       val('wm-left') + '%');
+    setLabel('wm-size',       val('wm-size') + 'px');
+    setLabel('wm-op',         val('wm-op') + '%');
+    setLabel('mwm-top',       val('mwm-top') + '%');
+    setLabel('mwm-left',      val('mwm-left') + '%');
+    setLabel('mwm-size',      val('mwm-size') + '%');
+    setLabel('sub-mt-d',      val('sub-mt-d') + 'rem');
+    setLabel('nav-logo-d',    val('nav-logo-d') + 'px');
+    setLabel('footer-logo-d', val('footer-logo-d') + 'px');
+    setLabel('sub-mt',        val('sub-mt') + 'rem');
+    setLabel('nav-logo',      val('nav-logo') + 'px');
+    setLabel('footer-logo',   val('footer-logo') + 'px');
+    setLabel('footer-mt',     val('footer-mt') + 'rem');
+    injectStyle();
+  }
+
+  function injectStyle() {
+    try {
+      const doc = iframe.contentDocument;
+      if (!doc) return;
+      let el = doc.getElementById('__editor-style');
+      if (!el) {
+        el = doc.createElement('style');
+        el.id = '__editor-style';
+        doc.head.appendChild(el);
+      }
+      el.textContent = `
+        .hero-watermark {
+          position: absolute !important;
+          width: 94% !important;
+          max-width: ${val('wm-size')}px !important;
+          top: ${val('wm-top')}% !important;
+          left: ${val('wm-left')}% !important;
+          transform: translate(-50%, -50%) !important;
+          opacity: ${val('wm-op') / 100} !important;
+          pointer-events: none !important;
+          z-index: 0 !important;
+        }
+        .hero-subtitle { margin-top: ${val('sub-mt-d')}rem !important; }
+        .nav-logo img  { height: ${val('nav-logo-d')}px !important; }
+        .footer-logo   { height: ${val('footer-logo-d')}px !important; }
+        @media (max-width: 900px) {
+          .hero-watermark {
+            top: ${val('mwm-top')}% !important;
+            left: ${val('mwm-left')}% !important;
+            width: ${val('mwm-size')}% !important;
+          }
+          .hero-subtitle { margin-top: ${val('sub-mt')}rem !important; }
+          .nav-logo img  { height: ${val('nav-logo')}px !important; }
+          .footer-logo   { height: ${val('footer-logo')}px !important; margin-top: ${val('footer-mt')}rem !important; }
+        }
+      `;
+    } catch(e) {}
+  }
+
+  function gerarCSS() {
+    const output =
+`/* DESKTOP */
+.hero-watermark {
+  top: ${val('wm-top')}%;
+  left: ${val('wm-left')}%;
+  width: 94%;
+  max-width: ${val('wm-size')}px;
+  opacity: ${(val('wm-op')/100).toFixed(2)};
+}
+.hero-subtitle { margin-top: ${val('sub-mt-d')}rem; }
+.nav-logo img  { height: ${val('nav-logo-d')}px; }
+.footer-logo   { height: ${val('footer-logo-d')}px; }
+
+/* MOBILE */
+@media (max-width: 900px) {
+  .hero-watermark { top: ${val('mwm-top')}%; left: ${val('mwm-left')}%; width: ${val('mwm-size')}%; }
+  .hero-subtitle  { margin-top: ${val('sub-mt')}rem; }
+  .nav-logo img   { height: ${val('nav-logo')}px; }
+  .footer-logo    { height: ${val('footer-logo')}px; margin-top: ${val('footer-mt')}rem; }
+}`;
+    const el = document.getElementById('css-output');
+    el.textContent = output;
+    el.style.display = 'block';
+    document.getElementById('copy-btn').style.display = 'block';
+  }
+
+  function copiarCSS() {
+    const text = document.getElementById('css-output').textContent;
+    navigator.clipboard.writeText(text).then(() => {
+      document.getElementById('copy-btn').textContent = '✓ Copiado!';
+      setTimeout(() => document.getElementById('copy-btn').textContent = '✓ Copiar texto', 2000);
+    });
+  }
+
+  iframe.addEventListener('load', injectStyle);
+
+  // ── DRAG TO MOVE ──
+  const header = document.getElementById('panel-header');
+  let isDragging = false, startX, startY, startLeft, startTop;
+
+  header.addEventListener('mousedown', (e) => {
+    if (e.target === document.getElementById('close-btn')) return;
+    isDragging = true;
+    startX = e.clientX;
+    startY = e.clientY;
+    const rect = panel.getBoundingClientRect();
+    startLeft = rect.left;
+    startTop  = rect.top;
+    panel.style.transition = 'none';
+    document.body.style.userSelect = 'none';
+  });
+
+  document.addEventListener('mousemove', (e) => {
+    if (!isDragging) return;
+    const dx = e.clientX - startX;
+    const dy = e.clientY - startY;
+    const newLeft = Math.max(0, Math.min(window.innerWidth  - panel.offsetWidth,  startLeft + dx));
+    const newTop  = Math.max(0, Math.min(window.innerHeight - panel.offsetHeight, startTop  + dy));
+    panel.style.left = newLeft + 'px';
+    panel.style.top  = newTop  + 'px';
+  });
+
+  document.addEventListener('mouseup', () => {
+    isDragging = false;
+    panel.style.transition = '';
+    document.body.style.userSelect = '';
+  });
+</script>
+</body>
+</html>

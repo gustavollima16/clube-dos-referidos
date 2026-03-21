@@ -1570,7 +1570,7 @@
         </div>
       </div>`).join('');
   }
-  fetch('data/content.json?' + Date.now())
+  fetch('CMS/data/content.json?' + Date.now())
     .then(r => r.json())
     .then(c => {
       if (c.hero) {

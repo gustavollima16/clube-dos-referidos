@@ -589,7 +589,7 @@
 <!-- SIDEBAR -->
 <aside class="sidebar">
   <div class="sidebar-logo">
-    <img src="images/emblema.png" alt="">
+    <img src="../images/emblema.png" alt="">
     <div>
       <div class="sidebar-logo-text">Clube dos Referidos</div>
       <div class="sidebar-logo-sub">CMS</div>
@@ -729,7 +729,7 @@
 <script>
 const REPO_OWNER = 'gustavollima16';
 const REPO_NAME  = 'clube-dos-referidos';
-const CONTENT_PATH = 'data/content.json';
+const CONTENT_PATH = 'CMS/data/content.json';
 
 let content = null;
 let contentSha = null;
@@ -792,7 +792,7 @@ async function loadFromGitHub() {
 }
 
 function loadLocal() {
-  fetch('data/content.json?' + Date.now())
+  fetch('data/content.json?' + Date.now()) // servido localmente a partir de CMS/
     .then(r => r.json())
     .then(c => { content = c; renderAll(); markClean(); })
     .catch(() => { content = defaultContent(); renderAll(); });
@@ -1012,7 +1012,7 @@ function showTab(tab, btn) {
 }
 
 function openEditorVisual() {
-  window.open('editor.html', '_blank');
+  window.open('../editor.html', '_blank');
 }
 
 /* ===== DIRTY STATE ===== */
