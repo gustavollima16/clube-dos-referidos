@@ -382,7 +382,7 @@
 <iframe id="preview" class="desktop" src="index.html" onload="injectStyle()"></iframe>
 
 <!-- BOTÃO PARA ABRIR PAINEL -->
-<button id="toggle-btn" onclick="abrirPainel()" title="Abrir editor">⚙</button>
+<button id="toggle-btn" onclick="abrirPainel()" title="Abrir editor"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg></button>
 
 <!-- PAINEL FLUTUANTE -->
 <div id="panel">
@@ -690,7 +690,7 @@
   </div><!-- /panel-body -->
 
   <div id="btn-area">
-    <button id="btn-publicar" onclick="publicarCSS()">🚀 Publicar CSS no Site</button>
+    <button id="btn-publicar" onclick="publicarCSS()"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:middle;margin-right:6px"><polyline points="16 16 12 12 8 16"/><line x1="12" y1="12" x2="12" y2="21"/><path d="M20.39 18.39A5 5 0 0 0 18 9h-1.26A8 8 0 1 0 3 16.3"/></svg>Publicar CSS no Site</button>
     <button id="btn-gerar" onclick="gerarCSS()">📋 Copiar valores para Claude</button>
     <div id="css-output"></div>
     <button id="copy-btn" onclick="copiarCSS()">✓ Copiar texto</button>
@@ -962,13 +962,13 @@ ${customCss}
       btn.textContent = '✓ Publicado!';
       btn.style.background = '#00e676';
       setTimeout(() => {
-        btn.textContent = '🚀 Publicar CSS no Site';
+        btn.textContent = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:middle;margin-right:6px"><polyline points="16 16 12 12 8 16"/><line x1="12" y1="12" x2="12" y2="21"/><path d="M20.39 18.39A5 5 0 0 0 18 9h-1.26A8 8 0 1 0 3 16.3"/></svg>Publicar CSS no Site';
         btn.style.background = '#00C8E8';
         btn.disabled = false;
       }, 3000);
     } catch(e) {
       alert('Erro: ' + e.message);
-      btn.textContent = '🚀 Publicar CSS no Site';
+      btn.textContent = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:middle;margin-right:6px"><polyline points="16 16 12 12 8 16"/><line x1="12" y1="12" x2="12" y2="21"/><path d="M20.39 18.39A5 5 0 0 0 18 9h-1.26A8 8 0 1 0 3 16.3"/></svg>Publicar CSS no Site';
       btn.disabled = false;
     }
   }
