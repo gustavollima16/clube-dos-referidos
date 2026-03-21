@@ -4,11 +4,11 @@
     "subtitle": "A plataforma dos melhores vendedores do Brasil. Acesse conteúdos exclusivos, videoaulas, materiais e muito mais para acelerar seus resultados.",
     "stats": [
       {
-        "number": "500+",
+        "number": "100+",
         "label": "Membros ativos"
       },
       {
-        "number": "80+",
+        "number": "50+",
         "label": "Videoaulas"
       },
       {
@@ -55,35 +55,100 @@
   ],
   "videoaulas": {
     "modulos": [
-      { "id": 1, "title": "Módulo 1 — Boas-Vindas ao Clube", "desc": "Entenda como funcionar dentro do clube e tire o máximo dessa experiência." },
-      { "id": 2, "title": "Módulo 2 — Como Funciona o Sistema de Referidos", "desc": "Aprenda o mecanismo de referidos, como gerar indicações e multiplicar sua rede." },
-      { "id": 3, "title": "Módulo 3 — Formação de Times Comerciais", "desc": "Como recrutar, treinar e liderar um time de vendas de alta performance." },
-      { "id": 4, "title": "Módulo 4 — Liderança em Vendas", "desc": "Desenvolva as habilidades de liderança que separam os bons dos grandes." },
-      { "id": 5, "title": "Módulo 5 — Técnicas Avançadas de Vendas", "desc": "Scripts, objeções, fechamento e estratégias para vender mais e melhor." }
+      {
+        "id": 1,
+        "title": "Módulo 1 — Boas-Vindas ao Clube",
+        "desc": "Entenda como funcionar dentro do clube e tire o máximo dessa experiência."
+      },
+      {
+        "id": 2,
+        "title": "Módulo 2 — Como Funciona o Sistema de Referidos",
+        "desc": "Aprenda o mecanismo de referidos, como gerar indicações e multiplicar sua rede."
+      },
+      {
+        "id": 3,
+        "title": "Módulo 3 — Formação de Times Comerciais",
+        "desc": "Como recrutar, treinar e liderar um time de vendas de alta performance."
+      },
+      {
+        "id": 4,
+        "title": "Módulo 4 — Liderança em Vendas",
+        "desc": "Desenvolva as habilidades de liderança que separam os bons dos grandes."
+      },
+      {
+        "id": 5,
+        "title": "Módulo 5 — Técnicas Avançadas de Vendas",
+        "desc": "Scripts, objeções, fechamento e estratégias para vender mais e melhor."
+      }
     ],
     "videos": [
-      { "id": 1, "moduleId": 1, "title": "Bem-vindo ao Clube dos Referidos", "desc": "Mensagem de boas-vindas dos fundadores.", "duration": "05:30", "youtubeId": "" },
-      { "id": 2, "moduleId": 1, "title": "Como navegar pela plataforma", "desc": "Um tour rápido pela área de membros.", "duration": "04:15", "youtubeId": "" }
+      {
+        "id": 1,
+        "moduleId": 1,
+        "title": "Bem-vindo ao Clube dos Referidos",
+        "desc": "Mensagem de boas-vindas dos fundadores.",
+        "duration": "05:30",
+        "youtubeId": ""
+      },
+      {
+        "id": 2,
+        "moduleId": 1,
+        "title": "Como navegar pela plataforma",
+        "desc": "Um tour rápido pela área de membros.",
+        "duration": "04:15",
+        "youtubeId": ""
+      }
     ]
   },
   "ebooks": [
-    { "id": 1, "title": "O Guia Definitivo de Indicações", "desc": "Tudo que você precisa saber para construir um sistema de referidos.", "cover": "", "fileUrl": "", "category": "Referidos", "pages": "48", "type": "ebook" }
+    {
+      "id": 1,
+      "title": "O Guia Definitivo de Indicações",
+      "desc": "Tudo que você precisa saber para construir um sistema de referidos.",
+      "cover": "",
+      "fileUrl": "",
+      "category": "Referidos",
+      "pages": "48",
+      "type": "ebook"
+    }
   ],
   "arquivos": [
-    { "id": 1, "title": "Planilha de Metas de Vendas 2025", "desc": "Acompanhe e gerencie metas do time.", "fileUrl": "", "type": "xlsx", "size": "820 KB", "category": "Planilhas" }
+    {
+      "id": 1,
+      "title": "Planilha de Metas de Vendas 2025",
+      "desc": "Acompanhe e gerencie metas do time.",
+      "fileUrl": "",
+      "type": "xlsx",
+      "size": "820 KB",
+      "category": "Planilhas"
+    }
   ],
   "fotos": [],
   "dashboard": {
     "avisos": [
-      { "id": 1, "titulo": "Bem-vindo ao Clube!", "texto": "Explore todo o conteúdo disponível.", "tipo": "info", "data": "2025-03-01" }
+      {
+        "id": 1,
+        "titulo": "Bem-vindo ao Clube!",
+        "texto": "Explore todo o conteúdo disponível.",
+        "tipo": "info",
+        "data": "2025-03-01"
+      }
     ]
   },
   "landing": {
     "whatsapp": "5511991439098",
     "footer": "© 2025 Clube dos Referidos. Todos os direitos reservados.",
     "mentores": [
-      { "nome": "Gustavo Lima", "cargo": "Co-fundador · Clube dos Referidos", "bio": "Empresário e mentor em vendas. Franqueado Wise Up / WSP. Especialista em times comerciais." },
-      { "nome": "Juliana Daleva", "cargo": "Co-fundadora · Clube dos Referidos", "bio": "Empresária e mentora em vendas. Franqueada Wise Up / WSP. Recordista em vendas ativas." }
+      {
+        "nome": "Gustavo Lima",
+        "cargo": "Co-fundador · Clube dos Referidos",
+        "bio": "Empresário e mentor em vendas. Franqueado Wise Up / WSP. Especialista em times comerciais."
+      },
+      {
+        "nome": "Juliana Daleva",
+        "cargo": "Co-fundadora · Clube dos Referidos",
+        "bio": "Empresária e mentora em vendas. Franqueada Wise Up / WSP. Recordista em vendas ativas."
+      }
     ]
   }
 }
