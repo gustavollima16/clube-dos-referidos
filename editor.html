@@ -1153,7 +1153,7 @@ const TARGET_MAP = {
 let _isDragging = false;
 
 function highlightElement(selector, label) {
-  const iframe = document.getElementById('preview-iframe');
+  const iframe = document.getElementById('preview');
   if (!iframe) return;
   const doc = iframe.contentDocument || iframe.contentWindow?.document;
   if (!doc) return;
@@ -1197,7 +1197,7 @@ function clearHighlight() {
   if (_isDragging) return;
   const lbl = document.getElementById('highlight-label');
   if (lbl) lbl.style.opacity = '0';
-  const iframe = document.getElementById('preview-iframe');
+  const iframe = document.getElementById('preview');
   if (!iframe) return;
   const doc = iframe.contentDocument || iframe.contentWindow?.document;
   if (!doc) return;
