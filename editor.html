@@ -154,7 +154,19 @@
       display: flex;
       align-items: center;
       gap: 6px;
+      cursor: pointer;
+      user-select: none;
     }
+    .group-title .toggle-arrow {
+      margin-left: auto;
+      transition: transform 0.2s;
+      font-style: normal;
+      color: #555;
+      font-size: 0.7rem;
+    }
+    .group.collapsed .group-title .toggle-arrow { transform: rotate(-90deg); }
+    .group.collapsed .group-body { display: none; }
+    .group-body { }
     .group-badge {
       font-size: 0.55rem;
       background: #00C8E822;
@@ -164,6 +176,64 @@
       border-radius: 4px;
     }
     .group-badge.mobile { background: #f59e0b22; color: #f59e0b; border-color: #f59e0b44; }
+    /* Color picker row */
+    .color-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 10px;
+    }
+    .color-row input[type=color] {
+      width: 28px;
+      height: 28px;
+      padding: 0;
+      border: 1px solid #333;
+      border-radius: 6px;
+      cursor: pointer;
+      background: none;
+      flex-shrink: 0;
+    }
+    .color-row label {
+      font-size: 0.72rem;
+      color: #888;
+      flex: 1;
+    }
+    /* Dropdown */
+    .select-row {
+      margin-bottom: 10px;
+    }
+    .select-row label {
+      display: block;
+      font-size: 0.65rem;
+      color: #888;
+      margin-bottom: 4px;
+    }
+    .select-row select {
+      width: 100%;
+      background: #1a1a1a;
+      border: 1px solid #333;
+      border-radius: 6px;
+      color: #fff;
+      font-size: 0.75rem;
+      padding: 6px 8px;
+      outline: none;
+    }
+    .select-row select:focus { border-color: #00C8E8; }
+    /* Custom CSS textarea */
+    .custom-css-area {
+      width: 100%;
+      background: #0a0a0a;
+      border: 1px solid #333;
+      border-radius: 6px;
+      color: #00C8E8;
+      font-family: 'Courier New', monospace;
+      font-size: 0.65rem;
+      padding: 8px;
+      resize: vertical;
+      outline: none;
+      line-height: 1.5;
+    }
+    .custom-css-area:focus { border-color: #00C8E8; }
 
     .control { margin-bottom: 10px; }
     .control-label {
@@ -333,87 +403,287 @@
 
     <!-- MARCA D'ÁGUA DESKTOP -->
     <div class="group only-desktop">
-      <div class="group-title">Marca d'água — Hero <span class="group-badge">Desktop</span></div>
-      <div class="control">
-        <div class="control-label">Vertical (↕) <span class="control-value" id="v-wm-top-val">38%</span></div>
-        <input type="range" min="0" max="100" value="38" id="wm-top" oninput="update()">
-      </div>
-      <div class="control">
-        <div class="control-label">Horizontal (↔) <span class="control-value" id="v-wm-left-val">67%</span></div>
-        <input type="range" min="0" max="100" value="67" id="wm-left" oninput="update()">
-      </div>
-      <div class="control">
-        <div class="control-label">Tamanho (max-width) <span class="control-value" id="v-wm-size-val">691px</span></div>
-        <input type="range" min="200" max="1200" value="691" id="wm-size" oninput="update()">
-      </div>
-      <div class="control">
-        <div class="control-label">Opacidade <span class="control-value" id="v-wm-op-val">7%</span></div>
-        <input type="range" min="1" max="30" value="7" id="wm-op" oninput="update()">
+      <div class="group-title" onclick="toggleGroup(this)">Marca d'água — Hero <span class="group-badge">Desktop</span><i class="toggle-arrow">▼</i></div>
+      <div class="group-body">
+        <div class="control">
+          <div class="control-label">Vertical (↕) <span class="control-value" id="v-wm-top-val">38%</span></div>
+          <input type="range" min="0" max="100" value="38" id="wm-top" oninput="update()">
+        </div>
+        <div class="control">
+          <div class="control-label">Horizontal (↔) <span class="control-value" id="v-wm-left-val">67%</span></div>
+          <input type="range" min="0" max="100" value="67" id="wm-left" oninput="update()">
+        </div>
+        <div class="control">
+          <div class="control-label">Tamanho (max-width) <span class="control-value" id="v-wm-size-val">691px</span></div>
+          <input type="range" min="200" max="1200" value="691" id="wm-size" oninput="update()">
+        </div>
+        <div class="control">
+          <div class="control-label">Opacidade <span class="control-value" id="v-wm-op-val">7%</span></div>
+          <input type="range" min="1" max="30" value="7" id="wm-op" oninput="update()">
+        </div>
       </div>
     </div>
 
     <!-- MARCA D'ÁGUA MOBILE -->
     <div class="group only-mobile">
-      <div class="group-title">Marca d'água — Hero <span class="group-badge mobile">Mobile</span></div>
-      <div class="control">
-        <div class="control-label">Vertical (↕) <span class="control-value" id="v-mwm-top-val">27%</span></div>
-        <input type="range" min="0" max="100" value="27" id="mwm-top" oninput="update()">
-      </div>
-      <div class="control">
-        <div class="control-label">Horizontal (↔) <span class="control-value" id="v-mwm-left-val">65%</span></div>
-        <input type="range" min="0" max="100" value="65" id="mwm-left" oninput="update()">
-      </div>
-      <div class="control">
-        <div class="control-label">Tamanho <span class="control-value" id="v-mwm-size-val">76%</span></div>
-        <input type="range" min="20" max="150" value="76" id="mwm-size" oninput="update()">
+      <div class="group-title" onclick="toggleGroup(this)">Marca d'água — Hero <span class="group-badge mobile">Mobile</span><i class="toggle-arrow">▼</i></div>
+      <div class="group-body">
+        <div class="control">
+          <div class="control-label">Vertical (↕) <span class="control-value" id="v-mwm-top-val">27%</span></div>
+          <input type="range" min="0" max="100" value="27" id="mwm-top" oninput="update()">
+        </div>
+        <div class="control">
+          <div class="control-label">Horizontal (↔) <span class="control-value" id="v-mwm-left-val">65%</span></div>
+          <input type="range" min="0" max="100" value="65" id="mwm-left" oninput="update()">
+        </div>
+        <div class="control">
+          <div class="control-label">Tamanho <span class="control-value" id="v-mwm-size-val">76%</span></div>
+          <input type="range" min="20" max="150" value="76" id="mwm-size" oninput="update()">
+        </div>
       </div>
     </div>
 
     <!-- TEXTOS DESKTOP -->
     <div class="group only-desktop">
-      <div class="group-title">Texto Hero <span class="group-badge">Desktop</span></div>
-      <div class="control">
-        <div class="control-label">Espaço acima do subtítulo <span class="control-value" id="v-sub-mt-d-val">0rem</span></div>
-        <input type="range" min="0" max="10" step="0.5" value="0" id="sub-mt-d" oninput="update()">
+      <div class="group-title" onclick="toggleGroup(this)">Texto Hero <span class="group-badge">Desktop</span><i class="toggle-arrow">▼</i></div>
+      <div class="group-body">
+        <div class="control">
+          <div class="control-label">Espaço acima do subtítulo <span class="control-value" id="v-sub-mt-d-val">0rem</span></div>
+          <input type="range" min="0" max="10" step="0.5" value="0" id="sub-mt-d" oninput="update()">
+        </div>
       </div>
     </div>
 
     <!-- LOGOS DESKTOP -->
     <div class="group only-desktop">
-      <div class="group-title">Logos <span class="group-badge">Desktop</span></div>
-      <div class="control">
-        <div class="control-label">Logo topo (nav) <span class="control-value" id="v-nav-logo-d-val">44px</span></div>
-        <input type="range" min="20" max="100" value="44" id="nav-logo-d" oninput="update()">
-      </div>
-      <div class="control">
-        <div class="control-label">Logo footer — Tamanho <span class="control-value" id="v-footer-logo-d-val">56px</span></div>
-        <input type="range" min="20" max="200" value="56" id="footer-logo-d" oninput="update()">
+      <div class="group-title" onclick="toggleGroup(this)">Logos <span class="group-badge">Desktop</span><i class="toggle-arrow">▼</i></div>
+      <div class="group-body">
+        <div class="control">
+          <div class="control-label">Logo topo (nav) <span class="control-value" id="v-nav-logo-d-val">44px</span></div>
+          <input type="range" min="20" max="100" value="44" id="nav-logo-d" oninput="update()">
+        </div>
+        <div class="control">
+          <div class="control-label">Logo footer — Tamanho <span class="control-value" id="v-footer-logo-d-val">56px</span></div>
+          <input type="range" min="20" max="200" value="56" id="footer-logo-d" oninput="update()">
+        </div>
       </div>
     </div>
 
     <!-- TEXTOS MOBILE -->
     <div class="group only-mobile">
-      <div class="group-title">Texto Hero <span class="group-badge mobile">Mobile</span></div>
-      <div class="control">
-        <div class="control-label">Espaço acima do subtítulo <span class="control-value" id="v-sub-mt-val">3rem</span></div>
-        <input type="range" min="0" max="10" step="0.5" value="3" id="sub-mt" oninput="update()">
+      <div class="group-title" onclick="toggleGroup(this)">Texto Hero <span class="group-badge mobile">Mobile</span><i class="toggle-arrow">▼</i></div>
+      <div class="group-body">
+        <div class="control">
+          <div class="control-label">Espaço acima do subtítulo <span class="control-value" id="v-sub-mt-val">3rem</span></div>
+          <input type="range" min="0" max="10" step="0.5" value="3" id="sub-mt" oninput="update()">
+        </div>
       </div>
     </div>
 
     <!-- LOGOS MOBILE -->
     <div class="group only-mobile">
-      <div class="group-title">Logos <span class="group-badge mobile">Mobile</span></div>
-      <div class="control">
-        <div class="control-label">Logo topo (nav) <span class="control-value" id="v-nav-logo-val">35px</span></div>
-        <input type="range" min="20" max="80" value="35" id="nav-logo" oninput="update()">
+      <div class="group-title" onclick="toggleGroup(this)">Logos <span class="group-badge mobile">Mobile</span><i class="toggle-arrow">▼</i></div>
+      <div class="group-body">
+        <div class="control">
+          <div class="control-label">Logo topo (nav) <span class="control-value" id="v-nav-logo-val">35px</span></div>
+          <input type="range" min="20" max="80" value="35" id="nav-logo" oninput="update()">
+        </div>
+        <div class="control">
+          <div class="control-label">Logo footer — Tamanho <span class="control-value" id="v-footer-logo-val">240px</span></div>
+          <input type="range" min="60" max="400" value="240" id="footer-logo" oninput="update()">
+        </div>
+        <div class="control">
+          <div class="control-label">Logo footer — Posição vertical <span class="control-value" id="v-footer-mt-val">-1.5rem</span></div>
+          <input type="range" min="-5" max="5" step="0.5" value="-1.5" id="footer-mt" oninput="update()">
+        </div>
       </div>
-      <div class="control">
-        <div class="control-label">Logo footer — Tamanho <span class="control-value" id="v-footer-logo-val">240px</span></div>
-        <input type="range" min="60" max="400" value="240" id="footer-logo" oninput="update()">
+    </div>
+
+    <!-- CORES -->
+    <div class="group only-desktop">
+      <div class="group-title" onclick="toggleGroup(this)">🎨 Cores <span class="group-badge">Desktop</span><i class="toggle-arrow">▼</i></div>
+      <div class="group-body">
+        <div class="color-row">
+          <input type="color" id="c-accent" value="#00C8E8" oninput="update()">
+          <label>Cor de destaque (accent)</label>
+        </div>
+        <div class="color-row">
+          <input type="color" id="c-cta-bg" value="#00C8E8" oninput="update()">
+          <label>Fundo botão CTA</label>
+        </div>
+        <div class="color-row">
+          <input type="color" id="c-bg-section" value="#0a0a0e" oninput="update()">
+          <label>Fundo seções claras</label>
+        </div>
+        <div class="color-row">
+          <input type="color" id="c-bg-footer" value="#000000" oninput="update()">
+          <label>Fundo footer</label>
+        </div>
+        <div class="color-row">
+          <input type="color" id="c-bg-card" value="#111111" oninput="update()">
+          <label>Fundo cards</label>
+        </div>
+        <div class="color-row">
+          <input type="color" id="c-stars" value="#00C8E8" oninput="update()">
+          <label>Cor estrelas depoimentos</label>
+        </div>
+        <div class="color-row">
+          <input type="color" id="c-input-bg" value="#1a1a1a" oninput="update()">
+          <label>Fundo inputs formulário</label>
+        </div>
+        <div class="control">
+          <div class="control-label">Intensidade neon "REFERIDOS" <span class="control-value" id="v-neon-blur-val">20px</span></div>
+          <input type="range" min="0" max="60" step="2" value="20" id="neon-blur" oninput="update()">
+        </div>
       </div>
-      <div class="control">
-        <div class="control-label">Logo footer — Posição vertical <span class="control-value" id="v-footer-mt-val">-1.5rem</span></div>
-        <input type="range" min="-5" max="5" step="0.5" value="-1.5" id="footer-mt" oninput="update()">
+    </div>
+
+    <!-- TIPOGRAFIA -->
+    <div class="group only-desktop">
+      <div class="group-title" onclick="toggleGroup(this)">✏️ Tipografia <span class="group-badge">Desktop</span><i class="toggle-arrow">▼</i></div>
+      <div class="group-body">
+        <div class="select-row">
+          <label>Fonte títulos</label>
+          <select id="font-display" onchange="update()">
+            <option value="Space Grotesk" selected>Space Grotesk</option>
+            <option value="Montserrat">Montserrat</option>
+            <option value="Outfit">Outfit</option>
+            <option value="Raleway">Raleway</option>
+            <option value="Poppins">Poppins</option>
+            <option value="Oswald">Oswald</option>
+            <option value="Bebas Neue">Bebas Neue</option>
+          </select>
+        </div>
+        <div class="select-row">
+          <label>Fonte corpo</label>
+          <select id="font-body" onchange="update()">
+            <option value="Inter" selected>Inter</option>
+            <option value="DM Sans">DM Sans</option>
+            <option value="Lato">Lato</option>
+            <option value="Nunito">Nunito</option>
+            <option value="Open Sans">Open Sans</option>
+            <option value="Roboto">Roboto</option>
+          </select>
+        </div>
+        <div class="control">
+          <div class="control-label">Tamanho título hero <span class="control-value" id="v-hero-title-size-val">4.5rem</span></div>
+          <input type="range" min="2" max="8" step="0.1" value="4.5" id="hero-title-size" oninput="update()">
+        </div>
+        <div class="control">
+          <div class="control-label">Tamanho subtítulo hero <span class="control-value" id="v-hero-sub-size-val">1.1rem</span></div>
+          <input type="range" min="0.8" max="2" step="0.05" value="1.1" id="hero-sub-size" oninput="update()">
+        </div>
+        <div class="control">
+          <div class="control-label">Tamanho títulos de seção <span class="control-value" id="v-section-title-size-val">2.5rem</span></div>
+          <input type="range" min="1.5" max="4" step="0.1" value="2.5" id="section-title-size" oninput="update()">
+        </div>
+        <div class="control">
+          <div class="control-label">Espaçamento entre letras (headings) <span class="control-value" id="v-heading-ls-val">0px</span></div>
+          <input type="range" min="-2" max="5" step="0.5" value="0" id="heading-ls" oninput="update()">
+        </div>
+        <div class="control">
+          <div class="control-label">Altura da linha (corpo) <span class="control-value" id="v-body-lh-val">1.6</span></div>
+          <input type="range" min="1" max="2.5" step="0.05" value="1.6" id="body-lh" oninput="update()">
+        </div>
+      </div>
+    </div>
+
+    <!-- LAYOUT -->
+    <div class="group only-desktop">
+      <div class="group-title" onclick="toggleGroup(this)">📐 Layout <span class="group-badge">Desktop</span><i class="toggle-arrow">▼</i></div>
+      <div class="group-body">
+        <div class="control">
+          <div class="control-label">Altura mínima hero <span class="control-value" id="v-hero-min-h-val">700px</span></div>
+          <input type="range" min="400" max="1000" step="10" value="700" id="hero-min-h" oninput="update()">
+        </div>
+        <div class="control">
+          <div class="control-label">Altura navbar <span class="control-value" id="v-navbar-h-val">80px</span></div>
+          <input type="range" min="50" max="120" step="2" value="80" id="navbar-h" oninput="update()">
+        </div>
+      </div>
+    </div>
+
+    <!-- ESPAÇAMENTOS -->
+    <div class="group only-desktop">
+      <div class="group-title" onclick="toggleGroup(this)">⬜ Espaçamentos <span class="group-badge">Desktop</span><i class="toggle-arrow">▼</i></div>
+      <div class="group-body">
+        <div class="control">
+          <div class="control-label">Padding das seções <span class="control-value" id="v-section-pad-val">120px</span></div>
+          <input type="range" min="40" max="200" step="5" value="120" id="section-pad" oninput="update()">
+        </div>
+        <div class="control">
+          <div class="control-label">Gap entre cards <span class="control-value" id="v-card-gap-val">24px</span></div>
+          <input type="range" min="8" max="60" step="2" value="24" id="card-gap" oninput="update()">
+        </div>
+        <div class="control">
+          <div class="control-label">Padding horizontal botões <span class="control-value" id="v-btn-px-val">40px</span></div>
+          <input type="range" min="10" max="80" step="2" value="40" id="btn-px" oninput="update()">
+        </div>
+        <div class="control">
+          <div class="control-label">Padding vertical botões <span class="control-value" id="v-btn-py-val">16px</span></div>
+          <input type="range" min="8" max="30" step="1" value="16" id="btn-py" oninput="update()">
+        </div>
+      </div>
+    </div>
+
+    <!-- ELEMENTOS -->
+    <div class="group only-desktop">
+      <div class="group-title" onclick="toggleGroup(this)">🧩 Elementos <span class="group-badge">Desktop</span><i class="toggle-arrow">▼</i></div>
+      <div class="group-body">
+        <div class="control">
+          <div class="control-label">Border radius cards <span class="control-value" id="v-card-radius-val">16px</span></div>
+          <input type="range" min="0" max="40" step="1" value="16" id="card-radius" oninput="update()">
+        </div>
+        <div class="control">
+          <div class="control-label">Border radius botões <span class="control-value" id="v-btn-radius-val">50px</span></div>
+          <input type="range" min="0" max="60" step="1" value="50" id="btn-radius" oninput="update()">
+        </div>
+        <div class="control">
+          <div class="control-label">Sombra cards <span class="control-value" id="v-card-shadow-val">0px</span></div>
+          <input type="range" min="0" max="60" step="2" value="0" id="card-shadow" oninput="update()">
+        </div>
+        <div class="control">
+          <div class="control-label">Border radius fotos mentores <span class="control-value" id="v-mentor-radius-val">50%</span></div>
+          <input type="range" min="0" max="100" step="1" value="50" id="mentor-radius" oninput="update()">
+        </div>
+        <div class="control">
+          <div class="control-label">Velocidade animações <span class="control-value" id="v-anim-speed-val">0.3s</span></div>
+          <input type="range" min="0.1" max="1" step="0.05" value="0.3" id="anim-speed" oninput="update()">
+        </div>
+      </div>
+    </div>
+
+    <!-- AVANÇADO -->
+    <div class="group only-desktop">
+      <div class="group-title" onclick="toggleGroup(this)">⚡ Avançado <span class="group-badge">Desktop</span><i class="toggle-arrow">▼</i></div>
+      <div class="group-body">
+        <div class="color-row">
+          <input type="color" id="c-scrollbar" value="#00C8E8" oninput="update()">
+          <label>Cor scrollbar</label>
+        </div>
+        <div class="color-row">
+          <input type="color" id="c-selection" value="#003040" oninput="update()">
+          <label>Cor seleção de texto</label>
+        </div>
+        <div class="select-row">
+          <label>CSS personalizado (adicionado ao bloco publicado)</label>
+          <textarea id="custom-css" class="custom-css-area" rows="8" placeholder="/* Cole seu CSS aqui */&#10;.hero-title { letter-spacing: -0.02em; }" oninput="update()"></textarea>
+        </div>
+      </div>
+    </div>
+
+    <!-- MOBILE — TIPOGRAFIA -->
+    <div class="group only-mobile">
+      <div class="group-title" onclick="toggleGroup(this)">✏️ Tipografia <span class="group-badge mobile">Mobile</span><i class="toggle-arrow">▼</i></div>
+      <div class="group-body">
+        <div class="control">
+          <div class="control-label">Tamanho título hero mobile <span class="control-value" id="v-hero-title-m-val">3rem</span></div>
+          <input type="range" min="2" max="5" step="0.1" value="3" id="hero-title-m" oninput="update()">
+        </div>
+        <div class="control">
+          <div class="control-label">Tamanho subtítulo mobile <span class="control-value" id="v-hero-sub-m-val">1rem</span></div>
+          <input type="range" min="0.8" max="1.5" step="0.05" value="1" id="hero-sub-m" oninput="update()">
+        </div>
       </div>
     </div>
 
@@ -459,10 +729,22 @@
   // Inicializa no modo desktop
   document.getElementById('panel-body').className = 'mode-desktop';
 
-  function val(id) { return parseFloat(document.getElementById(id).value); }
+  function toggleGroup(titleEl) {
+    titleEl.closest('.group').classList.toggle('collapsed');
+  }
+
+  function val(id) {
+    const el = document.getElementById(id);
+    return el ? parseFloat(el.value) : 0;
+  }
+  function strVal(id) {
+    const el = document.getElementById(id);
+    return el ? el.value : '';
+  }
 
   function setLabel(id, text) {
-    document.getElementById('v-' + id + '-val').textContent = text;
+    const el = document.getElementById('v-' + id + '-val');
+    if (el) el.textContent = text;
   }
 
   function update() {
@@ -480,7 +762,113 @@
     setLabel('nav-logo',      val('nav-logo') + 'px');
     setLabel('footer-logo',   val('footer-logo') + 'px');
     setLabel('footer-mt',     val('footer-mt') + 'rem');
+    // new controls
+    setLabel('neon-blur',       val('neon-blur') + 'px');
+    setLabel('hero-title-size', val('hero-title-size') + 'rem');
+    setLabel('hero-sub-size',   val('hero-sub-size') + 'rem');
+    setLabel('section-title-size', val('section-title-size') + 'rem');
+    setLabel('heading-ls',      val('heading-ls') + 'px');
+    setLabel('body-lh',         val('body-lh'));
+    setLabel('hero-min-h',      val('hero-min-h') + 'px');
+    setLabel('navbar-h',        val('navbar-h') + 'px');
+    setLabel('section-pad',     val('section-pad') + 'px');
+    setLabel('card-gap',        val('card-gap') + 'px');
+    setLabel('btn-px',          val('btn-px') + 'px');
+    setLabel('btn-py',          val('btn-py') + 'px');
+    setLabel('card-radius',     val('card-radius') + 'px');
+    setLabel('btn-radius',      val('btn-radius') + 'px');
+    setLabel('card-shadow',     val('card-shadow') + 'px');
+    setLabel('mentor-radius',   val('mentor-radius') + '%');
+    setLabel('anim-speed',      val('anim-speed') + 's');
+    setLabel('hero-title-m',    val('hero-title-m') + 'rem');
+    setLabel('hero-sub-m',      val('hero-sub-m') + 'rem');
     injectStyle();
+  }
+
+  function buildFullCSS() {
+    const accent = strVal('c-accent') || '#00C8E8';
+    const ctaBg = strVal('c-cta-bg') || '#00C8E8';
+    const bgSection = strVal('c-bg-section') || '#0a0a0e';
+    const bgFooter = strVal('c-bg-footer') || '#000000';
+    const bgCard = strVal('c-bg-card') || '#111111';
+    const stars = strVal('c-stars') || '#00C8E8';
+    const inputBg = strVal('c-input-bg') || '#1a1a1a';
+    const scrollbar = strVal('c-scrollbar') || '#00C8E8';
+    const selection = strVal('c-selection') || '#003040';
+    const fontDisplay = strVal('font-display') || 'Space Grotesk';
+    const fontBody = strVal('font-body') || 'Inter';
+    const customCss = strVal('custom-css') || '';
+
+    // Google Fonts import
+    const fontsNeeded = [];
+    if (fontDisplay !== 'Space Grotesk') fontsNeeded.push(fontDisplay.replace(/ /g, '+') + ':wght@400;700');
+    if (fontBody !== 'Inter') fontsNeeded.push(fontBody.replace(/ /g, '+') + ':wght@400;500;600');
+    const importLine = fontsNeeded.length > 0
+      ? `@import url('https://fonts.googleapis.com/css2?family=${fontsNeeded.join('&family=')}&display=swap');`
+      : '';
+
+    return `/* EDITOR-START */
+${importLine}
+:root {
+  --accent: ${accent};
+  --font-display: '${fontDisplay}', sans-serif;
+  --font-body: '${fontBody}', sans-serif;
+}
+/* Watermark */
+.hero-watermark {
+  position: absolute;
+  width: 94%;
+  max-width: ${val('wm-size')}px;
+  top: ${val('wm-top')}%;
+  left: ${val('wm-left')}%;
+  transform: translate(-50%, -50%);
+  opacity: ${(val('wm-op')/100).toFixed(2)};
+  pointer-events: none;
+  z-index: 0;
+}
+/* Logos */
+.hero-subtitle { margin-top: ${val('sub-mt-d')}rem; }
+.nav-logo img { height: ${val('nav-logo-d')}px; }
+.footer-logo { height: ${val('footer-logo-d')}px; }
+/* Colors */
+.btn-primary, .btn-primary { background: ${ctaBg} !important; }
+.depo-stars { color: ${stars} !important; }
+.hero-title .highlight { text-shadow: 0 0 ${val('neon-blur')}px rgba(0,200,232,0.6); }
+/* Typography */
+.hero-title { font-size: ${val('hero-title-size')}rem; font-family: var(--font-display); }
+.hero-subtitle { font-size: ${val('hero-sub-size')}rem; line-height: ${val('body-lh')}; }
+.lp-title, .section-title { font-size: ${val('section-title-size')}rem; letter-spacing: ${val('heading-ls')}px; }
+body { line-height: ${val('body-lh')}; font-family: var(--font-body); }
+/* Layout */
+.hero-panel { min-height: ${val('hero-min-h')}px; }
+.top-nav { height: ${val('navbar-h')}px; }
+/* Spacing */
+.lp-section { padding-top: ${val('section-pad')}px; padding-bottom: ${val('section-pad')}px; }
+.benefits-grid { gap: ${val('card-gap')}px; }
+.depo-grid { gap: ${val('card-gap')}px; }
+.btn-primary { padding: ${val('btn-py')}px ${val('btn-px')}px; }
+/* Elements */
+.benefit-card, .depo-card, .mentor-card { border-radius: ${val('card-radius')}px; }
+.btn, .btn-primary { border-radius: ${val('btn-radius')}px; }
+.benefit-card { box-shadow: 0 4px ${val('card-shadow')}px rgba(0,0,0,0.4); }
+.mentor-photo-wrap { border-radius: ${val('mentor-radius')}%; overflow: hidden; }
+.mentor-photo { border-radius: ${val('mentor-radius')}%; }
+.mentor-photo-border { border-radius: ${val('mentor-radius')}%; }
+* { transition-duration: ${val('anim-speed')}s; }
+/* Scrollbar */
+::-webkit-scrollbar-thumb { background: ${scrollbar}; }
+::selection { background: ${selection}; }
+/* Mobile */
+@media (max-width: 900px) {
+  .hero-watermark { top: ${val('mwm-top')}%; left: ${val('mwm-left')}%; width: ${val('mwm-size')}%; }
+  .hero-subtitle { margin-top: ${val('sub-mt')}rem; font-size: ${val('hero-sub-m')}rem; }
+  .nav-logo img { height: ${val('nav-logo')}px; }
+  .footer-logo { height: ${val('footer-logo')}px; margin-top: ${val('footer-mt')}rem; }
+  .hero-title { font-size: ${val('hero-title-m')}rem; }
+}
+/* Custom CSS */
+${customCss}
+/* EDITOR-END */`;
   }
 
   function injectStyle() {
@@ -493,56 +881,12 @@
         el.id = '__editor-style';
         doc.head.appendChild(el);
       }
-      el.textContent = `
-        .hero-watermark {
-          position: absolute !important;
-          width: 94% !important;
-          max-width: ${val('wm-size')}px !important;
-          top: ${val('wm-top')}% !important;
-          left: ${val('wm-left')}% !important;
-          transform: translate(-50%, -50%) !important;
-          opacity: ${val('wm-op') / 100} !important;
-          pointer-events: none !important;
-          z-index: 0 !important;
-        }
-        .hero-subtitle { margin-top: ${val('sub-mt-d')}rem !important; }
-        .nav-logo img  { height: ${val('nav-logo-d')}px !important; }
-        .footer-logo   { height: ${val('footer-logo-d')}px !important; }
-        @media (max-width: 900px) {
-          .hero-watermark {
-            top: ${val('mwm-top')}% !important;
-            left: ${val('mwm-left')}% !important;
-            width: ${val('mwm-size')}% !important;
-          }
-          .hero-subtitle { margin-top: ${val('sub-mt')}rem !important; }
-          .nav-logo img  { height: ${val('nav-logo')}px !important; }
-          .footer-logo   { height: ${val('footer-logo')}px !important; margin-top: ${val('footer-mt')}rem !important; }
-        }
-      `;
+      el.textContent = buildFullCSS();
     } catch(e) {}
   }
 
   function gerarCSS() {
-    const output =
-`/* DESKTOP */
-.hero-watermark {
-  top: ${val('wm-top')}%;
-  left: ${val('wm-left')}%;
-  width: 94%;
-  max-width: ${val('wm-size')}px;
-  opacity: ${(val('wm-op')/100).toFixed(2)};
-}
-.hero-subtitle { margin-top: ${val('sub-mt-d')}rem; }
-.nav-logo img  { height: ${val('nav-logo-d')}px; }
-.footer-logo   { height: ${val('footer-logo-d')}px; }
-
-/* MOBILE */
-@media (max-width: 900px) {
-  .hero-watermark { top: ${val('mwm-top')}%; left: ${val('mwm-left')}%; width: ${val('mwm-size')}%; }
-  .hero-subtitle  { margin-top: ${val('sub-mt')}rem; }
-  .nav-logo img   { height: ${val('nav-logo')}px; }
-  .footer-logo    { height: ${val('footer-logo')}px; margin-top: ${val('footer-mt')}rem; }
-}`;
+    const output = buildFullCSS();
     const el = document.getElementById('css-output');
     el.textContent = output;
     el.style.display = 'block';
@@ -593,28 +937,7 @@
       const html = atob(data.content.replace(/\n/g, ''));
 
       // Gera o novo bloco CSS
-      const novoCSS = `/* EDITOR-START */
-    .hero-watermark {
-      position: absolute;
-      width: 94%;
-      max-width: ${val('wm-size')}px;
-      top: ${val('wm-top')}%;
-      left: ${val('wm-left')}%;
-      transform: translate(-50%, -50%);
-      opacity: ${(val('wm-op')/100).toFixed(2)};
-      pointer-events: none;
-      z-index: 0;
-    }
-    .hero-subtitle { margin-top: ${val('sub-mt-d')}rem; }
-    .nav-logo img { height: ${val('nav-logo-d')}px; }
-    .footer-logo { height: ${val('footer-logo-d')}px; }
-    @media (max-width: 900px) {
-      .hero-watermark { top: ${val('mwm-top')}%; left: ${val('mwm-left')}%; width: ${val('mwm-size')}%; }
-      .hero-subtitle { margin-top: ${val('sub-mt')}rem; }
-      .nav-logo img { height: ${val('nav-logo')}px; }
-      .footer-logo { height: ${val('footer-logo')}px; margin-top: ${val('footer-mt')}rem; }
-    }
-    /* EDITOR-END */`;
+      const novoCSS = buildFullCSS();
 
       // Substitui o bloco entre os marcadores
       const novoHTML = html.replace(/\/\* EDITOR-START \*\/[\s\S]*?\/\* EDITOR-END \*\//,  novoCSS);
@@ -719,6 +1042,11 @@
       if (navLogo !== null) setSlider('nav-logo',      navLogo);
       if (footer  !== null) setSlider('footer-logo',   footer);
       if (footerMt!== null) setSlider('footer-mt',     footerMt);
+      // Load accent color from CSS variables
+      const accentMatch = css.match(/--accent:\s*(#[a-fA-F0-9]{6})/);
+      if (accentMatch) { const el = document.getElementById('c-accent'); if(el) el.value = accentMatch[1]; }
+      const ctaBgMatch = css.match(/\.btn-primary[^{]*\{[^}]*background:\s*(#[a-fA-F0-9]{6})/);
+      if (ctaBgMatch) { const el = document.getElementById('c-cta-bg'); if(el) el.value = ctaBgMatch[1]; }
 
       update();
     } catch(e) {}

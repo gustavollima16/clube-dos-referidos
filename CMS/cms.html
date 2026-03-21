@@ -749,9 +749,55 @@
       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
       Mentores
     </button>
+    <button class="nav-item" data-tab="formulario" onclick="showTab('formulario', this)">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M8 12h8M8 8h8M8 16h4"/></svg>
+      Formulário
+    </button>
     <button class="nav-item" data-tab="config" onclick="showTab('config', this)">
       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M12 1v4M12 19v4M4.22 4.22l2.83 2.83M16.95 16.95l2.83 2.83M1 12h4M19 12h4M4.22 19.78l2.83-2.83M16.95 7.05l2.83-2.83"/></svg>
       Configurações
+    </button>
+
+    <div class="nav-section-label" style="margin-top:8px;">Identidade</div>
+    <button class="nav-item" data-tab="logo-favicon" onclick="showTab('logo-favicon', this)">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+      Logo &amp; Favicon
+    </button>
+    <button class="nav-item" data-tab="navegacao" onclick="showTab('navegacao', this)">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+      Navegação
+    </button>
+    <button class="nav-item" data-tab="rodape" onclick="showTab('rodape', this)">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="18" x2="21" y2="18"/><line x1="3" y1="12" x2="15" y2="12"/></svg>
+      Rodapé &amp; Social
+    </button>
+
+    <div class="nav-section-label" style="margin-top:8px;">Páginas</div>
+    <button class="nav-item" data-tab="pag-login" onclick="showTab('pag-login', this)">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><polyline points="10 17 15 12 10 7"/><line x1="15" y1="12" x2="3" y2="12"/></svg>
+      Página Login
+    </button>
+    <button class="nav-item" data-tab="pag-convite" onclick="showTab('pag-convite', this)">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+      Página Convite
+    </button>
+    <button class="nav-item" data-tab="pag-membros" onclick="showTab('pag-membros', this)">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+      Página Membros
+    </button>
+    <button class="nav-item" data-tab="pag-sobre" onclick="showTab('pag-sobre', this)">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+      Página Sobre
+    </button>
+
+    <div class="nav-section-label" style="margin-top:8px;">SEO &amp; Técnico</div>
+    <button class="nav-item" data-tab="seo" onclick="showTab('seo', this)">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+      SEO
+    </button>
+    <button class="nav-item" data-tab="analytics" onclick="showTab('analytics', this)">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+      Analytics
     </button>
 
     <div class="nav-section-label" style="margin-top:8px;">Ferramentas</div>
@@ -808,12 +854,29 @@
         <div class="card-header">
           <div class="card-title">
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M4 6h16M4 12h8M4 18h4"/></svg>
-            Subtítulo do Hero
+            Títulos e Textos do Hero
           </div>
         </div>
         <div class="field">
-          <label class="field-label">Texto abaixo do título principal</label>
+          <label class="field-label">Badge (texto do selo acima do título)</label>
+          <input type="text" id="hero-badge" placeholder="★ Acesso exclusivo por convite" oninput="markDirty()">
+        </div>
+        <div class="field-row">
+          <div class="field">
+            <label class="field-label">Título Linha 1</label>
+            <input type="text" id="hero-title-line1" placeholder="CLUBE" oninput="markDirty()">
+          </div>
+          <div class="field">
+            <label class="field-label">Palavra em Destaque (neon)</label>
+            <input type="text" id="hero-title-highlight" placeholder="REFERIDOS" oninput="markDirty()">
+          </div>
+        </div>
+        <div class="field">
+          <label class="field-label">Subtítulo do Hero</label>
           <textarea id="hero-subtitle" rows="3" oninput="markDirty()" placeholder="A plataforma dos melhores vendedores..."></textarea>
+        </div>
+        <div style="margin-top:14px;display:flex;justify-content:flex-end;">
+          <button class="btn btn-primary btn-sm" onclick="saveHero()">💾 Salvar Textos</button>
         </div>
       </div>
 
@@ -852,7 +915,40 @@
     <div class="tab-content" id="tab-quemsomos">
       <div class="section-header">
         <h2>Quem Somos</h2>
-        <p>Estatísticas da seção Quem Somos.</p>
+        <p>Títulos, cards e estatísticas da seção Quem Somos.</p>
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M4 6h16M4 12h8M4 18h4"/></svg>
+            Título da Seção
+          </div>
+        </div>
+        <div class="field">
+          <label class="field-label">Título</label>
+          <input type="text" id="qs-titulo" placeholder="Por que o Clube dos Referidos?" oninput="markDirty()">
+        </div>
+        <div class="field">
+          <label class="field-label">Subtítulo</label>
+          <input type="text" id="qs-subtitulo" placeholder="Uma plataforma construída para quem leva vendas a sério." oninput="markDirty()">
+        </div>
+        <div style="margin-top:14px;display:flex;justify-content:flex-end;">
+          <button class="btn btn-primary btn-sm" onclick="saveQuemSomos()">💾 Salvar Título</button>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+            Cards de Benefícios
+          </div>
+        </div>
+        <div id="qs-cards-editor"></div>
+        <div style="margin-top:14px;display:flex;justify-content:flex-end;">
+          <button class="btn btn-primary btn-sm" onclick="saveQuemSomos()">💾 Salvar Cards</button>
+        </div>
       </div>
 
       <div class="card">
@@ -863,6 +959,9 @@
           </div>
         </div>
         <div class="stats-grid" id="qs-stats-editor"></div>
+        <div style="margin-top:14px;display:flex;justify-content:flex-end;">
+          <button class="btn btn-primary btn-sm" onclick="saveQuemSomos()">💾 Salvar Estatísticas</button>
+        </div>
       </div>
     </div>
 
@@ -1044,6 +1143,30 @@
         <p>Edite as informações dos mentores exibidas na landing page.</p>
       </div>
 
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M4 6h16M4 12h8M4 18h4"/></svg>
+            Cabeçalho da Seção
+          </div>
+        </div>
+        <div class="field">
+          <label class="field-label">Título</label>
+          <input type="text" id="mentores-titulo" placeholder="Os Mentores" oninput="markDirty()">
+        </div>
+        <div class="field">
+          <label class="field-label">Subtítulo</label>
+          <input type="text" id="mentores-subtitulo" placeholder="Conheça quem está por trás do clube" oninput="markDirty()">
+        </div>
+        <div class="field">
+          <label class="field-label">Texto do Badge (abaixo dos cards)</label>
+          <textarea id="mentores-badge" rows="3" placeholder="Formados diretamente por Flávio Augusto..." oninput="markDirty()"></textarea>
+        </div>
+        <div style="margin-top:14px;display:flex;justify-content:flex-end;">
+          <button class="btn btn-primary btn-sm" onclick="saveMentoresCabecalho()">💾 Salvar Cabeçalho</button>
+        </div>
+      </div>
+
       <div id="mentores-cards"></div>
     </div>
 
@@ -1093,6 +1216,359 @@
       </div>
     </div>
 
+    <!-- TAB: FORMULÁRIO -->
+    <div class="tab-content" id="tab-formulario">
+      <div class="section-header">
+        <h2>Formulário de Aplicação</h2>
+        <p>Textos da seção de aplicação da landing page.</p>
+      </div>
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M8 12h8M8 8h8M8 16h4"/></svg>
+            Textos do Formulário
+          </div>
+        </div>
+        <div class="field">
+          <label class="field-label">Título da Seção</label>
+          <input type="text" id="form-titulo" placeholder="Quero fazer parte" oninput="markDirty()">
+        </div>
+        <div class="field">
+          <label class="field-label">Subtítulo</label>
+          <input type="text" id="form-subtitulo" placeholder="Preencha o formulário abaixo" oninput="markDirty()">
+        </div>
+        <div class="field">
+          <label class="field-label">Texto do Botão</label>
+          <input type="text" id="form-botao" placeholder="Enviar Aplicação" oninput="markDirty()">
+        </div>
+        <div class="field">
+          <label class="field-label">Mensagem de Sucesso</label>
+          <textarea id="form-sucesso" rows="2" placeholder="Recebemos sua aplicação! Entraremos em contato em até 48 horas." oninput="markDirty()"></textarea>
+        </div>
+        <div style="margin-top:14px;display:flex;justify-content:flex-end;">
+          <button class="btn btn-primary btn-sm" onclick="saveFormulario()">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+            💾 Salvar
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- TAB: LOGO & FAVICON -->
+    <div class="tab-content" id="tab-logo-favicon">
+      <div class="section-header">
+        <h2>Logo &amp; Favicon</h2>
+        <p>Gerencie os arquivos de logo e favicon do site.</p>
+      </div>
+      <input type="file" class="file-input-hidden" id="logo-upload-input" accept="image/*">
+      <input type="file" class="file-input-hidden" id="favicon-upload-input" accept="image/*,.ico">
+
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+            Logo Principal
+          </div>
+        </div>
+        <div id="logo-preview-wrap" style="margin-bottom:12px;display:none;">
+          <img id="logo-preview-img" src="" alt="Logo" style="height:60px;object-fit:contain;background:#1a1a1a;padding:8px;border-radius:8px;border:1px solid rgba(255,255,255,0.1);">
+        </div>
+        <div class="field">
+          <label class="field-label">URL da Logo</label>
+          <div style="display:flex;gap:8px;">
+            <input type="text" id="logo-url" placeholder="https://... ou vazio para usar images/logo.png" oninput="previewLogo(); markDirty()">
+            <button class="btn btn-ghost btn-sm" onclick="document.getElementById('logo-upload-input').click()">Upload</button>
+          </div>
+        </div>
+        <div style="margin-top:14px;display:flex;justify-content:flex-end;">
+          <button class="btn btn-primary btn-sm" onclick="saveLogoFavicon()">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+            💾 Salvar Logo
+          </button>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+            Favicon
+          </div>
+        </div>
+        <div id="favicon-preview-wrap" style="margin-bottom:12px;display:none;">
+          <img id="favicon-preview-img" src="" alt="Favicon" style="width:32px;height:32px;object-fit:contain;background:#1a1a1a;padding:4px;border-radius:6px;border:1px solid rgba(255,255,255,0.1);">
+        </div>
+        <div class="field">
+          <label class="field-label">URL do Favicon</label>
+          <div style="display:flex;gap:8px;">
+            <input type="text" id="favicon-url" placeholder="https://..." oninput="previewFavicon(); markDirty()">
+            <button class="btn btn-ghost btn-sm" onclick="document.getElementById('favicon-upload-input').click()">Upload</button>
+          </div>
+        </div>
+        <div style="margin-top:14px;display:flex;justify-content:flex-end;">
+          <button class="btn btn-primary btn-sm" onclick="saveLogoFavicon()">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+            💾 Salvar Favicon
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- TAB: NAVEGAÇÃO -->
+    <div class="tab-content" id="tab-navegacao">
+      <div class="section-header">
+        <h2>Navegação</h2>
+        <p>Edite os links e o botão CTA da navbar.</p>
+      </div>
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><polyline points="10 17 15 12 10 7"/><line x1="15" y1="12" x2="3" y2="12"/></svg>
+            Botão CTA
+          </div>
+        </div>
+        <div class="field">
+          <label class="field-label">Texto do Botão (Área de Membros)</label>
+          <input type="text" id="nav-cta-text" placeholder="Área de Membros" oninput="markDirty()">
+        </div>
+        <div style="margin-top:14px;display:flex;justify-content:flex-end;">
+          <button class="btn btn-primary btn-sm" onclick="saveNavegacao()">💾 Salvar</button>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+            Links da Navegação
+          </div>
+        </div>
+        <div id="nav-links-editor"></div>
+        <div style="margin-top:14px;display:flex;justify-content:flex-end;">
+          <button class="btn btn-primary btn-sm" onclick="saveNavegacao()">💾 Salvar Links</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- TAB: RODAPÉ & SOCIAL -->
+    <div class="tab-content" id="tab-rodape">
+      <div class="section-header">
+        <h2>Rodapé &amp; Redes Sociais</h2>
+        <p>Texto do rodapé e links das redes sociais.</p>
+      </div>
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="8" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+            Copyright
+          </div>
+        </div>
+        <div class="field">
+          <label class="field-label">Texto de Copyright</label>
+          <input type="text" id="rodape-copyright" placeholder="© 2025 Clube dos Referidos. Todos os direitos reservados." oninput="markDirty()">
+        </div>
+        <div style="margin-top:14px;display:flex;justify-content:flex-end;">
+          <button class="btn btn-primary btn-sm" onclick="saveRodape()">💾 Salvar</button>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg>
+            Redes Sociais
+          </div>
+        </div>
+        <div id="social-links-editor"></div>
+        <div style="margin-top:14px;display:flex;justify-content:flex-end;">
+          <button class="btn btn-primary btn-sm" onclick="saveRodape()">💾 Salvar Redes</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- TAB: PÁGINA LOGIN -->
+    <div class="tab-content" id="tab-pag-login">
+      <div class="section-header">
+        <h2>Página Login</h2>
+        <p>Textos exibidos na tela de login/cadastro.</p>
+      </div>
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><polyline points="10 17 15 12 10 7"/><line x1="15" y1="12" x2="3" y2="12"/></svg>
+            Textos da Tela de Login
+          </div>
+        </div>
+        <div class="field">
+          <label class="field-label">Título</label>
+          <input type="text" id="login-titulo" placeholder="Bem-vindo de volta" oninput="markDirty()">
+        </div>
+        <div class="field">
+          <label class="field-label">Subtítulo</label>
+          <input type="text" id="login-subtitulo" placeholder="Acesse sua conta para continuar aprendendo." oninput="markDirty()">
+        </div>
+        <div class="field-row">
+          <div class="field">
+            <label class="field-label">Texto Botão Entrar</label>
+            <input type="text" id="login-btn-entrar" placeholder="Acessar minha conta" oninput="markDirty()">
+          </div>
+          <div class="field">
+            <label class="field-label">Texto Botão Criar Conta</label>
+            <input type="text" id="login-btn-criar" placeholder="Criar conta" oninput="markDirty()">
+          </div>
+        </div>
+        <div style="margin-top:14px;display:flex;justify-content:flex-end;">
+          <button class="btn btn-primary btn-sm" onclick="savePaginaLogin()">💾 Salvar</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- TAB: PÁGINA CONVITE -->
+    <div class="tab-content" id="tab-pag-convite">
+      <div class="section-header">
+        <h2>Página Convite</h2>
+        <p>Textos exibidos na tela de cadastro via convite.</p>
+      </div>
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+            Textos da Tela de Convite
+          </div>
+        </div>
+        <div class="field">
+          <label class="field-label">Título</label>
+          <input type="text" id="convite-titulo" placeholder="Você foi convidado!" oninput="markDirty()">
+        </div>
+        <div class="field">
+          <label class="field-label">Subtítulo</label>
+          <textarea id="convite-subtitulo" rows="2" placeholder="Preencha seus dados para criar sua conta." oninput="markDirty()"></textarea>
+        </div>
+        <div style="margin-top:14px;display:flex;justify-content:flex-end;">
+          <button class="btn btn-primary btn-sm" onclick="savePaginaConvite()">💾 Salvar</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- TAB: PÁGINA MEMBROS -->
+    <div class="tab-content" id="tab-pag-membros">
+      <div class="section-header">
+        <h2>Página Membros</h2>
+        <p>Textos exibidos no diretório de membros.</p>
+      </div>
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>
+            Textos da Página de Membros
+          </div>
+        </div>
+        <div class="field">
+          <label class="field-label">Título</label>
+          <input type="text" id="membros-titulo" placeholder="Diretório de Membros" oninput="markDirty()">
+        </div>
+        <div class="field">
+          <label class="field-label">Subtítulo</label>
+          <input type="text" id="membros-subtitulo" placeholder="Conheça quem faz parte do clube" oninput="markDirty()">
+        </div>
+        <div style="margin-top:14px;display:flex;justify-content:flex-end;">
+          <button class="btn btn-primary btn-sm" onclick="savePaginaMembros()">💾 Salvar</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- TAB: PÁGINA SOBRE -->
+    <div class="tab-content" id="tab-pag-sobre">
+      <div class="section-header">
+        <h2>Página Sobre</h2>
+        <p>Textos da página Sobre o Clube.</p>
+      </div>
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+            Conteúdo da Página Sobre
+          </div>
+        </div>
+        <div class="field">
+          <label class="field-label">Título</label>
+          <input type="text" id="sobre-titulo" placeholder="Sobre o Clube dos Referidos" oninput="markDirty()">
+        </div>
+        <div class="field">
+          <label class="field-label">Texto Principal</label>
+          <textarea id="sobre-texto" rows="8" placeholder="Escreva aqui o texto da página sobre..." oninput="markDirty()"></textarea>
+        </div>
+        <div style="margin-top:14px;display:flex;justify-content:flex-end;">
+          <button class="btn btn-primary btn-sm" onclick="savePaginaSobre()">💾 Salvar</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- TAB: SEO -->
+    <div class="tab-content" id="tab-seo">
+      <div class="section-header">
+        <h2>SEO</h2>
+        <p>Configure os metadados de otimização para motores de busca.</p>
+      </div>
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+            Metadados
+          </div>
+        </div>
+        <div class="hint-box">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+          O título aparece na aba do navegador e resultados de busca. A descrição é exibida no Google. OG Image é usada ao compartilhar nas redes sociais.
+        </div>
+        <div class="field">
+          <label class="field-label">Title da Página (até 60 caracteres)</label>
+          <input type="text" id="seo-titulo" placeholder="Clube dos Referidos — A Plataforma dos Melhores Vendedores" oninput="markDirty()">
+        </div>
+        <div class="field">
+          <label class="field-label">Meta Description (até 160 caracteres)</label>
+          <textarea id="seo-desc" rows="3" placeholder="Comunidade exclusiva para franqueados e parceiros que vendem mais..." oninput="markDirty()"></textarea>
+        </div>
+        <div class="field">
+          <label class="field-label">OG Image URL (imagem ao compartilhar)</label>
+          <input type="text" id="seo-og-image" placeholder="https://..." oninput="markDirty()">
+        </div>
+        <div style="margin-top:14px;display:flex;justify-content:flex-end;">
+          <button class="btn btn-primary btn-sm" onclick="saveSEO()">💾 Salvar SEO</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- TAB: ANALYTICS -->
+    <div class="tab-content" id="tab-analytics">
+      <div class="section-header">
+        <h2>Analytics</h2>
+        <p>Configure o rastreamento de visitas e comportamento.</p>
+      </div>
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+            Google Analytics 4
+          </div>
+        </div>
+        <div class="hint-box">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+          <div>
+            <strong style="color:var(--accent)">Como obter o ID do GA4:</strong><br>
+            1. Acesse <a href="https://analytics.google.com" target="_blank" style="color:var(--accent)">analytics.google.com</a><br>
+            2. Administrar → Propriedade → Fluxos de dados<br>
+            3. Clique no fluxo web → copie o "ID de Medição" (formato: G-XXXXXXXXXX)
+          </div>
+        </div>
+        <div class="field">
+          <label class="field-label">ID de Medição do Google Analytics 4</label>
+          <input type="text" id="analytics-ga-id" placeholder="G-XXXXXXXXXX" oninput="markDirty()">
+        </div>
+        <div style="margin-top:14px;display:flex;justify-content:flex-end;">
+          <button class="btn btn-primary btn-sm" onclick="saveAnalytics()">💾 Salvar Analytics</button>
+        </div>
+      </div>
+    </div>
+
   </div><!-- /content -->
 </div><!-- /main -->
 
@@ -1123,6 +1599,8 @@ window.addEventListener('DOMContentLoaded', () => {
     document.getElementById('modal-setup').classList.remove('hidden');
     loadLocal();
   }
+
+  wireLogoFaviconInputs();
 
   // wire up file inputs
   document.getElementById('ebook-file-input').addEventListener('change', function() {
@@ -1234,6 +1712,17 @@ function ensureDefaults() {
   if (!content.dashboard.avisos) content.dashboard.avisos = [];
   if (!content.landing) content.landing = { whatsapp: '', footer: '', mentores: [] };
   if (!content.landing.mentores) content.landing.mentores = [];
+  if (!content.nav) content.nav = { links: [], ctaText: 'Área de Membros' };
+  if (!content.rodape) content.rodape = { copyright: '', redesSociais: [] };
+  if (!content.seo) content.seo = { titulo: '', descricao: '', ogImage: '' };
+  if (!content.analytics) content.analytics = { gaId: '' };
+  if (!content.identidade) content.identidade = { logoUrl: '', faviconUrl: '' };
+  if (!content.paginas) content.paginas = {};
+  if (!content.formulario) content.formulario = {};
+  if (!content.mentoresData) content.mentoresData = {};
+  if (!content.quemSomos) content.quemSomos = { stats: [], cards: [] };
+  if (!content.quemSomos.cards) content.quemSomos.cards = [];
+  if (!content.hero) content.hero = { badge: '', subtitle: '', stats: [] };
 }
 
 function defaultContent() {
@@ -1254,8 +1743,11 @@ function defaultContent() {
 function renderAll() {
   if (!content) return;
   renderHeroSubtitle();
+  renderHeroBadge();
   renderHeroStats();
   renderQsStats();
+  renderQsCards();
+  renderQsHeader();
   renderDepoimentos();
   renderModulos();
   renderVideos();
@@ -1264,7 +1756,15 @@ function renderAll() {
   renderFotos();
   renderAvisos();
   renderMentores();
+  renderMentoresCabecalho();
   renderConfig();
+  renderFormulario();
+  renderLogoFavicon();
+  renderNavegacao();
+  renderRodape();
+  renderPaginas();
+  renderSEO();
+  renderAnalytics();
 }
 
 /* ===== HERO ===== */
@@ -1348,6 +1848,12 @@ function renderDepoimentos() {
             <input type="text" value="${esc(d.role)}" oninput="updateDepo(${i},'role',this.value)">
           </div>
         </div>
+        <div class="field">
+          <label class="field-label">Avaliação (estrelas)</label>
+          <div style="display:flex;gap:4px;margin-top:4px;" id="stars-${i}">
+            ${[1,2,3,4,5].map(s=>`<button type="button" onclick="setDepoStars(${i},${s})" style="background:none;border:none;cursor:pointer;font-size:1.3rem;color:${(d.estrelas||5)>=s?'#00C8E8':'#333'};padding:0 2px;transition:color 0.15s;" title="${s} estrela${s>1?'s':''}">★</button>`).join('')}
+          </div>
+        </div>
         <div style="margin-top:12px;display:flex;justify-content:space-between;align-items:center;gap:8px;">
           <button class="btn btn-danger btn-sm" onclick="removeDepo(${i})">
             <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/><path d="M10 11v6M14 11v6"/><path d="M9 6V4h6v2"/></svg>
@@ -1355,7 +1861,7 @@ function renderDepoimentos() {
           </button>
           <button class="btn btn-primary btn-sm" onclick="saveDepo(${i})">
             <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
-            Salvar
+            💾 Salvar
           </button>
         </div>
       </div>
@@ -2012,15 +2518,54 @@ async function uploadToSupabase(file, bucket) {
 
 /* ===== COLLECT CHANGES ===== */
 function collectContent() {
-  // hero subtitle
+  if (!content.hero) content.hero = {};
+  // hero fields
   const sub = document.getElementById('hero-subtitle');
-  if (sub && content.hero) content.hero.subtitle = sub.value;
-  // config
+  const badge = document.getElementById('hero-badge');
+  const line1 = document.getElementById('hero-title-line1');
+  const highlight = document.getElementById('hero-title-highlight');
+  if (sub) content.hero.subtitle = sub.value;
+  if (badge) content.hero.badge = badge.value;
+  if (line1) content.hero.titleLine1 = line1.value;
+  if (highlight) content.hero.titleHighlight = highlight.value;
+  // config (legacy)
   const wa = document.getElementById('config-whatsapp');
   const ft = document.getElementById('config-footer');
   if (!content.landing) content.landing = { whatsapp: '', footer: '', mentores: [] };
   if (wa) content.landing.whatsapp = wa.value;
   if (ft) content.landing.footer = ft.value;
+  // rodape copyright
+  const cp = document.getElementById('rodape-copyright');
+  if (!content.rodape) content.rodape = {};
+  if (cp) content.rodape.copyright = cp.value;
+  // seo
+  if (!content.seo) content.seo = {};
+  const seoT = document.getElementById('seo-titulo');
+  const seoD = document.getElementById('seo-desc');
+  const seoOg = document.getElementById('seo-og-image');
+  if (seoT) content.seo.titulo = seoT.value;
+  if (seoD) content.seo.descricao = seoD.value;
+  if (seoOg) content.seo.ogImage = seoOg.value;
+  // analytics
+  if (!content.analytics) content.analytics = {};
+  const gaId = document.getElementById('analytics-ga-id');
+  if (gaId) content.analytics.gaId = gaId.value;
+  // nav
+  if (!content.nav) content.nav = {};
+  const navCta = document.getElementById('nav-cta-text');
+  if (navCta) content.nav.ctaText = navCta.value;
+  // formulario
+  if (!content.formulario) content.formulario = {};
+  const formT = document.getElementById('form-titulo');
+  const formSub = document.getElementById('form-subtitulo');
+  const formBtn = document.getElementById('form-botao');
+  const formSucc = document.getElementById('form-sucesso');
+  if (formT) content.formulario.titulo = formT.value;
+  if (formSub) content.formulario.subtitulo = formSub.value;
+  if (formBtn) content.formulario.botaoTexto = formBtn.value;
+  if (formSucc) content.formulario.mensagemSucesso = formSucc.value;
+  // paginas
+  if (!content.paginas) content.paginas = {};
   return content;
 }
 
@@ -2075,6 +2620,371 @@ async function publish() {
   }
 }
 
+/* ===== DEPOIMENTOS ESTRELAS ===== */
+function setDepoStars(i, stars) {
+  content.depoimentos[i].estrelas = stars;
+  const wrap = document.getElementById(`stars-${i}`);
+  if (wrap) {
+    wrap.querySelectorAll('button').forEach((btn, idx) => {
+      btn.style.color = idx < stars ? '#00C8E8' : '#333';
+    });
+  }
+  markDirty();
+}
+
+/* ===== HERO SAVE ===== */
+function saveHero() {
+  if (!content.hero) content.hero = {};
+  const badge = document.getElementById('hero-badge');
+  const line1 = document.getElementById('hero-title-line1');
+  const highlight = document.getElementById('hero-title-highlight');
+  const sub = document.getElementById('hero-subtitle');
+  if (badge) content.hero.badge = badge.value;
+  if (line1) content.hero.titleLine1 = line1.value;
+  if (highlight) content.hero.titleHighlight = highlight.value;
+  if (sub) content.hero.subtitle = sub.value;
+  markDirty();
+  toast('Textos do Hero salvos! Clique em "Publicar no Site" quando terminar.', 'success');
+}
+
+/* ===== QUEM SOMOS EXTENDED ===== */
+function renderQsCards() {
+  const el = document.getElementById('qs-cards-editor');
+  if (!el) return;
+  const cards = content.quemSomos?.cards || [{icon:'🏆',title:'',text:''},{icon:'🤝',title:'',text:''},{icon:'📈',title:'',text:''}];
+  el.innerHTML = cards.map((c, i) => `
+    <div style="background:var(--bg-card2);border:1px solid var(--border);border-radius:10px;padding:14px;margin-bottom:10px;">
+      <div class="field-row-3">
+        <div class="field">
+          <label class="field-label">Ícone (emoji)</label>
+          <input type="text" value="${esc(c.icon)}" placeholder="🏆" oninput="updateQsCard(${i},'icon',this.value)" style="font-size:1.2rem;text-align:center;">
+        </div>
+        <div class="field">
+          <label class="field-label">Título</label>
+          <input type="text" value="${esc(c.title)}" placeholder="Excelência" oninput="updateQsCard(${i},'title',this.value)">
+        </div>
+        <div class="field">
+          <label class="field-label">Texto</label>
+          <input type="text" value="${esc(c.text)}" placeholder="Descrição" oninput="updateQsCard(${i},'text',this.value)">
+        </div>
+      </div>
+    </div>`).join('');
+}
+function updateQsCard(i, field, val) {
+  if (!content.quemSomos) content.quemSomos = { cards: [], stats: [] };
+  if (!content.quemSomos.cards) content.quemSomos.cards = [];
+  if (!content.quemSomos.cards[i]) content.quemSomos.cards[i] = {};
+  content.quemSomos.cards[i][field] = val;
+  markDirty();
+}
+function saveQuemSomos() {
+  if (!content.quemSomos) content.quemSomos = {};
+  const titulo = document.getElementById('qs-titulo');
+  const subtitulo = document.getElementById('qs-subtitulo');
+  if (titulo) content.quemSomos.titulo = titulo.value;
+  if (subtitulo) content.quemSomos.subtitulo = subtitulo.value;
+  markDirty();
+  toast('Quem Somos salvo! Clique em "Publicar no Site" quando terminar.', 'success');
+}
+function renderQsHeader() {
+  const titulo = document.getElementById('qs-titulo');
+  const subtitulo = document.getElementById('qs-subtitulo');
+  if (titulo && content.quemSomos) titulo.value = content.quemSomos.titulo || '';
+  if (subtitulo && content.quemSomos) subtitulo.value = content.quemSomos.subtitulo || '';
+}
+
+/* ===== MENTORES CABEÇALHO ===== */
+function renderMentoresCabecalho() {
+  const titulo = document.getElementById('mentores-titulo');
+  const subtitulo = document.getElementById('mentores-subtitulo');
+  const badge = document.getElementById('mentores-badge');
+  const d = content.mentoresData || {};
+  if (titulo) titulo.value = d.titulo || '';
+  if (subtitulo) subtitulo.value = d.subtitulo || '';
+  if (badge) badge.value = d.badgeText || content.mentoresBadge || '';
+}
+function saveMentoresCabecalho() {
+  if (!content.mentoresData) content.mentoresData = {};
+  const titulo = document.getElementById('mentores-titulo');
+  const subtitulo = document.getElementById('mentores-subtitulo');
+  const badge = document.getElementById('mentores-badge');
+  if (titulo) content.mentoresData.titulo = titulo.value;
+  if (subtitulo) content.mentoresData.subtitulo = subtitulo.value;
+  if (badge) { content.mentoresData.badgeText = badge.value; content.mentoresBadge = badge.value; }
+  markDirty();
+  toast('Cabeçalho dos Mentores salvo!', 'success');
+}
+
+/* ===== FORMULÁRIO ===== */
+function renderFormulario() {
+  const f = content.formulario || {};
+  const el = (id) => document.getElementById(id);
+  if (el('form-titulo')) el('form-titulo').value = f.titulo || '';
+  if (el('form-subtitulo')) el('form-subtitulo').value = f.subtitulo || '';
+  if (el('form-botao')) el('form-botao').value = f.botaoTexto || '';
+  if (el('form-sucesso')) el('form-sucesso').value = f.mensagemSucesso || '';
+}
+function saveFormulario() {
+  if (!content.formulario) content.formulario = {};
+  const f = content.formulario;
+  f.titulo = document.getElementById('form-titulo')?.value || '';
+  f.subtitulo = document.getElementById('form-subtitulo')?.value || '';
+  f.botaoTexto = document.getElementById('form-botao')?.value || '';
+  f.mensagemSucesso = document.getElementById('form-sucesso')?.value || '';
+  markDirty();
+  toast('Formulário salvo!', 'success');
+}
+
+/* ===== LOGO & FAVICON ===== */
+function renderLogoFavicon() {
+  const id = content.identidade || {};
+  const logoUrl = document.getElementById('logo-url');
+  const faviconUrl = document.getElementById('favicon-url');
+  if (logoUrl) logoUrl.value = id.logoUrl || '';
+  if (faviconUrl) faviconUrl.value = id.faviconUrl || '';
+  previewLogo();
+  previewFavicon();
+}
+function previewLogo() {
+  const url = document.getElementById('logo-url')?.value;
+  const wrap = document.getElementById('logo-preview-wrap');
+  const img = document.getElementById('logo-preview-img');
+  if (url && wrap && img) { img.src = url; wrap.style.display = 'block'; }
+  else if (wrap) wrap.style.display = 'none';
+}
+function previewFavicon() {
+  const url = document.getElementById('favicon-url')?.value;
+  const wrap = document.getElementById('favicon-preview-wrap');
+  const img = document.getElementById('favicon-preview-img');
+  if (url && wrap && img) { img.src = url; wrap.style.display = 'block'; }
+  else if (wrap) wrap.style.display = 'none';
+}
+function saveLogoFavicon() {
+  if (!content.identidade) content.identidade = {};
+  content.identidade.logoUrl = document.getElementById('logo-url')?.value || '';
+  content.identidade.faviconUrl = document.getElementById('favicon-url')?.value || '';
+  markDirty();
+  toast('Logo/Favicon salvos!', 'success');
+}
+
+/* ===== NAVEGAÇÃO ===== */
+function renderNavegacao() {
+  const nav = content.nav || {};
+  const ctaEl = document.getElementById('nav-cta-text');
+  if (ctaEl) ctaEl.value = nav.ctaText || '';
+  renderNavLinks();
+}
+function renderNavLinks() {
+  const el = document.getElementById('nav-links-editor');
+  if (!el) return;
+  const links = content.nav?.links || [];
+  el.innerHTML = links.map((l, i) => `
+    <div style="display:flex;gap:8px;margin-bottom:10px;align-items:flex-end;">
+      <div class="field" style="flex:2;margin-bottom:0;">
+        <label class="field-label">Texto</label>
+        <input type="text" value="${esc(l.text)}" oninput="updateNavLink(${i},'text',this.value)" placeholder="O Clube">
+      </div>
+      <div class="field" style="flex:3;margin-bottom:0;">
+        <label class="field-label">Link (href)</label>
+        <input type="text" value="${esc(l.href)}" oninput="updateNavLink(${i},'href',this.value)" placeholder="#clube">
+      </div>
+    </div>`).join('');
+}
+function updateNavLink(i, field, val) {
+  if (!content.nav) content.nav = { links: [], ctaText: '' };
+  if (!content.nav.links[i]) content.nav.links[i] = { text: '', href: '' };
+  content.nav.links[i][field] = val;
+  markDirty();
+}
+function saveNavegacao() {
+  if (!content.nav) content.nav = { links: [], ctaText: '' };
+  content.nav.ctaText = document.getElementById('nav-cta-text')?.value || '';
+  markDirty();
+  toast('Navegação salva!', 'success');
+}
+
+/* ===== RODAPÉ & REDES SOCIAIS ===== */
+function renderRodape() {
+  const r = content.rodape || {};
+  const cpEl = document.getElementById('rodape-copyright');
+  if (cpEl) cpEl.value = r.copyright || '';
+  renderSocialLinks();
+}
+function renderSocialLinks() {
+  const el = document.getElementById('social-links-editor');
+  if (!el) return;
+  const icons = {
+    instagram: '📷',
+    linkedin: '💼',
+    youtube: '▶️',
+    tiktok: '🎵',
+    twitter: '🐦'
+  };
+  const redes = content.rodape?.redesSociais || [];
+  el.innerHTML = redes.map((r, i) => `
+    <div style="background:var(--bg-card2);border:1px solid var(--border);border-radius:10px;padding:14px;margin-bottom:10px;">
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px;">
+        <span style="font-size:1.1rem;">${icons[r.plataforma]||'🔗'}</span>
+        <strong style="text-transform:capitalize;font-size:0.85rem;">${r.plataforma}</strong>
+        <label style="display:flex;align-items:center;gap:6px;margin-left:auto;cursor:pointer;font-size:0.75rem;color:var(--text-secondary);">
+          <input type="checkbox" ${r.ativo?'checked':''} onchange="updateSocialRede(${i},'ativo',this.checked)" style="accent-color:var(--accent);">
+          Ativo
+        </label>
+      </div>
+      <div class="field" style="margin-bottom:0;">
+        <label class="field-label">URL</label>
+        <input type="text" value="${esc(r.url)}" placeholder="https://..." oninput="updateSocialRede(${i},'url',this.value)" ${r.ativo?'':'style="opacity:0.5;"'}>
+      </div>
+    </div>`).join('');
+}
+function updateSocialRede(i, field, val) {
+  if (!content.rodape) content.rodape = { copyright: '', redesSociais: [] };
+  if (!content.rodape.redesSociais[i]) return;
+  content.rodape.redesSociais[i][field] = val;
+  renderSocialLinks();
+  markDirty();
+}
+function saveRodape() {
+  if (!content.rodape) content.rodape = {};
+  content.rodape.copyright = document.getElementById('rodape-copyright')?.value || '';
+  markDirty();
+  toast('Rodapé salvo!', 'success');
+}
+
+/* ===== PÁGINAS ===== */
+function renderPaginas() {
+  const p = content.paginas || {};
+  const el = (id) => document.getElementById(id);
+  // Login
+  if (el('login-titulo')) el('login-titulo').value = p.login?.titulo || '';
+  if (el('login-subtitulo')) el('login-subtitulo').value = p.login?.subtitulo || '';
+  if (el('login-btn-entrar')) el('login-btn-entrar').value = p.login?.botaoEntrar || '';
+  if (el('login-btn-criar')) el('login-btn-criar').value = p.login?.botaoCriar || '';
+  // Convite
+  if (el('convite-titulo')) el('convite-titulo').value = p.convite?.titulo || '';
+  if (el('convite-subtitulo')) el('convite-subtitulo').value = p.convite?.subtitulo || '';
+  // Membros
+  if (el('membros-titulo')) el('membros-titulo').value = p.membros?.titulo || '';
+  if (el('membros-subtitulo')) el('membros-subtitulo').value = p.membros?.subtitulo || '';
+  // Sobre
+  if (el('sobre-titulo')) el('sobre-titulo').value = p.sobre?.titulo || '';
+  if (el('sobre-texto')) el('sobre-texto').value = p.sobre?.texto || '';
+}
+function savePaginaLogin() {
+  if (!content.paginas) content.paginas = {};
+  if (!content.paginas.login) content.paginas.login = {};
+  content.paginas.login.titulo = document.getElementById('login-titulo')?.value || '';
+  content.paginas.login.subtitulo = document.getElementById('login-subtitulo')?.value || '';
+  content.paginas.login.botaoEntrar = document.getElementById('login-btn-entrar')?.value || '';
+  content.paginas.login.botaoCriar = document.getElementById('login-btn-criar')?.value || '';
+  markDirty();
+  toast('Página Login salva!', 'success');
+}
+function savePaginaConvite() {
+  if (!content.paginas) content.paginas = {};
+  if (!content.paginas.convite) content.paginas.convite = {};
+  content.paginas.convite.titulo = document.getElementById('convite-titulo')?.value || '';
+  content.paginas.convite.subtitulo = document.getElementById('convite-subtitulo')?.value || '';
+  markDirty();
+  toast('Página Convite salva!', 'success');
+}
+function savePaginaMembros() {
+  if (!content.paginas) content.paginas = {};
+  if (!content.paginas.membros) content.paginas.membros = {};
+  content.paginas.membros.titulo = document.getElementById('membros-titulo')?.value || '';
+  content.paginas.membros.subtitulo = document.getElementById('membros-subtitulo')?.value || '';
+  markDirty();
+  toast('Página Membros salva!', 'success');
+}
+function savePaginaSobre() {
+  if (!content.paginas) content.paginas = {};
+  if (!content.paginas.sobre) content.paginas.sobre = {};
+  content.paginas.sobre.titulo = document.getElementById('sobre-titulo')?.value || '';
+  content.paginas.sobre.texto = document.getElementById('sobre-texto')?.value || '';
+  markDirty();
+  toast('Página Sobre salva!', 'success');
+}
+
+/* ===== SEO ===== */
+function renderSEO() {
+  const s = content.seo || {};
+  const el = (id) => document.getElementById(id);
+  if (el('seo-titulo')) el('seo-titulo').value = s.titulo || '';
+  if (el('seo-desc')) el('seo-desc').value = s.descricao || '';
+  if (el('seo-og-image')) el('seo-og-image').value = s.ogImage || '';
+}
+function saveSEO() {
+  if (!content.seo) content.seo = {};
+  content.seo.titulo = document.getElementById('seo-titulo')?.value || '';
+  content.seo.descricao = document.getElementById('seo-desc')?.value || '';
+  content.seo.ogImage = document.getElementById('seo-og-image')?.value || '';
+  markDirty();
+  toast('SEO salvo!', 'success');
+}
+
+/* ===== ANALYTICS ===== */
+function renderAnalytics() {
+  const a = content.analytics || {};
+  const el = document.getElementById('analytics-ga-id');
+  if (el) el.value = a.gaId || '';
+}
+function saveAnalytics() {
+  if (!content.analytics) content.analytics = {};
+  content.analytics.gaId = document.getElementById('analytics-ga-id')?.value || '';
+  markDirty();
+  toast('Analytics salvo!', 'success');
+}
+
+/* ===== HERO RENDER BADGE ===== */
+function renderHeroBadge() {
+  const badge = document.getElementById('hero-badge');
+  const line1 = document.getElementById('hero-title-line1');
+  const highlight = document.getElementById('hero-title-highlight');
+  if (badge && content.hero) badge.value = content.hero.badge || '';
+  if (line1 && content.hero) line1.value = content.hero.titleLine1 || '';
+  if (highlight && content.hero) highlight.value = content.hero.titleHighlight || '';
+}
+
+/* logo/favicon upload wiring — called from DOMContentLoaded below */
+function wireLogoFaviconInputs() {
+  const logoInput = document.getElementById('logo-upload-input');
+  const faviconInput = document.getElementById('favicon-upload-input');
+  if (logoInput && !logoInput._wired) {
+    logoInput._wired = true;
+    logoInput.addEventListener('change', function() {
+      const file = this.files[0];
+      if (!file) return;
+      uploadToSupabase(file, 'arquivos').then(url => {
+        if (!content.identidade) content.identidade = {};
+        content.identidade.logoUrl = url;
+        const urlEl = document.getElementById('logo-url');
+        if (urlEl) urlEl.value = url;
+        previewLogo();
+        markDirty();
+        toast('Logo enviada!', 'success');
+      }).catch(e => toast('Erro no upload: ' + e.message, 'error'));
+      this.value = '';
+    });
+  }
+  if (faviconInput && !faviconInput._wired) {
+    faviconInput._wired = true;
+    faviconInput.addEventListener('change', function() {
+      const file = this.files[0];
+      if (!file) return;
+      uploadToSupabase(file, 'arquivos').then(url => {
+        if (!content.identidade) content.identidade = {};
+        content.identidade.faviconUrl = url;
+        const urlEl = document.getElementById('favicon-url');
+        if (urlEl) urlEl.value = url;
+        previewFavicon();
+        markDirty();
+        toast('Favicon enviado!', 'success');
+      }).catch(e => toast('Erro no upload: ' + e.message, 'error'));
+      this.value = '';
+    });
+  }
+}
+
 /* ===== NAVIGATION ===== */
 function showTab(tab, btn) {
   document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
@@ -2092,7 +3002,17 @@ function showTab(tab, btn) {
     newsletter: 'Newsletter',
     avisos: 'Dashboard Avisos',
     mentores: 'Mentores',
-    config: 'Configurações'
+    formulario: 'Formulário de Aplicação',
+    config: 'Configurações',
+    'logo-favicon': 'Logo & Favicon',
+    navegacao: 'Navegação',
+    rodape: 'Rodapé & Redes Sociais',
+    'pag-login': 'Página Login',
+    'pag-convite': 'Página Convite',
+    'pag-membros': 'Página Membros',
+    'pag-sobre': 'Página Sobre',
+    seo: 'SEO',
+    analytics: 'Analytics'
   };
   document.getElementById('topbar-title').textContent = titles[tab] || tab;
 }

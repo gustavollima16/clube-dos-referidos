@@ -1546,47 +1546,135 @@
 
 
 <script>
-/* ---- Carrega content.json e atualiza o DOM ---- */
+/* ---- Carrega content.json e atualiza o DOM dinamicamente ---- */
 (function() {
+  function esc(s) {
+    return (s||'').toString().replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+  }
   function initials(name) {
-    return name.split(' ').slice(0,2).map(w => w[0]).join('').toUpperCase();
+    return (name||'').split(' ').filter(Boolean).slice(0,2).map(w => w[0]).join('').toUpperCase() || '?';
   }
   function renderStats(containerId, stats) {
     const el = document.getElementById(containerId);
-    if (!el || !stats) return;
+    if (!el || !stats || !stats.length) return;
     el.innerHTML = stats.map(s => `
       <div class="stat-item">
-        <div class="stat-number">${s.number}</div>
-        <div class="stat-label">${s.label}</div>
+        <div class="stat-number">${esc(s.number)}</div>
+        <div class="stat-label">${esc(s.label)}</div>
       </div>`).join('');
   }
   function renderDepoimentos(depos) {
     const grid = document.getElementById('depo-grid');
-    if (!grid || !depos) return;
-    grid.innerHTML = depos.map(d => `
+    if (!grid || !depos || !depos.length) return;
+    grid.innerHTML = depos.map(d => {
+      const stars = Math.min(5, Math.max(1, parseInt(d.estrelas)||5));
+      const starStr = '★'.repeat(stars) + '☆'.repeat(5 - stars);
+      return `
       <div class="depo-card">
-        <div class="depo-stars">★★★★★</div>
-        <p class="depo-text">"${d.text}"</p>
+        <div class="depo-stars">${starStr}</div>
+        <p class="depo-text">"${esc(d.text)}"</p>
         <div class="depo-author">
           <div class="depo-avatar">${initials(d.name)}</div>
           <div>
-            <div class="depo-name">${d.name}</div>
-            <div class="depo-role">${d.role}</div>
+            <div class="depo-name">${esc(d.name)}</div>
+            <div class="depo-role">${esc(d.role)}</div>
           </div>
         </div>
-      </div>`).join('');
+      </div>`;
+    }).join('');
+  }
+  function renderNavLinks(nav) {
+    if (!nav || !nav.links) return;
+    const desktopNav = document.querySelector('.nav-links');
+    const mobileMenu = document.getElementById('mobileMenu');
+    if (desktopNav) {
+      const links = nav.links.map(l =>
+        `<li><a href="${esc(l.href)}" onclick="closeMobileMenu && closeMobileMenu()">${esc(l.text)}</a></li>`).join('');
+      const cta = nav.ctaText || 'Área de Membros';
+      desktopNav.innerHTML = links + `<li class="nav-cta"><a href="#area-membros" onclick="scrollToAuth(event)">${esc(cta)}</a></li>`;
+    }
+    if (mobileMenu) {
+      const links = nav.links.map(l =>
+        `<a href="${esc(l.href)}" onclick="closeMobileMenu()">${esc(l.text)}</a>`).join('');
+      const cta = nav.ctaText || 'Área de Membros';
+      mobileMenu.innerHTML = links + `<a href="#area-membros" onclick="scrollToAuth(event);closeMobileMenu()">${esc(cta)}</a>`;
+    }
+  }
+  function renderHero(c) {
+    if (!c.hero) return;
+    const sub = document.getElementById('hero-subtitle');
+    if (sub && c.hero.subtitle) sub.textContent = c.hero.subtitle;
+    // badge
+    const badge = document.querySelector('.hero-badge');
+    if (badge && c.hero.badge) badge.childNodes[badge.childNodes.length-1].textContent = ' ' + c.hero.badge;
+    renderStats('hero-stats', c.hero.stats);
+  }
+  function renderFooter(c) {
+    const copy = document.querySelector('.footer-copy');
+    if (copy) {
+      const txt = (c.rodape && c.rodape.copyright) || (c.landing && c.landing.footer) || '';
+      if (txt) copy.textContent = txt;
+    }
+    // WhatsApp button
+    const wa = document.querySelector('.whatsapp-float');
+    if (wa && c.landing && c.landing.whatsapp) {
+      wa.href = 'https://wa.me/' + c.landing.whatsapp;
+    }
+  }
+  function applyContent(c) {
+    // Hero
+    renderHero(c);
+    // Quem Somos stats
+    if (c.quemSomos) renderStats('quem-somos-stats', c.quemSomos.stats);
+    // Depoimentos
+    if (c.depoimentos) renderDepoimentos(c.depoimentos);
+    // Nav
+    if (c.nav) renderNavLinks(c.nav);
+    // Footer
+    renderFooter(c);
+    // SEO
+    if (c.seo) {
+      if (c.seo.titulo) document.title = c.seo.titulo;
+      let metaDesc = document.querySelector('meta[name="description"]');
+      if (c.seo.descricao) {
+        if (!metaDesc) { metaDesc = document.createElement('meta'); metaDesc.name = 'description'; document.head.appendChild(metaDesc); }
+        metaDesc.content = c.seo.descricao;
+      }
+      if (c.seo.ogImage) {
+        let og = document.querySelector('meta[property="og:image"]');
+        if (!og) { og = document.createElement('meta'); og.setAttribute('property','og:image'); document.head.appendChild(og); }
+        og.content = c.seo.ogImage;
+      }
+    }
+    // Analytics
+    if (c.analytics && c.analytics.gaId) {
+      const existing = document.getElementById('__ga-script');
+      if (!existing) {
+        const s1 = document.createElement('script');
+        s1.async = true;
+        s1.src = 'https://www.googletagmanager.com/gtag/js?id=' + c.analytics.gaId;
+        document.head.appendChild(s1);
+        const s2 = document.createElement('script');
+        s2.id = '__ga-script';
+        s2.textContent = `window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','${c.analytics.gaId}');`;
+        document.head.appendChild(s2);
+      }
+    }
+    // Favicon
+    if (c.identidade && c.identidade.faviconUrl) {
+      let link = document.querySelector("link[rel~='icon']");
+      if (!link) { link = document.createElement('link'); link.rel = 'icon'; document.head.appendChild(link); }
+      link.href = c.identidade.faviconUrl;
+    }
+    // Formulário textos
+    if (c.formulario) {
+      const btnText = document.getElementById('applyBtnText');
+      if (btnText && c.formulario.botaoTexto) btnText.textContent = c.formulario.botaoTexto;
+    }
   }
   fetch('CMS/data/content.json?' + Date.now())
     .then(r => r.json())
-    .then(c => {
-      if (c.hero) {
-        const sub = document.getElementById('hero-subtitle');
-        if (sub && c.hero.subtitle) sub.textContent = c.hero.subtitle;
-        renderStats('hero-stats', c.hero.stats);
-      }
-      if (c.quemSomos) renderStats('quem-somos-stats', c.quemSomos.stats);
-      if (c.depoimentos) renderDepoimentos(c.depoimentos);
-    })
+    .then(c => applyContent(c))
     .catch(() => {}); /* fallback: mantém conteúdo estático do HTML */
 })();
 </script>
