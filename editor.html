@@ -261,9 +261,52 @@
       cursor: pointer;
     }
     #copy-btn:hover { background: #222; }
+
+    /* Modal token */
+    #modal-token {
+      display: none;
+      position: fixed; inset: 0;
+      background: rgba(0,0,0,0.85);
+      z-index: 9999;
+      align-items: center;
+      justify-content: center;
+    }
+    #modal-token.show { display: flex; }
+    #modal-token .box {
+      background: #111;
+      border: 1px solid rgba(0,200,232,0.3);
+      border-radius: 16px;
+      padding: 32px;
+      width: 340px;
+      text-align: center;
+    }
+    #modal-token h3 { color: #00C8E8; font-size: 1rem; margin-bottom: 8px; }
+    #modal-token p  { color: #888; font-size: 0.8rem; margin-bottom: 20px; line-height: 1.5; }
+    #modal-token input {
+      width: 100%; padding: 10px 12px;
+      background: #1a1a1a; border: 1px solid #333;
+      border-radius: 8px; color: #fff; font-size: 0.85rem;
+      margin-bottom: 12px;
+    }
+    #modal-token button {
+      width: 100%; padding: 11px;
+      background: #00C8E8; color: #000;
+      border: none; border-radius: 9px;
+      font-weight: 700; cursor: pointer;
+    }
   </style>
 </head>
 <body>
+
+<!-- MODAL TOKEN -->
+<div id="modal-token">
+  <div class="box">
+    <h3>🔑 Token do GitHub</h3>
+    <p>Cole seu token para publicar alterações diretamente no site. Será salvo automaticamente.</p>
+    <input id="token-input" type="password" placeholder="ghp_...">
+    <button onclick="salvarToken()">Conectar</button>
+  </div>
+</div>
 
 <!-- IFRAME FULL WIDTH — site real -->
 <iframe id="preview" class="desktop" src="index.html" onload="injectStyle()"></iframe>
@@ -520,14 +563,20 @@
   const GH_FILE  = 'index.html';
   const GH_BRANCH = 'main';
 
+  function salvarToken() {
+    const t = document.getElementById('token-input').value.trim();
+    if (!t) return;
+    localStorage.setItem('cms_gh_pat', t);
+    document.getElementById('modal-token').classList.remove('show');
+    publicarCSS();
+  }
+
   async function publicarCSS() {
-    const pat = localStorage.getItem('cms_gh_pat');
-    if (!pat) {
-      const t = prompt('Cole seu token do GitHub (guardado automaticamente):');
-      if (!t) return;
-      localStorage.setItem('cms_gh_pat', t.trim());
-    }
     const token = localStorage.getItem('cms_gh_pat');
+    if (!token) {
+      document.getElementById('modal-token').classList.add('show');
+      return;
+    }
     const btn = document.getElementById('btn-publicar');
     btn.disabled = true;
     btn.textContent = 'Publicando...';
