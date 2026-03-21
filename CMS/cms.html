@@ -209,6 +209,7 @@
   .btn-primary:disabled { opacity: 0.4; cursor: not-allowed; box-shadow: none; }
   .btn-danger { background: var(--red); color: #fff; }
   .btn-danger:hover { background: #ff5555; }
+  .btn-sm { padding: 6px 12px; font-size: 0.75rem; }
 
   .save-status {
     font-size: 0.75rem;
@@ -289,6 +290,8 @@
 
   input[type="text"],
   input[type="password"],
+  input[type="number"],
+  select,
   textarea {
     width: 100%;
     background: var(--bg-input);
@@ -304,15 +307,18 @@
   }
   input[type="text"]:focus,
   input[type="password"]:focus,
+  input[type="number"]:focus,
+  select:focus,
   textarea:focus {
     border-color: var(--accent);
     box-shadow: 0 0 0 3px var(--accent-dim);
   }
+  select option { background: var(--bg-card); }
 
   .field-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
   .field-row-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; }
 
-  /* ===== DEPOIMENTOS ===== */
+  /* ===== LIST ITEMS (depoimentos style, reused for all lists) ===== */
   .depo-list { display: flex; flex-direction: column; gap: 12px; }
 
   .depo-item {
@@ -345,8 +351,8 @@
     color: var(--accent);
     flex-shrink: 0;
   }
-  .depo-item-meta { flex: 1; }
-  .depo-item-name { font-size: 0.875rem; font-weight: 600; }
+  .depo-item-meta { flex: 1; min-width: 0; }
+  .depo-item-name { font-size: 0.875rem; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
   .depo-item-role { font-size: 0.75rem; color: var(--text-muted); }
   .depo-item-chevron {
     color: var(--text-muted);
@@ -526,7 +532,7 @@
   .empty-state svg { margin-bottom: 12px; opacity: 0.4; }
   .empty-state p { font-size: 0.85rem; }
 
-  /* ===== WATERMARK EDITOR hint ===== */
+  /* ===== HINT BOX ===== */
   .hint-box {
     background: var(--accent-dim);
     border: 1px solid var(--border-accent);
@@ -544,6 +550,105 @@
   /* ===== TABS ===== */
   .tab-content { display: none; }
   .tab-content.active { display: block; }
+
+  /* ===== SUB TABS ===== */
+  .sub-tabs {
+    display: flex;
+    gap: 4px;
+    margin-bottom: 20px;
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 4px;
+  }
+  .sub-tab-btn {
+    flex: 1;
+    padding: 8px 16px;
+    border-radius: 7px;
+    border: none;
+    background: transparent;
+    color: var(--text-secondary);
+    font-family: var(--font);
+    font-size: 0.8rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+  .sub-tab-btn.active {
+    background: var(--accent-dim);
+    color: var(--accent);
+    border: 1px solid var(--border-accent);
+  }
+  .sub-tab-content { display: none; }
+  .sub-tab-content.active { display: block; }
+
+  /* ===== FOTOS GRID ===== */
+  .fotos-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+    gap: 12px;
+    margin-bottom: 12px;
+  }
+  .foto-thumb {
+    position: relative;
+    aspect-ratio: 1;
+    border-radius: 10px;
+    overflow: hidden;
+    border: 1px solid var(--border);
+    background: var(--bg-card2);
+  }
+  .foto-thumb img {
+    width: 100%; height: 100%;
+    object-fit: cover;
+  }
+  .foto-thumb-del {
+    position: absolute;
+    top: 6px; right: 6px;
+    width: 26px; height: 26px;
+    border-radius: 6px;
+    background: rgba(239,68,68,0.9);
+    border: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+    opacity: 0;
+    transition: opacity 0.15s;
+  }
+  .foto-thumb:hover .foto-thumb-del { opacity: 1; }
+
+  /* ===== NEWSLETTER ===== */
+  .member-count-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: var(--accent-dim);
+    border: 1px solid var(--border-accent);
+    color: var(--accent);
+    font-size: 0.8rem;
+    font-weight: 600;
+    padding: 6px 12px;
+    border-radius: 20px;
+    margin-bottom: 16px;
+  }
+
+  /* ===== AVISO TIPO badge ===== */
+  .tipo-badge {
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-size: 0.7rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+  }
+  .tipo-info { background: rgba(0,200,232,0.15); color: var(--accent); }
+  .tipo-aviso { background: rgba(245,158,11,0.15); color: #f59e0b; }
+  .tipo-urgente { background: rgba(239,68,68,0.15); color: var(--red); }
+
+  /* upload input hidden */
+  .file-input-hidden { display: none; }
 </style>
 </head>
 <body>
@@ -609,6 +714,44 @@
     <button class="nav-item" data-tab="quemsomos" onclick="showTab('quemsomos', this)">
       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg>
       Quem Somos
+    </button>
+
+    <div class="nav-section-label" style="margin-top:8px;">Área de Membros</div>
+    <button class="nav-item" data-tab="videoaulas" onclick="showTab('videoaulas', this)">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2" ry="2"/></svg>
+      Videoaulas
+    </button>
+    <button class="nav-item" data-tab="ebooks" onclick="showTab('ebooks', this)">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+      eBooks
+    </button>
+    <button class="nav-item" data-tab="arquivos" onclick="showTab('arquivos', this)">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><polyline points="13 2 13 9 20 9"/></svg>
+      Arquivos
+    </button>
+    <button class="nav-item" data-tab="fotos" onclick="showTab('fotos', this)">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+      Fotos
+    </button>
+
+    <div class="nav-section-label" style="margin-top:8px;">Comunicação</div>
+    <button class="nav-item" data-tab="newsletter" onclick="showTab('newsletter', this)">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+      Newsletter
+    </button>
+    <button class="nav-item" data-tab="avisos" onclick="showTab('avisos', this)">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+      Dashboard Avisos
+    </button>
+
+    <div class="nav-section-label" style="margin-top:8px;">Landing Page</div>
+    <button class="nav-item" data-tab="mentores" onclick="showTab('mentores', this)">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+      Mentores
+    </button>
+    <button class="nav-item" data-tab="config" onclick="showTab('config', this)">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M12 1v4M12 19v4M4.22 4.22l2.83 2.83M16.95 16.95l2.83 2.83M1 12h4M19 12h4M4.22 19.78l2.83-2.83M16.95 7.05l2.83-2.83"/></svg>
+      Configurações
     </button>
 
     <div class="nav-section-label" style="margin-top:8px;">Ferramentas</div>
@@ -723,6 +866,233 @@
       </div>
     </div>
 
+    <!-- TAB: VIDEOAULAS -->
+    <div class="tab-content" id="tab-videoaulas">
+      <div class="section-header">
+        <h2>Videoaulas</h2>
+        <p>Gerencie módulos e vídeos da área de membros.</p>
+      </div>
+
+      <div class="sub-tabs">
+        <button class="sub-tab-btn active" onclick="showSubTab('videoaulas','modulos',this)">Módulos</button>
+        <button class="sub-tab-btn" onclick="showSubTab('videoaulas','videos',this)">Vídeos</button>
+      </div>
+
+      <!-- Sub: Módulos -->
+      <div class="sub-tab-content active" id="subtab-videoaulas-modulos">
+        <div class="depo-list" id="modulos-list"></div>
+        <button class="add-btn" onclick="addModulo()">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+          Adicionar módulo
+        </button>
+      </div>
+
+      <!-- Sub: Vídeos -->
+      <div class="sub-tab-content" id="subtab-videoaulas-videos">
+        <div class="depo-list" id="videos-list"></div>
+        <button class="add-btn" onclick="addVideo()">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+          Adicionar vídeo
+        </button>
+      </div>
+    </div>
+
+    <!-- TAB: EBOOKS -->
+    <div class="tab-content" id="tab-ebooks">
+      <div class="section-header">
+        <h2>eBooks</h2>
+        <p>Gerencie os eBooks e PDFs disponíveis para membros.</p>
+      </div>
+
+      <div class="hint-box">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+        Use o botão "Upload" para enviar arquivos diretamente ao Supabase Storage (bucket: ebooks).
+      </div>
+
+      <input type="file" class="file-input-hidden" id="ebook-file-input" accept=".pdf,.epub,.docx">
+      <input type="file" class="file-input-hidden" id="ebook-cover-input" accept="image/*">
+
+      <div class="depo-list" id="ebooks-list"></div>
+
+      <button class="add-btn" onclick="addEbook()">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+        Adicionar eBook
+      </button>
+    </div>
+
+    <!-- TAB: ARQUIVOS -->
+    <div class="tab-content" id="tab-arquivos">
+      <div class="section-header">
+        <h2>Arquivos</h2>
+        <p>Gerencie os arquivos, planilhas e templates disponíveis para membros.</p>
+      </div>
+
+      <div class="hint-box">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+        Use o botão "Upload" para enviar arquivos ao Supabase Storage (bucket: arquivos).
+      </div>
+
+      <input type="file" class="file-input-hidden" id="arquivo-file-input">
+
+      <div class="depo-list" id="arquivos-list"></div>
+
+      <button class="add-btn" onclick="addArquivo()">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+        Adicionar arquivo
+      </button>
+    </div>
+
+    <!-- TAB: FOTOS -->
+    <div class="tab-content" id="tab-fotos">
+      <div class="section-header">
+        <h2>Fotos</h2>
+        <p>Faça upload e gerencie as fotos da galeria.</p>
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+            Galeria de Fotos
+          </div>
+          <div class="card-actions">
+            <input type="file" class="file-input-hidden" id="foto-upload-input" accept="image/*" multiple onchange="uploadFotos(this)">
+            <button class="btn btn-primary btn-sm" onclick="document.getElementById('foto-upload-input').click()">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="16 16 12 12 8 16"/><line x1="12" y1="12" x2="12" y2="21"/><path d="M20.39 18.39A5 5 0 0 0 18 9h-1.26A8 8 0 1 0 3 16.3"/></svg>
+              Upload foto
+            </button>
+          </div>
+        </div>
+        <div class="fotos-grid" id="fotos-grid"></div>
+        <div id="fotos-empty" class="empty-state" style="display:none;">
+          <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+          <p>Nenhuma foto ainda.<br>Clique em "Upload foto" para adicionar.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- TAB: NEWSLETTER -->
+    <div class="tab-content" id="tab-newsletter">
+      <div class="section-header">
+        <h2>Newsletter</h2>
+        <p>Envie um e-mail para todos os membros aprovados.</p>
+      </div>
+
+      <div class="hint-box">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+        Ao clicar em "Enviar Newsletter", seu cliente de e-mail abrirá com os membros no BCC e o conteúdo preenchido.
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+            Compor mensagem
+          </div>
+          <div class="card-actions">
+            <button class="btn btn-ghost btn-sm" onclick="buscarMembros()">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+              Buscar membros
+            </button>
+          </div>
+        </div>
+
+        <div id="member-count-wrap" style="display:none; margin-bottom:16px;">
+          <div class="member-count-badge">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+            <span id="member-count-text">0 membros encontrados</span>
+          </div>
+        </div>
+
+        <div class="field">
+          <label class="field-label">Assunto</label>
+          <input type="text" id="newsletter-subject" placeholder="Ex: Novidades do Clube — Março 2025">
+        </div>
+        <div class="field">
+          <label class="field-label">Mensagem</label>
+          <textarea id="newsletter-body" rows="10" placeholder="Escreva sua mensagem aqui...&#10;&#10;Você pode usar texto simples ou formatação básica."></textarea>
+        </div>
+
+        <div style="display:flex; gap:10px; justify-content:flex-end; margin-top:16px;">
+          <button class="btn btn-primary" onclick="enviarNewsletter()">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+            Enviar Newsletter
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- TAB: AVISOS (Dashboard) -->
+    <div class="tab-content" id="tab-avisos">
+      <div class="section-header">
+        <h2>Dashboard Avisos</h2>
+        <p>Gerencie os avisos exibidos no painel do membro.</p>
+      </div>
+
+      <div class="depo-list" id="avisos-list"></div>
+
+      <button class="add-btn" onclick="addAviso()">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+        Adicionar aviso
+      </button>
+    </div>
+
+    <!-- TAB: MENTORES -->
+    <div class="tab-content" id="tab-mentores">
+      <div class="section-header">
+        <h2>Mentores</h2>
+        <p>Edite as informações dos mentores exibidas na landing page.</p>
+      </div>
+
+      <div id="mentores-cards"></div>
+    </div>
+
+    <!-- TAB: CONFIG -->
+    <div class="tab-content" id="tab-config">
+      <div class="section-header">
+        <h2>Configurações</h2>
+        <p>WhatsApp de contato e rodapé da landing page.</p>
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 11.5 19.79 19.79 0 0 1 1.61 2.84 2 2 0 0 1 3.58 1h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L7.91 8.96a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+            WhatsApp
+          </div>
+        </div>
+        <div class="field">
+          <label class="field-label">Número do WhatsApp (somente dígitos)</label>
+          <input type="text" id="config-whatsapp" placeholder="5511991439098" oninput="markDirty()">
+        </div>
+        <div style="margin-top:14px;display:flex;justify-content:flex-end;">
+          <button class="btn btn-primary btn-sm" onclick="saveConfig()">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+            Salvar
+          </button>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>
+            Rodapé
+          </div>
+        </div>
+        <div class="field">
+          <label class="field-label">Texto do Footer</label>
+          <input type="text" id="config-footer" placeholder="© 2025 Clube dos Referidos. Todos os direitos reservados." oninput="markDirty()">
+        </div>
+        <div style="margin-top:14px;display:flex;justify-content:flex-end;">
+          <button class="btn btn-primary btn-sm" onclick="saveConfig()">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+            Salvar
+          </button>
+        </div>
+      </div>
+    </div>
+
   </div><!-- /content -->
 </div><!-- /main -->
 
@@ -730,11 +1100,19 @@
 const REPO_OWNER = 'gustavollima16';
 const REPO_NAME  = 'clube-dos-referidos';
 const CONTENT_PATH = 'CMS/data/content.json';
+const SUPABASE_URL = 'https://zjdiwjmmnjigikhehamo.supabase.co';
+const SUPABASE_ANON = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InpqZGl3am1tbmppZ2lraGVoYW1vIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzM4ODMzODcsImV4cCI6MjA4OTQ1OTM4N30.wQ8JiSIXIpLPJtw0Tp_DYrZFgUfp0j3rJPYwZ54cgDA';
 
 let content = null;
 let contentSha = null;
 let isDirty = false;
 let pat = localStorage.getItem('cms_gh_pat') || '';
+let newsletterEmails = [];
+
+// pending upload targets for ebooks/arquivos
+let _pendingEbookFileIdx = null;
+let _pendingEbookCoverIdx = null;
+let _pendingArquivoFileIdx = null;
 
 /* ===== INIT ===== */
 window.addEventListener('DOMContentLoaded', () => {
@@ -745,6 +1123,52 @@ window.addEventListener('DOMContentLoaded', () => {
     document.getElementById('modal-setup').classList.remove('hidden');
     loadLocal();
   }
+
+  // wire up file inputs
+  document.getElementById('ebook-file-input').addEventListener('change', function() {
+    if (_pendingEbookFileIdx === null) return;
+    const file = this.files[0];
+    if (!file) return;
+    uploadToSupabase(file, 'ebooks').then(url => {
+      content.ebooks[_pendingEbookFileIdx].fileUrl = url;
+      const inp = document.getElementById('ebook-fileurl-' + _pendingEbookFileIdx);
+      if (inp) inp.value = url;
+      markDirty();
+      toast('Arquivo enviado!', 'success');
+    }).catch(e => toast('Erro no upload: ' + e.message, 'error'));
+    _pendingEbookFileIdx = null;
+    this.value = '';
+  });
+
+  document.getElementById('ebook-cover-input').addEventListener('change', function() {
+    if (_pendingEbookCoverIdx === null) return;
+    const file = this.files[0];
+    if (!file) return;
+    uploadToSupabase(file, 'ebooks').then(url => {
+      content.ebooks[_pendingEbookCoverIdx].cover = url;
+      const inp = document.getElementById('ebook-cover-' + _pendingEbookCoverIdx);
+      if (inp) inp.value = url;
+      markDirty();
+      toast('Capa enviada!', 'success');
+    }).catch(e => toast('Erro no upload: ' + e.message, 'error'));
+    _pendingEbookCoverIdx = null;
+    this.value = '';
+  });
+
+  document.getElementById('arquivo-file-input').addEventListener('change', function() {
+    if (_pendingArquivoFileIdx === null) return;
+    const file = this.files[0];
+    if (!file) return;
+    uploadToSupabase(file, 'arquivos').then(url => {
+      content.arquivos[_pendingArquivoFileIdx].fileUrl = url;
+      const inp = document.getElementById('arquivo-fileurl-' + _pendingArquivoFileIdx);
+      if (inp) inp.value = url;
+      markDirty();
+      toast('Arquivo enviado!', 'success');
+    }).catch(e => toast('Erro no upload: ' + e.message, 'error'));
+    _pendingArquivoFileIdx = null;
+    this.value = '';
+  });
 });
 
 /* ===== TOKEN SETUP ===== */
@@ -779,6 +1203,7 @@ async function loadFromGitHub() {
     contentSha = data.sha;
     const raw = decodeURIComponent(escape(atob(data.content.replace(/\n/g,''))));
     content = JSON.parse(raw);
+    ensureDefaults();
     renderAll();
     markClean();
     toast('Conteúdo carregado do GitHub', 'success');
@@ -792,29 +1217,57 @@ async function loadFromGitHub() {
 }
 
 function loadLocal() {
-  fetch('data/content.json?' + Date.now()) // servido localmente a partir de CMS/
+  fetch('data/content.json?' + Date.now())
     .then(r => r.json())
-    .then(c => { content = c; renderAll(); markClean(); })
+    .then(c => { content = c; ensureDefaults(); renderAll(); markClean(); })
     .catch(() => { content = defaultContent(); renderAll(); });
+}
+
+function ensureDefaults() {
+  if (!content.videoaulas) content.videoaulas = { modulos: [], videos: [] };
+  if (!content.videoaulas.modulos) content.videoaulas.modulos = [];
+  if (!content.videoaulas.videos) content.videoaulas.videos = [];
+  if (!content.ebooks) content.ebooks = [];
+  if (!content.arquivos) content.arquivos = [];
+  if (!content.fotos) content.fotos = [];
+  if (!content.dashboard) content.dashboard = { avisos: [] };
+  if (!content.dashboard.avisos) content.dashboard.avisos = [];
+  if (!content.landing) content.landing = { whatsapp: '', footer: '', mentores: [] };
+  if (!content.landing.mentores) content.landing.mentores = [];
 }
 
 function defaultContent() {
   return {
     hero: { subtitle: '', stats: [{number:'',label:''},{number:'',label:''},{number:'',label:''}] },
     quemSomos: { stats: [{number:'',label:''},{number:'',label:''},{number:'',label:''}] },
-    depoimentos: []
+    depoimentos: [],
+    videoaulas: { modulos: [], videos: [] },
+    ebooks: [],
+    arquivos: [],
+    fotos: [],
+    dashboard: { avisos: [] },
+    landing: { whatsapp: '', footer: '', mentores: [] }
   };
 }
 
-/* ===== RENDER ===== */
+/* ===== RENDER ALL ===== */
 function renderAll() {
   if (!content) return;
   renderHeroSubtitle();
   renderHeroStats();
   renderQsStats();
   renderDepoimentos();
+  renderModulos();
+  renderVideos();
+  renderEbooks();
+  renderArquivos();
+  renderFotos();
+  renderAvisos();
+  renderMentores();
+  renderConfig();
 }
 
+/* ===== HERO ===== */
 function renderHeroSubtitle() {
   const el = document.getElementById('hero-subtitle');
   if (el && content.hero) el.value = content.hero.subtitle || '';
@@ -856,6 +1309,7 @@ function updateStat(prefix, i, field, val) {
   markDirty();
 }
 
+/* ===== DEPOIMENTOS ===== */
 function renderDepoimentos() {
   const list = document.getElementById('depo-list');
   if (!list) return;
@@ -871,7 +1325,7 @@ function renderDepoimentos() {
     const av = initials(d.name || '?');
     return `
     <div class="depo-item" id="depo-item-${i}">
-      <div class="depo-item-header" onclick="toggleDepo(${i})">
+      <div class="depo-item-header" onclick="toggleItem('depo-item-${i}')">
         <div class="depo-avatar-preview">${av}</div>
         <div class="depo-item-meta">
           <div class="depo-item-name">${esc(d.name) || 'Sem nome'}</div>
@@ -895,11 +1349,11 @@ function renderDepoimentos() {
           </div>
         </div>
         <div style="margin-top:12px;display:flex;justify-content:space-between;align-items:center;gap:8px;">
-          <button class="btn btn-danger" onclick="removeDepo(${i})">
+          <button class="btn btn-danger btn-sm" onclick="removeDepo(${i})">
             <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/><path d="M10 11v6M14 11v6"/><path d="M9 6V4h6v2"/></svg>
             Remover
           </button>
-          <button class="btn btn-primary" onclick="saveDepo(${i})">
+          <button class="btn btn-primary btn-sm" onclick="saveDepo(${i})">
             <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
             Salvar
           </button>
@@ -909,14 +1363,8 @@ function renderDepoimentos() {
   }).join('');
 }
 
-function toggleDepo(i) {
-  const item = document.getElementById(`depo-item-${i}`);
-  if (item) item.classList.toggle('open');
-}
-
 function updateDepo(i, field, val) {
   content.depoimentos[i][field] = val;
-  // atualiza header ao vivo
   const item = document.getElementById(`depo-item-${i}`);
   if (item) {
     if (field === 'name') {
@@ -932,7 +1380,6 @@ function addDepoimento() {
   if (!content.depoimentos) content.depoimentos = [];
   content.depoimentos.push({ id: Date.now().toString(), text: '', name: '', role: '' });
   renderDepoimentos();
-  // abre o novo
   const idx = content.depoimentos.length - 1;
   const item = document.getElementById(`depo-item-${idx}`);
   if (item) item.classList.add('open');
@@ -949,7 +1396,618 @@ function saveDepo(i) {
   const item = document.getElementById(`depo-item-${i}`);
   if (item) item.classList.remove('open');
   markDirty();
-  toast('Depoimento salvo! Clique em "Publicar no Site" quando terminar todas as edições.', 'success');
+  toast('Depoimento salvo! Clique em "Publicar no Site" quando terminar.', 'success');
+}
+
+/* ===== MÓDULOS ===== */
+function renderModulos() {
+  const list = document.getElementById('modulos-list');
+  if (!list) return;
+  const modulos = content.videoaulas?.modulos || [];
+  if (modulos.length === 0) {
+    list.innerHTML = `<div class="empty-state"><svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2" ry="2"/></svg><p>Nenhum módulo ainda.</p></div>`;
+    return;
+  }
+  list.innerHTML = modulos.map((m, i) => `
+    <div class="depo-item" id="modulo-item-${i}">
+      <div class="depo-item-header" onclick="toggleItem('modulo-item-${i}')">
+        <div class="depo-avatar-preview" style="border-radius:8px;">${m.id || (i+1)}</div>
+        <div class="depo-item-meta">
+          <div class="depo-item-name">${esc(m.title) || 'Sem título'}</div>
+          <div class="depo-item-role">${esc(m.desc || '').substring(0,60)}${(m.desc||'').length>60?'...':''}</div>
+        </div>
+        <svg class="depo-item-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+      </div>
+      <div class="depo-item-body">
+        <div class="field">
+          <label class="field-label">Título do Módulo</label>
+          <input type="text" value="${esc(m.title)}" oninput="updateModulo(${i},'title',this.value)">
+        </div>
+        <div class="field">
+          <label class="field-label">Descrição</label>
+          <textarea rows="2" oninput="updateModulo(${i},'desc',this.value)">${esc(m.desc)}</textarea>
+        </div>
+        <div style="margin-top:12px;display:flex;justify-content:space-between;gap:8px;">
+          <button class="btn btn-danger btn-sm" onclick="removeModulo(${i})">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/></svg>
+            Remover
+          </button>
+          <button class="btn btn-primary btn-sm" onclick="saveGeneric('modulo-item-${i}','Módulo')">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+            Salvar
+          </button>
+        </div>
+      </div>
+    </div>`).join('');
+}
+
+function updateModulo(i, field, val) {
+  content.videoaulas.modulos[i][field] = val;
+  const item = document.getElementById(`modulo-item-${i}`);
+  if (item && field === 'title') item.querySelector('.depo-item-name').textContent = val || 'Sem título';
+  markDirty();
+}
+
+function addModulo() {
+  if (!content.videoaulas) content.videoaulas = { modulos: [], videos: [] };
+  const nextId = (content.videoaulas.modulos.length > 0 ? Math.max(...content.videoaulas.modulos.map(m=>m.id||0)) + 1 : 1);
+  content.videoaulas.modulos.push({ id: nextId, title: '', desc: '' });
+  renderModulos();
+  const idx = content.videoaulas.modulos.length - 1;
+  const item = document.getElementById(`modulo-item-${idx}`);
+  if (item) item.classList.add('open');
+  markDirty();
+}
+
+function removeModulo(i) {
+  content.videoaulas.modulos.splice(i, 1);
+  renderModulos();
+  markDirty();
+}
+
+/* ===== VIDEOS ===== */
+function renderVideos() {
+  const list = document.getElementById('videos-list');
+  if (!list) return;
+  const videos = content.videoaulas?.videos || [];
+  const modulos = content.videoaulas?.modulos || [];
+  if (videos.length === 0) {
+    list.innerHTML = `<div class="empty-state"><svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2" ry="2"/></svg><p>Nenhum vídeo ainda.</p></div>`;
+    return;
+  }
+  const moduloOpts = modulos.map(m => `<option value="${m.id}">${esc(m.title)}</option>`).join('');
+  list.innerHTML = videos.map((v, i) => {
+    const modTit = modulos.find(m => m.id === v.moduleId)?.title || 'Módulo ?';
+    return `
+    <div class="depo-item" id="video-item-${i}">
+      <div class="depo-item-header" onclick="toggleItem('video-item-${i}')">
+        <div class="depo-avatar-preview" style="border-radius:6px;font-size:0.65rem;">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+        </div>
+        <div class="depo-item-meta">
+          <div class="depo-item-name">${esc(v.title) || 'Sem título'}</div>
+          <div class="depo-item-role">${esc(modTit)} · ${esc(v.duration||'')}</div>
+        </div>
+        <svg class="depo-item-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+      </div>
+      <div class="depo-item-body">
+        <div class="field-row">
+          <div class="field">
+            <label class="field-label">Título</label>
+            <input type="text" value="${esc(v.title)}" oninput="updateVideo(${i},'title',this.value)">
+          </div>
+          <div class="field">
+            <label class="field-label">Duração (ex: 12:34)</label>
+            <input type="text" value="${esc(v.duration)}" oninput="updateVideo(${i},'duration',this.value)" placeholder="12:34">
+          </div>
+        </div>
+        <div class="field-row">
+          <div class="field">
+            <label class="field-label">YouTube ID</label>
+            <input type="text" value="${esc(v.youtubeId)}" oninput="updateVideo(${i},'youtubeId',this.value)" placeholder="dQw4w9WgXcQ">
+          </div>
+          <div class="field">
+            <label class="field-label">Módulo</label>
+            <select onchange="updateVideo(${i},'moduleId',parseInt(this.value))">
+              ${modulos.map(m=>`<option value="${m.id}" ${m.id===v.moduleId?'selected':''}>${esc(m.title)}</option>`).join('')}
+            </select>
+          </div>
+        </div>
+        <div class="field">
+          <label class="field-label">Descrição</label>
+          <textarea rows="2" oninput="updateVideo(${i},'desc',this.value)">${esc(v.desc)}</textarea>
+        </div>
+        <div style="margin-top:12px;display:flex;justify-content:space-between;gap:8px;">
+          <button class="btn btn-danger btn-sm" onclick="removeVideo(${i})">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/></svg>
+            Remover
+          </button>
+          <button class="btn btn-primary btn-sm" onclick="saveGeneric('video-item-${i}','Vídeo')">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+            Salvar
+          </button>
+        </div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function updateVideo(i, field, val) {
+  content.videoaulas.videos[i][field] = val;
+  const item = document.getElementById(`video-item-${i}`);
+  if (item && field === 'title') item.querySelector('.depo-item-name').textContent = val || 'Sem título';
+  markDirty();
+}
+
+function addVideo() {
+  if (!content.videoaulas) content.videoaulas = { modulos: [], videos: [] };
+  const nextId = (content.videoaulas.videos.length > 0 ? Math.max(...content.videoaulas.videos.map(v=>v.id||0)) + 1 : 1);
+  const firstModuleId = content.videoaulas.modulos[0]?.id || 1;
+  content.videoaulas.videos.push({ id: nextId, moduleId: firstModuleId, title: '', desc: '', duration: '', youtubeId: '' });
+  renderVideos();
+  const idx = content.videoaulas.videos.length - 1;
+  const item = document.getElementById(`video-item-${idx}`);
+  if (item) item.classList.add('open');
+  markDirty();
+}
+
+function removeVideo(i) {
+  content.videoaulas.videos.splice(i, 1);
+  renderVideos();
+  markDirty();
+}
+
+/* ===== EBOOKS ===== */
+function renderEbooks() {
+  const list = document.getElementById('ebooks-list');
+  if (!list) return;
+  const ebooks = content.ebooks || [];
+  if (ebooks.length === 0) {
+    list.innerHTML = `<div class="empty-state"><svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg><p>Nenhum eBook ainda.</p></div>`;
+    return;
+  }
+  list.innerHTML = ebooks.map((e, i) => `
+    <div class="depo-item" id="ebook-item-${i}">
+      <div class="depo-item-header" onclick="toggleItem('ebook-item-${i}')">
+        <div class="depo-avatar-preview" style="border-radius:6px;font-size:0.65rem;">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+        </div>
+        <div class="depo-item-meta">
+          <div class="depo-item-name">${esc(e.title) || 'Sem título'}</div>
+          <div class="depo-item-role">${esc(e.category||'')} · ${esc(e.type||'')} · ${esc(e.pages||'')} pág.</div>
+        </div>
+        <svg class="depo-item-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+      </div>
+      <div class="depo-item-body">
+        <div class="field-row">
+          <div class="field">
+            <label class="field-label">Título</label>
+            <input type="text" value="${esc(e.title)}" oninput="updateEbook(${i},'title',this.value)">
+          </div>
+          <div class="field">
+            <label class="field-label">Categoria</label>
+            <input type="text" value="${esc(e.category)}" oninput="updateEbook(${i},'category',this.value)" placeholder="Vendas">
+          </div>
+        </div>
+        <div class="field-row">
+          <div class="field">
+            <label class="field-label">Tipo</label>
+            <select onchange="updateEbook(${i},'type',this.value)">
+              <option value="ebook" ${e.type==='ebook'?'selected':''}>eBook</option>
+              <option value="pdf" ${e.type==='pdf'?'selected':''}>PDF</option>
+              <option value="planilha" ${e.type==='planilha'?'selected':''}>Planilha</option>
+            </select>
+          </div>
+          <div class="field">
+            <label class="field-label">Páginas</label>
+            <input type="text" value="${esc(e.pages)}" oninput="updateEbook(${i},'pages',this.value)" placeholder="48">
+          </div>
+        </div>
+        <div class="field">
+          <label class="field-label">Descrição</label>
+          <textarea rows="2" oninput="updateEbook(${i},'desc',this.value)">${esc(e.desc)}</textarea>
+        </div>
+        <div class="field">
+          <label class="field-label">URL do Arquivo</label>
+          <div style="display:flex;gap:8px;">
+            <input type="text" id="ebook-fileurl-${i}" value="${esc(e.fileUrl)}" oninput="updateEbook(${i},'fileUrl',this.value)" placeholder="https://...">
+            <button class="btn btn-ghost btn-sm" onclick="triggerEbookUpload(${i})">Upload</button>
+          </div>
+        </div>
+        <div class="field">
+          <label class="field-label">URL da Capa</label>
+          <div style="display:flex;gap:8px;">
+            <input type="text" id="ebook-cover-${i}" value="${esc(e.cover)}" oninput="updateEbook(${i},'cover',this.value)" placeholder="https://...">
+            <button class="btn btn-ghost btn-sm" onclick="triggerEbookCover(${i})">Upload</button>
+          </div>
+        </div>
+        <div style="margin-top:12px;display:flex;justify-content:space-between;gap:8px;">
+          <button class="btn btn-danger btn-sm" onclick="removeEbook(${i})">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/></svg>
+            Remover
+          </button>
+          <button class="btn btn-primary btn-sm" onclick="saveGeneric('ebook-item-${i}','eBook')">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+            Salvar
+          </button>
+        </div>
+      </div>
+    </div>`).join('');
+}
+
+function updateEbook(i, field, val) {
+  content.ebooks[i][field] = val;
+  markDirty();
+}
+function addEbook() {
+  if (!content.ebooks) content.ebooks = [];
+  const nextId = (content.ebooks.length > 0 ? Math.max(...content.ebooks.map(e=>e.id||0)) + 1 : 1);
+  content.ebooks.push({ id: nextId, title: '', desc: '', cover: '', fileUrl: '', category: '', pages: '', type: 'ebook' });
+  renderEbooks();
+  const idx = content.ebooks.length - 1;
+  const item = document.getElementById(`ebook-item-${idx}`);
+  if (item) item.classList.add('open');
+  markDirty();
+}
+function removeEbook(i) {
+  content.ebooks.splice(i, 1);
+  renderEbooks();
+  markDirty();
+}
+function triggerEbookUpload(i) {
+  _pendingEbookFileIdx = i;
+  document.getElementById('ebook-file-input').click();
+}
+function triggerEbookCover(i) {
+  _pendingEbookCoverIdx = i;
+  document.getElementById('ebook-cover-input').click();
+}
+
+/* ===== ARQUIVOS ===== */
+function renderArquivos() {
+  const list = document.getElementById('arquivos-list');
+  if (!list) return;
+  const arquivos = content.arquivos || [];
+  if (arquivos.length === 0) {
+    list.innerHTML = `<div class="empty-state"><svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><polyline points="13 2 13 9 20 9"/></svg><p>Nenhum arquivo ainda.</p></div>`;
+    return;
+  }
+  list.innerHTML = arquivos.map((a, i) => `
+    <div class="depo-item" id="arquivo-item-${i}">
+      <div class="depo-item-header" onclick="toggleItem('arquivo-item-${i}')">
+        <div class="depo-avatar-preview" style="border-radius:6px;font-size:0.6rem;font-weight:800;">${esc((a.type||'').toUpperCase())}</div>
+        <div class="depo-item-meta">
+          <div class="depo-item-name">${esc(a.title) || 'Sem título'}</div>
+          <div class="depo-item-role">${esc(a.category||'')} · ${esc(a.size||'')}</div>
+        </div>
+        <svg class="depo-item-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+      </div>
+      <div class="depo-item-body">
+        <div class="field-row">
+          <div class="field">
+            <label class="field-label">Título</label>
+            <input type="text" value="${esc(a.title)}" oninput="updateArquivo(${i},'title',this.value)">
+          </div>
+          <div class="field">
+            <label class="field-label">Categoria</label>
+            <input type="text" value="${esc(a.category)}" oninput="updateArquivo(${i},'category',this.value)" placeholder="Planilhas">
+          </div>
+        </div>
+        <div class="field-row">
+          <div class="field">
+            <label class="field-label">Tipo</label>
+            <select onchange="updateArquivo(${i},'type',this.value)">
+              <option value="xlsx" ${a.type==='xlsx'?'selected':''}>xlsx</option>
+              <option value="docx" ${a.type==='docx'?'selected':''}>docx</option>
+              <option value="pdf" ${a.type==='pdf'?'selected':''}>pdf</option>
+              <option value="pptx" ${a.type==='pptx'?'selected':''}>pptx</option>
+              <option value="zip" ${a.type==='zip'?'selected':''}>zip</option>
+              <option value="csv" ${a.type==='csv'?'selected':''}>csv</option>
+            </select>
+          </div>
+          <div class="field">
+            <label class="field-label">Tamanho (ex: 820 KB)</label>
+            <input type="text" value="${esc(a.size)}" oninput="updateArquivo(${i},'size',this.value)" placeholder="820 KB">
+          </div>
+        </div>
+        <div class="field">
+          <label class="field-label">Descrição</label>
+          <textarea rows="2" oninput="updateArquivo(${i},'desc',this.value)">${esc(a.desc)}</textarea>
+        </div>
+        <div class="field">
+          <label class="field-label">URL do Arquivo</label>
+          <div style="display:flex;gap:8px;">
+            <input type="text" id="arquivo-fileurl-${i}" value="${esc(a.fileUrl)}" oninput="updateArquivo(${i},'fileUrl',this.value)" placeholder="https://...">
+            <button class="btn btn-ghost btn-sm" onclick="triggerArquivoUpload(${i})">Upload</button>
+          </div>
+        </div>
+        <div style="margin-top:12px;display:flex;justify-content:space-between;gap:8px;">
+          <button class="btn btn-danger btn-sm" onclick="removeArquivo(${i})">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/></svg>
+            Remover
+          </button>
+          <button class="btn btn-primary btn-sm" onclick="saveGeneric('arquivo-item-${i}','Arquivo')">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+            Salvar
+          </button>
+        </div>
+      </div>
+    </div>`).join('');
+}
+
+function updateArquivo(i, field, val) {
+  content.arquivos[i][field] = val;
+  markDirty();
+}
+function addArquivo() {
+  if (!content.arquivos) content.arquivos = [];
+  const nextId = (content.arquivos.length > 0 ? Math.max(...content.arquivos.map(a=>a.id||0)) + 1 : 1);
+  content.arquivos.push({ id: nextId, title: '', desc: '', fileUrl: '', type: 'pdf', size: '', category: '' });
+  renderArquivos();
+  const idx = content.arquivos.length - 1;
+  const item = document.getElementById(`arquivo-item-${idx}`);
+  if (item) item.classList.add('open');
+  markDirty();
+}
+function removeArquivo(i) {
+  content.arquivos.splice(i, 1);
+  renderArquivos();
+  markDirty();
+}
+function triggerArquivoUpload(i) {
+  _pendingArquivoFileIdx = i;
+  document.getElementById('arquivo-file-input').click();
+}
+
+/* ===== FOTOS ===== */
+function renderFotos() {
+  const grid = document.getElementById('fotos-grid');
+  const empty = document.getElementById('fotos-empty');
+  if (!grid) return;
+  const fotos = content.fotos || [];
+  if (fotos.length === 0) {
+    grid.innerHTML = '';
+    if (empty) empty.style.display = 'block';
+    return;
+  }
+  if (empty) empty.style.display = 'none';
+  grid.innerHTML = fotos.map((url, i) => `
+    <div class="foto-thumb">
+      <img src="${esc(url)}" alt="Foto ${i+1}" loading="lazy">
+      <button class="foto-thumb-del" onclick="removeFoto(${i})" title="Remover">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
+    </div>`).join('');
+}
+
+async function uploadFotos(input) {
+  const files = Array.from(input.files);
+  if (!files.length) return;
+  showLoading('Enviando fotos...');
+  try {
+    for (const file of files) {
+      const url = await uploadToSupabase(file, 'fotos');
+      if (!content.fotos) content.fotos = [];
+      content.fotos.push(url);
+    }
+    renderFotos();
+    markDirty();
+    toast(`${files.length} foto(s) enviada(s)!`, 'success');
+  } catch(e) {
+    toast('Erro no upload: ' + e.message, 'error');
+  } finally {
+    hideLoading();
+    input.value = '';
+  }
+}
+
+function removeFoto(i) {
+  content.fotos.splice(i, 1);
+  renderFotos();
+  markDirty();
+}
+
+/* ===== AVISOS ===== */
+function renderAvisos() {
+  const list = document.getElementById('avisos-list');
+  if (!list) return;
+  const avisos = content.dashboard?.avisos || [];
+  if (avisos.length === 0) {
+    list.innerHTML = `<div class="empty-state"><svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg><p>Nenhum aviso ainda.</p></div>`;
+    return;
+  }
+  list.innerHTML = avisos.map((a, i) => `
+    <div class="depo-item" id="aviso-item-${i}">
+      <div class="depo-item-header" onclick="toggleItem('aviso-item-${i}')">
+        <div class="depo-avatar-preview" style="border-radius:6px; background:${a.tipo==='urgente'?'rgba(239,68,68,0.15)':a.tipo==='aviso'?'rgba(245,158,11,0.15)':'var(--accent-dim)'};">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+        </div>
+        <div class="depo-item-meta">
+          <div class="depo-item-name">${esc(a.titulo) || 'Sem título'}</div>
+          <div class="depo-item-role">${esc(a.data||'')} · <span class="tipo-badge tipo-${esc(a.tipo||'info')}">${esc(a.tipo||'info')}</span></div>
+        </div>
+        <svg class="depo-item-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+      </div>
+      <div class="depo-item-body">
+        <div class="field-row">
+          <div class="field">
+            <label class="field-label">Título</label>
+            <input type="text" value="${esc(a.titulo)}" oninput="updateAviso(${i},'titulo',this.value)">
+          </div>
+          <div class="field">
+            <label class="field-label">Data (YYYY-MM-DD)</label>
+            <input type="text" value="${esc(a.data)}" oninput="updateAviso(${i},'data',this.value)" placeholder="2025-03-01">
+          </div>
+        </div>
+        <div class="field">
+          <label class="field-label">Tipo</label>
+          <select onchange="updateAviso(${i},'tipo',this.value)">
+            <option value="info" ${a.tipo==='info'?'selected':''}>Info</option>
+            <option value="aviso" ${a.tipo==='aviso'?'selected':''}>Aviso</option>
+            <option value="urgente" ${a.tipo==='urgente'?'selected':''}>Urgente</option>
+          </select>
+        </div>
+        <div class="field">
+          <label class="field-label">Mensagem</label>
+          <textarea rows="3" oninput="updateAviso(${i},'texto',this.value)">${esc(a.texto)}</textarea>
+        </div>
+        <div style="margin-top:12px;display:flex;justify-content:space-between;gap:8px;">
+          <button class="btn btn-danger btn-sm" onclick="removeAviso(${i})">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/></svg>
+            Remover
+          </button>
+          <button class="btn btn-primary btn-sm" onclick="saveGeneric('aviso-item-${i}','Aviso')">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+            Salvar
+          </button>
+        </div>
+      </div>
+    </div>`).join('');
+}
+
+function updateAviso(i, field, val) {
+  content.dashboard.avisos[i][field] = val;
+  const item = document.getElementById(`aviso-item-${i}`);
+  if (item && field === 'titulo') item.querySelector('.depo-item-name').textContent = val || 'Sem título';
+  markDirty();
+}
+function addAviso() {
+  if (!content.dashboard) content.dashboard = { avisos: [] };
+  if (!content.dashboard.avisos) content.dashboard.avisos = [];
+  const nextId = (content.dashboard.avisos.length > 0 ? Math.max(...content.dashboard.avisos.map(a=>a.id||0)) + 1 : 1);
+  const today = new Date().toISOString().split('T')[0];
+  content.dashboard.avisos.push({ id: nextId, titulo: '', texto: '', tipo: 'info', data: today });
+  renderAvisos();
+  const idx = content.dashboard.avisos.length - 1;
+  const item = document.getElementById(`aviso-item-${idx}`);
+  if (item) item.classList.add('open');
+  markDirty();
+}
+function removeAviso(i) {
+  content.dashboard.avisos.splice(i, 1);
+  renderAvisos();
+  markDirty();
+}
+
+/* ===== MENTORES ===== */
+function renderMentores() {
+  const container = document.getElementById('mentores-cards');
+  if (!container) return;
+  const mentores = content.landing?.mentores || [];
+  if (mentores.length === 0) {
+    container.innerHTML = `<div class="empty-state"><p>Nenhum mentor configurado.</p></div>`;
+    return;
+  }
+  container.innerHTML = mentores.map((m, i) => `
+    <div class="card" style="margin-bottom:16px;">
+      <div class="card-header">
+        <div class="card-title">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+          Mentor ${i+1}
+        </div>
+      </div>
+      <div class="field-row">
+        <div class="field">
+          <label class="field-label">Nome</label>
+          <input type="text" value="${esc(m.nome)}" oninput="updateMentor(${i},'nome',this.value)">
+        </div>
+        <div class="field">
+          <label class="field-label">Cargo</label>
+          <input type="text" value="${esc(m.cargo)}" oninput="updateMentor(${i},'cargo',this.value)">
+        </div>
+      </div>
+      <div class="field">
+        <label class="field-label">Bio (credenciais, separadas por ponto)</label>
+        <textarea rows="2" oninput="updateMentor(${i},'bio',this.value)">${esc(m.bio)}</textarea>
+      </div>
+      <div style="display:flex;justify-content:flex-end;margin-top:14px;">
+        <button class="btn btn-primary btn-sm" onclick="saveMentor(${i})">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+          Salvar mentor
+        </button>
+      </div>
+    </div>`).join('');
+}
+
+function updateMentor(i, field, val) {
+  content.landing.mentores[i][field] = val;
+  markDirty();
+}
+function saveMentor(i) {
+  markDirty();
+  toast('Mentor salvo! Clique em "Publicar no Site" quando terminar.', 'success');
+}
+
+/* ===== CONFIG ===== */
+function renderConfig() {
+  const wa = document.getElementById('config-whatsapp');
+  const ft = document.getElementById('config-footer');
+  if (wa && content.landing) wa.value = content.landing.whatsapp || '';
+  if (ft && content.landing) ft.value = content.landing.footer || '';
+}
+function saveConfig() {
+  const wa = document.getElementById('config-whatsapp');
+  const ft = document.getElementById('config-footer');
+  if (!content.landing) content.landing = { whatsapp: '', footer: '', mentores: [] };
+  if (wa) content.landing.whatsapp = wa.value;
+  if (ft) content.landing.footer = ft.value;
+  markDirty();
+  toast('Configurações salvas! Clique em "Publicar no Site" quando terminar.', 'success');
+}
+
+/* ===== NEWSLETTER ===== */
+async function buscarMembros() {
+  showLoading('Buscando membros...');
+  try {
+    const res = await fetch(`${SUPABASE_URL}/rest/v1/profiles?select=email&status=eq.aprovado`, {
+      headers: { 'apikey': SUPABASE_ANON, 'Authorization': `Bearer ${SUPABASE_ANON}` }
+    });
+    if (!res.ok) throw new Error('Erro ' + res.status);
+    const data = await res.json();
+    newsletterEmails = data.map(d => d.email).filter(Boolean);
+    const wrap = document.getElementById('member-count-wrap');
+    const txt = document.getElementById('member-count-text');
+    if (wrap) wrap.style.display = 'block';
+    if (txt) txt.textContent = `${newsletterEmails.length} membro(s) encontrado(s)`;
+    toast(`${newsletterEmails.length} membros encontrados`, 'success');
+  } catch(e) {
+    toast('Erro ao buscar membros: ' + e.message, 'error');
+  } finally {
+    hideLoading();
+  }
+}
+
+function enviarNewsletter() {
+  const subject = document.getElementById('newsletter-subject')?.value || '';
+  const body = document.getElementById('newsletter-body')?.value || '';
+  if (!subject) { toast('Insira o assunto', 'error'); return; }
+  if (!body) { toast('Insira a mensagem', 'error'); return; }
+  if (newsletterEmails.length === 0) {
+    toast('Busque os membros primeiro', 'error');
+    return;
+  }
+  const bcc = newsletterEmails.join(',');
+  const mailto = `mailto:?bcc=${encodeURIComponent(bcc)}&subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+  window.location.href = mailto;
+}
+
+/* ===== SUPABASE UPLOAD ===== */
+async function uploadToSupabase(file, bucket) {
+  const path = Date.now() + '-' + file.name.replace(/[^a-zA-Z0-9._-]/g, '_');
+  const res = await fetch(`${SUPABASE_URL}/storage/v1/object/${bucket}/${path}`, {
+    method: 'POST',
+    headers: {
+      'Authorization': `Bearer ${SUPABASE_ANON}`,
+      'Content-Type': file.type || 'application/octet-stream',
+      'x-upsert': 'true'
+    },
+    body: file
+  });
+  if (!res.ok) {
+    const err = await res.text();
+    throw new Error('Upload falhou: ' + err);
+  }
+  return `${SUPABASE_URL}/storage/v1/object/public/${bucket}/${path}`;
 }
 
 /* ===== COLLECT CHANGES ===== */
@@ -957,6 +2015,12 @@ function collectContent() {
   // hero subtitle
   const sub = document.getElementById('hero-subtitle');
   if (sub && content.hero) content.hero.subtitle = sub.value;
+  // config
+  const wa = document.getElementById('config-whatsapp');
+  const ft = document.getElementById('config-footer');
+  if (!content.landing) content.landing = { whatsapp: '', footer: '', mentores: [] };
+  if (wa) content.landing.whatsapp = wa.value;
+  if (ft) content.landing.footer = ft.value;
   return content;
 }
 
@@ -972,7 +2036,6 @@ async function publish() {
     const json = JSON.stringify(content, null, 2);
     const encoded = btoa(unescape(encodeURIComponent(json)));
 
-    // pega SHA atual se não tiver
     if (!contentSha) {
       const r = await fetch(`https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}/contents/${CONTENT_PATH}`, {
         headers: { 'Authorization': `token ${pat}` }
@@ -981,7 +2044,7 @@ async function publish() {
     }
 
     const body = {
-      message: '✏️ Atualização de conteúdo via CMS',
+      message: 'Atualização de conteúdo via CMS',
       content: encoded
     };
     if (contentSha) body.sha = contentSha;
@@ -1003,7 +2066,7 @@ async function publish() {
     const result = await res.json();
     contentSha = result.content?.sha;
     markClean();
-    toast('✅ Publicado com sucesso! Site atualiza em ~1 min.', 'success');
+    toast('Publicado com sucesso! Site atualiza em ~1 min.', 'success');
   } catch(e) {
     console.error(e);
     toast('Erro ao publicar: ' + e.message, 'error');
@@ -1015,11 +2078,45 @@ async function publish() {
 /* ===== NAVIGATION ===== */
 function showTab(tab, btn) {
   document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
-  document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
+  document.querySelectorAll('.nav-item[data-tab]').forEach(el => el.classList.remove('active'));
   document.getElementById('tab-' + tab)?.classList.add('active');
   btn?.classList.add('active');
-  const titles = { hero: 'Hero & Estatísticas', depoimentos: 'Depoimentos', quemsomos: 'Quem Somos' };
+  const titles = {
+    hero: 'Hero & Estatísticas',
+    depoimentos: 'Depoimentos',
+    quemsomos: 'Quem Somos',
+    videoaulas: 'Videoaulas',
+    ebooks: 'eBooks',
+    arquivos: 'Arquivos',
+    fotos: 'Fotos',
+    newsletter: 'Newsletter',
+    avisos: 'Dashboard Avisos',
+    mentores: 'Mentores',
+    config: 'Configurações'
+  };
   document.getElementById('topbar-title').textContent = titles[tab] || tab;
+}
+
+function showSubTab(parentTab, sub, btn) {
+  const prefix = `subtab-${parentTab}-`;
+  document.querySelectorAll(`[id^="${prefix}"]`).forEach(el => el.classList.remove('active'));
+  document.getElementById(`subtab-${parentTab}-${sub}`)?.classList.add('active');
+  // update sub-tab buttons
+  const parent = btn?.closest('.sub-tabs');
+  if (parent) parent.querySelectorAll('.sub-tab-btn').forEach(b => b.classList.remove('active'));
+  btn?.classList.add('active');
+}
+
+function toggleItem(id) {
+  const item = document.getElementById(id);
+  if (item) item.classList.toggle('open');
+}
+
+function saveGeneric(itemId, label) {
+  const item = document.getElementById(itemId);
+  if (item) item.classList.remove('open');
+  markDirty();
+  toast(`${label} salvo! Clique em "Publicar no Site" quando terminar.`, 'success');
 }
 
 function openEditorVisual() {
@@ -1045,7 +2142,7 @@ function initials(name) {
   return (name || '').split(' ').filter(Boolean).slice(0,2).map(w => w[0].toUpperCase()).join('') || '?';
 }
 function esc(str) {
-  return (str || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+  return (str || '').toString().replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
 }
 function showLoading(msg) {
   document.getElementById('loading-text').textContent = msg || 'Carregando...';
