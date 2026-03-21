@@ -21,9 +21,38 @@
       }
     ]
   },
+  "clube": {
+    "titulo": "A comunidade dos melhores vendedores do Brasil",
+    "subtitulo": "O Clube dos Referidos reúne profissionais de alta performance que querem crescer juntos, compartilhar conhecimento e conquistar resultados extraordinários.",
+    "tagText": "O Clube",
+    "beneficios": [
+      {
+        "icon": "video",
+        "title": "Videoaulas Exclusivas",
+        "desc": "Mais de 80 aulas com técnicas avançadas de vendas, liderança e desenvolvimento pessoal produzidas por especialistas do mercado."
+      },
+      {
+        "icon": "file",
+        "title": "Biblioteca de Conteúdo",
+        "desc": "eBooks, PDFs, scripts de vendas, planilhas e materiais práticos para você aplicar imediatamente no seu negócio."
+      },
+      {
+        "icon": "people",
+        "title": "Rede de Referidos",
+        "desc": "Conecte-se com uma rede exclusiva de profissionais, troque indicações qualificadas e multiplique seus resultados."
+      },
+      {
+        "icon": "star",
+        "title": "Eventos & Encontros",
+        "desc": "Participe de encontros presenciais e virtuais com os maiores nomes do mundo das vendas e do empreendedorismo."
+      }
+    ]
+  },
   "quemSomos": {
-    "titulo": "Por que o Clube dos Referidos?",
-    "subtitulo": "Uma plataforma construída para quem leva vendas a sério.",
+    "tagText": "Quem Somos",
+    "titulo": "Nascemos para transformar vendedores em referências",
+    "subtitulo": "O Clube dos Referidos surgiu da visão de que os melhores vendedores merecem um espaço exclusivo para crescer, se conectar e ser reconhecidos.",
+    "corpo": "Nossa missão é simples: reunir profissionais de alta performance, oferecer ferramentas de elite e criar uma rede de conexões que gera oportunidades reais. Acreditamos que quando vendedores excepcionais se encontram, negócios extraordinários acontecem.",
     "cards": [
       {"icon": "🏆", "title": "Excelência", "text": "Só os melhores fazem parte"},
       {"icon": "🤝", "title": "Comunidade", "text": "Crescemos juntos"},
@@ -47,8 +76,8 @@
   "depoimentos": [
     {
       "id": "1",
-      "text": "O Clube dos Referidos mudou completamente minha visão de vendas. As conexões que fiz aqui me trouxeram clientes que jamais teria alcançado sozinho. Os mentores são sensacionais e acompanham de perto.",
-      "name": "Ricardo Mendes Silva",
+      "text": "O Clube dos Referidos mudou completamente minha visão de vendas. As conexões que fiz aqui me trouxeram clientes que jamais teria alcançado sozinho.",
+      "name": "Ricardo Mendes",
       "role": "Diretor Comercial",
       "estrelas": 5
     },
@@ -175,11 +204,12 @@
     ],
     "ctaText": "Área de Membros"
   },
-  "mentoresBadge": "Formados diretamente por Flávio Augusto, co-fundadores do Clube dos Referidos e referências em vendas ativas e liderança comercial.",
+  "mentoresBadge": "Juliana e Gustavo são 2 dos maiores recordistas da Wiser Sales Platform (WSP) — fundada por Flávio Augusto da Silva.",
   "mentoresData": {
-    "titulo": "Os Mentores",
-    "subtitulo": "Conheça quem está por trás do clube",
-    "badgeText": "Formados diretamente por Flávio Augusto, co-fundadores do Clube dos Referidos e referências em vendas ativas e liderança comercial.",
+    "tagText": "Os Mentores",
+    "titulo": "Os profissionais por trás do método",
+    "subtitulo": "Formados diretamente por Flávio Augusto, co-fundadores do Clube dos Referidos e referências em vendas ativas e liderança comercial.",
+    "badgeText": "Juliana e Gustavo são 2 dos maiores recordistas da Wiser Sales Platform (WSP) — fundada por Flávio Augusto da Silva.",
     "lista": [
       {
         "nome": "Gustavo Lima",
@@ -205,26 +235,30 @@
     ]
   },
   "secoesTitulos": {
-    "quemSomos": {"titulo": "Por que o Clube dos Referidos?", "subtitulo": "Uma plataforma construída para quem leva vendas a sério."},
-    "mentores": {"titulo": "Conheça os Mentores", "subtitulo": "Líderes que já estiveram no seu lugar e sabem o caminho."},
+    "clube": {"titulo": "A comunidade dos melhores vendedores do Brasil", "subtitulo": "O Clube dos Referidos reúne profissionais de alta performance que querem crescer juntos, compartilhar conhecimento e conquistar resultados extraordinários."},
+    "quemSomos": {"titulo": "Nascemos para transformar vendedores em referências", "subtitulo": "O Clube dos Referidos surgiu da visão de que os melhores vendedores merecem um espaço exclusivo para crescer, se conectar e ser reconhecidos."},
+    "mentores": {"titulo": "Os profissionais por trás do método", "subtitulo": "Formados diretamente por Flávio Augusto, co-fundadores do Clube dos Referidos e referências em vendas ativas e liderança comercial."},
     "depoimentos": {"titulo": "O que dizem nossos membros", "subtitulo": "Histórias reais de profissionais que transformaram seus negócios dentro do Clube dos Referidos."},
-    "inscricao": {"titulo": "Faça sua Aplicação", "subtitulo": "Preencha o formulário abaixo. Nossa equipe entrará em contato em até 48 horas."}
+    "inscricao": {"titulo": "Aplique para o Clube dos Referidos", "subtitulo": "A entrada no Clube é por aplicação. Um ambiente exclusivo para garantir um bom nível de troca, execução e resultado. Faça a sua aplicação. Caso você seja aprovado, nosso time entrará em contato para os próximos passos."}
   },
   "formulario": {
-    "titulo": "Quero fazer parte",
-    "subtitulo": "Preencha o formulário abaixo",
-    "botaoTexto": "Enviar Aplicação",
+    "titulo": "Aplique para o Clube dos Referidos",
+    "subtitulo": "A entrada no Clube é por aplicação. Um ambiente exclusivo para garantir um bom nível de troca, execução e resultado. Faça a sua aplicação. Caso você seja aprovado, nosso time entrará em contato para os próximos passos.",
+    "botaoTexto": "Enviar aplicação",
     "mensagemSucesso": "Obrigado pelo seu interesse! Você receberá uma mensagem do nosso time em breve.",
     "campos": [
-      {"label": "Nome completo", "placeholder": "Seu nome completo"},
-      {"label": "Email", "placeholder": "seu@email.com"},
+      {"label": "Nome e sobrenome", "placeholder": "Seu nome completo"},
       {"label": "WhatsApp", "placeholder": "(11) 99999-9999"},
-      {"label": "Empresa / Franquia", "placeholder": "Nome da sua empresa"},
-      {"label": "Faturamento mensal", "placeholder": "Ex: R$ 50.000"}
+      {"label": "Email", "placeholder": "seu@email.com"},
+      {"label": "Instagram (@)", "placeholder": "@seuperfil"},
+      {"label": "Cargo e função principal", "placeholder": "Ex: Gerente Comercial"},
+      {"label": "Nome da empresa", "placeholder": "Ex: Wise Up Alphaville"},
+      {"label": "Faturamento anual", "placeholder": "Ex: R$ 500 mil"}
     ]
   },
   "rodape": {
     "copyright": "© 2025 Clube dos Referidos. Todos os direitos reservados.",
+    "subTexto": "Clube dos Referidos — Comunidade de Alta Performance em Vendas",
     "redesSociais": [
       {"plataforma": "instagram", "url": "", "ativo": true},
       {"plataforma": "linkedin", "url": "", "ativo": false},
