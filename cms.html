@@ -1,0 +1,1056 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CMS — Clube dos Referidos</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --accent: #00C8E8;
+    --accent-dim: rgba(0,200,232,0.08);
+    --accent-glow: rgba(0,200,232,0.25);
+    --bg: #000000;
+    --bg-card: #111111;
+    --bg-card2: #161616;
+    --bg-input: #1a1a1a;
+    --border: rgba(255,255,255,0.08);
+    --border-accent: rgba(0,200,232,0.3);
+    --text: #ffffff;
+    --text-secondary: rgba(255,255,255,0.6);
+    --text-muted: rgba(255,255,255,0.35);
+    --sidebar-w: 240px;
+    --green: #22c55e;
+    --red: #ef4444;
+    --font-display: 'Space Grotesk', sans-serif;
+    --font: 'Inter', sans-serif;
+  }
+
+  body {
+    font-family: var(--font);
+    background: var(--bg);
+    color: var(--text);
+    display: flex;
+    min-height: 100vh;
+    overflow: hidden;
+  }
+
+  /* ===== SIDEBAR ===== */
+  .sidebar {
+    width: var(--sidebar-w);
+    background: var(--bg-card);
+    border-right: 1px solid var(--border);
+    display: flex;
+    flex-direction: column;
+    flex-shrink: 0;
+    height: 100vh;
+    position: fixed;
+    left: 0; top: 0;
+    z-index: 100;
+  }
+
+  .sidebar-logo {
+    padding: 24px 20px 20px;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .sidebar-logo img {
+    height: 32px;
+    width: 32px;
+    object-fit: contain;
+  }
+  .sidebar-logo-text {
+    font-family: var(--font-display);
+    font-size: 0.85rem;
+    font-weight: 700;
+    line-height: 1.2;
+    color: var(--text);
+  }
+  .sidebar-logo-sub {
+    font-size: 0.65rem;
+    color: var(--accent);
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  .sidebar-nav {
+    flex: 1;
+    padding: 16px 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    overflow-y: auto;
+  }
+
+  .nav-section-label {
+    font-size: 0.65rem;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    padding: 12px 8px 6px;
+  }
+
+  .nav-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 9px 12px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: var(--text-secondary);
+    transition: all 0.15s;
+    border: none;
+    background: none;
+    width: 100%;
+    text-align: left;
+  }
+  .nav-item:hover { background: rgba(255,255,255,0.05); color: var(--text); }
+  .nav-item.active {
+    background: var(--accent-dim);
+    color: var(--accent);
+    border: 1px solid var(--border-accent);
+  }
+  .nav-item svg { flex-shrink: 0; opacity: 0.8; }
+  .nav-item.active svg { opacity: 1; }
+
+  .sidebar-bottom {
+    padding: 16px;
+    border-top: 1px solid var(--border);
+  }
+
+  .github-status {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    padding: 8px 10px;
+    background: var(--bg-input);
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.15s;
+    border: 1px solid var(--border);
+  }
+  .github-status:hover { border-color: var(--border-accent); color: var(--text-secondary); }
+  .gh-dot {
+    width: 7px; height: 7px;
+    border-radius: 50%;
+    background: var(--red);
+    flex-shrink: 0;
+    transition: background 0.3s;
+  }
+  .gh-dot.connected { background: var(--green); box-shadow: 0 0 6px var(--green); }
+  .gh-label { flex: 1; }
+
+  /* ===== MAIN ===== */
+  .main {
+    margin-left: var(--sidebar-w);
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    overflow: hidden;
+  }
+
+  .topbar {
+    height: 60px;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 28px;
+    flex-shrink: 0;
+    background: rgba(0,0,0,0.6);
+    backdrop-filter: blur(12px);
+  }
+
+  .topbar-title {
+    font-family: var(--font-display);
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--text);
+  }
+  .topbar-sub { font-size: 0.75rem; color: var(--text-muted); margin-top: 1px; }
+
+  .topbar-actions { display: flex; align-items: center; gap: 10px; }
+
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 16px;
+    border-radius: 8px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    cursor: pointer;
+    border: none;
+    transition: all 0.15s;
+    font-family: var(--font);
+  }
+  .btn-ghost {
+    background: transparent;
+    color: var(--text-secondary);
+    border: 1px solid var(--border);
+  }
+  .btn-ghost:hover { border-color: var(--border-accent); color: var(--text); }
+  .btn-primary {
+    background: var(--accent);
+    color: #000;
+  }
+  .btn-primary:hover { background: #00e0ff; box-shadow: 0 0 20px var(--accent-glow); }
+  .btn-primary:disabled { opacity: 0.4; cursor: not-allowed; box-shadow: none; }
+  .btn-danger { background: var(--red); color: #fff; }
+  .btn-danger:hover { background: #ff5555; }
+
+  .save-status {
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .save-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--text-muted); }
+  .save-dot.saved { background: var(--green); box-shadow: 0 0 6px var(--green); }
+  .save-dot.unsaved { background: #f59e0b; box-shadow: 0 0 6px #f59e0b; }
+
+  /* ===== CONTENT AREA ===== */
+  .content {
+    flex: 1;
+    overflow-y: auto;
+    padding: 28px;
+  }
+
+  /* scrollbar */
+  .content::-webkit-scrollbar { width: 6px; }
+  .content::-webkit-scrollbar-track { background: transparent; }
+  .content::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 3px; }
+
+  .section-header {
+    margin-bottom: 24px;
+  }
+  .section-header h2 {
+    font-family: var(--font-display);
+    font-size: 1.4rem;
+    font-weight: 700;
+    margin-bottom: 4px;
+  }
+  .section-header p { font-size: 0.85rem; color: var(--text-secondary); }
+
+  /* ===== CARDS ===== */
+  .card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 20px;
+    margin-bottom: 16px;
+    transition: border-color 0.2s;
+  }
+  .card:hover { border-color: rgba(255,255,255,0.12); }
+
+  .card-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 16px;
+  }
+  .card-title {
+    font-size: 0.8rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--accent);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .card-actions { display: flex; gap: 6px; }
+
+  /* ===== FORM FIELDS ===== */
+  .field { margin-bottom: 14px; }
+  .field:last-child { margin-bottom: 0; }
+
+  label.field-label {
+    display: block;
+    font-size: 0.72rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--text-muted);
+    margin-bottom: 6px;
+  }
+
+  input[type="text"],
+  input[type="password"],
+  textarea {
+    width: 100%;
+    background: var(--bg-input);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    color: var(--text);
+    font-family: var(--font);
+    font-size: 0.875rem;
+    padding: 10px 12px;
+    transition: border-color 0.15s;
+    outline: none;
+    resize: vertical;
+  }
+  input[type="text"]:focus,
+  input[type="password"]:focus,
+  textarea:focus {
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px var(--accent-dim);
+  }
+
+  .field-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  .field-row-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; }
+
+  /* ===== DEPOIMENTOS ===== */
+  .depo-list { display: flex; flex-direction: column; gap: 12px; }
+
+  .depo-item {
+    background: var(--bg-card2);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    overflow: hidden;
+    transition: border-color 0.2s;
+  }
+  .depo-item:hover { border-color: rgba(255,255,255,0.12); }
+
+  .depo-item-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 14px 16px;
+    cursor: pointer;
+    user-select: none;
+  }
+  .depo-avatar-preview {
+    width: 36px; height: 36px;
+    border-radius: 50%;
+    background: var(--accent-dim);
+    border: 1px solid var(--border-accent);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: var(--accent);
+    flex-shrink: 0;
+  }
+  .depo-item-meta { flex: 1; }
+  .depo-item-name { font-size: 0.875rem; font-weight: 600; }
+  .depo-item-role { font-size: 0.75rem; color: var(--text-muted); }
+  .depo-item-chevron {
+    color: var(--text-muted);
+    transition: transform 0.2s;
+    flex-shrink: 0;
+  }
+  .depo-item.open .depo-item-chevron { transform: rotate(180deg); }
+
+  .depo-item-body {
+    padding: 0 16px 16px;
+    display: none;
+    border-top: 1px solid var(--border);
+    padding-top: 14px;
+  }
+  .depo-item.open .depo-item-body { display: block; }
+
+  /* ===== ADD BUTTON ===== */
+  .add-btn {
+    width: 100%;
+    padding: 12px;
+    border: 1px dashed var(--border);
+    border-radius: 10px;
+    background: transparent;
+    color: var(--text-muted);
+    font-family: var(--font);
+    font-size: 0.8rem;
+    cursor: pointer;
+    transition: all 0.15s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    margin-top: 8px;
+  }
+  .add-btn:hover {
+    border-color: var(--accent);
+    color: var(--accent);
+    background: var(--accent-dim);
+  }
+
+  /* ===== STATS GRID ===== */
+  .stats-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+  .stat-card {
+    background: var(--bg-card2);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 14px;
+    text-align: center;
+  }
+  .stat-card .stat-preview {
+    font-family: var(--font-display);
+    font-size: 1.4rem;
+    font-weight: 700;
+    color: var(--accent);
+    margin-bottom: 8px;
+    min-height: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  /* ===== MODAL (setup GitHub PAT) ===== */
+  .modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.85);
+    backdrop-filter: blur(8px);
+    z-index: 1000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+  }
+  .modal-overlay.hidden { display: none; }
+
+  .modal {
+    background: var(--bg-card);
+    border: 1px solid var(--border-accent);
+    border-radius: 16px;
+    padding: 32px;
+    max-width: 480px;
+    width: 100%;
+    box-shadow: 0 0 60px rgba(0,200,232,0.15);
+  }
+  .modal-icon {
+    width: 48px; height: 48px;
+    background: var(--accent-dim);
+    border: 1px solid var(--border-accent);
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 16px;
+    color: var(--accent);
+  }
+  .modal h2 {
+    font-family: var(--font-display);
+    font-size: 1.3rem;
+    margin-bottom: 8px;
+  }
+  .modal p { font-size: 0.85rem; color: var(--text-secondary); line-height: 1.6; margin-bottom: 20px; }
+  .modal .steps {
+    background: var(--bg-input);
+    border-radius: 8px;
+    padding: 14px;
+    margin-bottom: 20px;
+    font-size: 0.8rem;
+    color: var(--text-secondary);
+    line-height: 1.8;
+  }
+  .modal .steps strong { color: var(--accent); }
+  .modal-actions { display: flex; gap: 10px; margin-top: 20px; }
+  .modal-actions .btn { flex: 1; justify-content: center; }
+
+  /* ===== TOAST ===== */
+  .toast-container {
+    position: fixed;
+    bottom: 24px;
+    right: 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    z-index: 9999;
+  }
+  .toast {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 12px 16px;
+    font-size: 0.8rem;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    animation: slideIn 0.25s ease;
+    max-width: 320px;
+    box-shadow: 0 4px 24px rgba(0,0,0,0.5);
+  }
+  .toast.success { border-color: var(--green); }
+  .toast.error { border-color: var(--red); }
+  .toast.info { border-color: var(--border-accent); }
+  .toast-icon { font-size: 1rem; flex-shrink: 0; }
+  @keyframes slideIn {
+    from { transform: translateX(20px); opacity: 0; }
+    to { transform: translateX(0); opacity: 1; }
+  }
+
+  /* ===== LOADING ===== */
+  .loading-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.7);
+    z-index: 500;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    gap: 12px;
+    backdrop-filter: blur(4px);
+  }
+  .loading-overlay.hidden { display: none; }
+  .spinner {
+    width: 40px; height: 40px;
+    border: 3px solid rgba(0,200,232,0.2);
+    border-top-color: var(--accent);
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+  .loading-text { font-size: 0.85rem; color: var(--text-secondary); }
+
+  /* ===== EMPTY STATE ===== */
+  .empty-state {
+    text-align: center;
+    padding: 48px 24px;
+    color: var(--text-muted);
+  }
+  .empty-state svg { margin-bottom: 12px; opacity: 0.4; }
+  .empty-state p { font-size: 0.85rem; }
+
+  /* ===== WATERMARK EDITOR hint ===== */
+  .hint-box {
+    background: var(--accent-dim);
+    border: 1px solid var(--border-accent);
+    border-radius: 10px;
+    padding: 14px 16px;
+    font-size: 0.8rem;
+    color: var(--text-secondary);
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    margin-bottom: 16px;
+  }
+  .hint-box svg { flex-shrink: 0; color: var(--accent); margin-top: 1px; }
+
+  /* ===== TABS ===== */
+  .tab-content { display: none; }
+  .tab-content.active { display: block; }
+</style>
+</head>
+<body>
+
+<!-- LOADING -->
+<div class="loading-overlay hidden" id="loading">
+  <div class="spinner"></div>
+  <div class="loading-text" id="loading-text">Carregando...</div>
+</div>
+
+<!-- TOAST -->
+<div class="toast-container" id="toasts"></div>
+
+<!-- MODAL: Setup GitHub -->
+<div class="modal-overlay" id="modal-setup">
+  <div class="modal">
+    <div class="modal-icon">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/></svg>
+    </div>
+    <h2>Conectar ao GitHub</h2>
+    <p>Para publicar alterações direto no site, você precisa de um Token do GitHub com permissão de escrita no repositório.</p>
+    <div class="steps">
+      <strong>Como gerar o token:</strong><br>
+      1. Acesse github.com → Configurações → Developer Settings<br>
+      2. Personal access tokens → Tokens (classic) → Generate new token<br>
+      3. Marque a permissão <strong>repo</strong> (acesso completo)<br>
+      4. Gere e cole o token abaixo
+    </div>
+    <div class="field">
+      <label class="field-label">Token do GitHub</label>
+      <input type="password" id="pat-input" placeholder="ghp_xxxxxxxxxxxxxxxxxxxx">
+    </div>
+    <div class="modal-actions">
+      <button class="btn btn-ghost" onclick="skipSetup()">Continuar offline</button>
+      <button class="btn btn-primary" onclick="saveToken()">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+        Conectar
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- SIDEBAR -->
+<aside class="sidebar">
+  <div class="sidebar-logo">
+    <img src="images/emblema.png" alt="">
+    <div>
+      <div class="sidebar-logo-text">Clube dos Referidos</div>
+      <div class="sidebar-logo-sub">CMS</div>
+    </div>
+  </div>
+
+  <nav class="sidebar-nav">
+    <div class="nav-section-label">Conteúdo</div>
+    <button class="nav-item active" data-tab="hero" onclick="showTab('hero', this)">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg>
+      Hero & Estatísticas
+    </button>
+    <button class="nav-item" data-tab="depoimentos" onclick="showTab('depoimentos', this)">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+      Depoimentos
+    </button>
+    <button class="nav-item" data-tab="quemsomos" onclick="showTab('quemsomos', this)">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+      Quem Somos
+    </button>
+
+    <div class="nav-section-label" style="margin-top:8px;">Ferramentas</div>
+    <button class="nav-item" onclick="openEditorVisual()">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M12 1v4M12 19v4M4.22 4.22l2.83 2.83M16.95 16.95l2.83 2.83M1 12h4M19 12h4M4.22 19.78l2.83-2.83M16.95 7.05l2.83-2.83"/></svg>
+      Editor Visual (CSS)
+    </button>
+  </nav>
+
+  <div class="sidebar-bottom">
+    <div class="github-status" id="gh-status" onclick="document.getElementById('modal-setup').classList.remove('hidden')">
+      <div class="gh-dot" id="gh-dot"></div>
+      <span class="gh-label" id="gh-label">Não conectado</span>
+      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/></svg>
+    </div>
+  </div>
+</aside>
+
+<!-- MAIN -->
+<div class="main">
+  <!-- TOPBAR -->
+  <header class="topbar">
+    <div>
+      <div class="topbar-title" id="topbar-title">Hero & Estatísticas</div>
+      <div class="topbar-sub">Edite e publique direto no site</div>
+    </div>
+    <div class="topbar-actions">
+      <div class="save-status">
+        <div class="save-dot" id="save-dot"></div>
+        <span id="save-label">Sem alterações</span>
+      </div>
+      <button class="btn btn-ghost" onclick="loadFromGitHub()">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M23 4v6h-6"/><path d="M1 20v-6h6"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></svg>
+        Recarregar
+      </button>
+      <button class="btn btn-primary" id="publish-btn" onclick="publish()" disabled>
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="16 16 12 12 8 16"/><line x1="12" y1="12" x2="12" y2="21"/><path d="M20.39 18.39A5 5 0 0 0 18 9h-1.26A8 8 0 1 0 3 16.3"/></svg>
+        Publicar no site
+      </button>
+    </div>
+  </header>
+
+  <!-- CONTENT -->
+  <div class="content">
+
+    <!-- TAB: HERO -->
+    <div class="tab-content active" id="tab-hero">
+      <div class="section-header">
+        <h2>Hero & Estatísticas</h2>
+        <p>Texto principal da página e números de destaque.</p>
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M4 6h16M4 12h8M4 18h4"/></svg>
+            Subtítulo do Hero
+          </div>
+        </div>
+        <div class="field">
+          <label class="field-label">Texto abaixo do título principal</label>
+          <textarea id="hero-subtitle" rows="3" oninput="markDirty()" placeholder="A plataforma dos melhores vendedores..."></textarea>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+            Estatísticas — Seção Hero
+          </div>
+        </div>
+        <div class="stats-grid" id="hero-stats-editor"></div>
+      </div>
+    </div>
+
+    <!-- TAB: DEPOIMENTOS -->
+    <div class="tab-content" id="tab-depoimentos">
+      <div class="section-header">
+        <h2>Depoimentos</h2>
+        <p>Adicione, edite ou remova depoimentos de membros.</p>
+      </div>
+
+      <div class="hint-box">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+        As iniciais do avatar são geradas automaticamente a partir do nome. Ex: "Maria Silva" → MS
+      </div>
+
+      <div class="depo-list" id="depo-list"></div>
+
+      <button class="add-btn" onclick="addDepoimento()">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+        Adicionar depoimento
+      </button>
+    </div>
+
+    <!-- TAB: QUEM SOMOS -->
+    <div class="tab-content" id="tab-quemsomos">
+      <div class="section-header">
+        <h2>Quem Somos</h2>
+        <p>Estatísticas da seção Quem Somos.</p>
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+            Estatísticas — Quem Somos
+          </div>
+        </div>
+        <div class="stats-grid" id="qs-stats-editor"></div>
+      </div>
+    </div>
+
+  </div><!-- /content -->
+</div><!-- /main -->
+
+<script>
+const REPO_OWNER = 'gustavollima16';
+const REPO_NAME  = 'clube-dos-referidos';
+const CONTENT_PATH = 'data/content.json';
+
+let content = null;
+let contentSha = null;
+let isDirty = false;
+let pat = localStorage.getItem('cms_gh_pat') || '';
+
+/* ===== INIT ===== */
+window.addEventListener('DOMContentLoaded', () => {
+  if (pat) {
+    setConnected(true);
+    loadFromGitHub();
+  } else {
+    document.getElementById('modal-setup').classList.remove('hidden');
+    loadLocal();
+  }
+});
+
+/* ===== TOKEN SETUP ===== */
+function saveToken() {
+  const val = document.getElementById('pat-input').value.trim();
+  if (!val) { toast('Insira o token', 'error'); return; }
+  pat = val;
+  localStorage.setItem('cms_gh_pat', pat);
+  document.getElementById('modal-setup').classList.add('hidden');
+  setConnected(true);
+  loadFromGitHub();
+}
+function skipSetup() {
+  document.getElementById('modal-setup').classList.add('hidden');
+  loadLocal();
+}
+function setConnected(ok) {
+  document.getElementById('gh-dot').className = 'gh-dot' + (ok ? ' connected' : '');
+  document.getElementById('gh-label').textContent = ok ? 'GitHub conectado' : 'Não conectado';
+}
+
+/* ===== LOAD ===== */
+async function loadFromGitHub() {
+  if (!pat) { loadLocal(); return; }
+  showLoading('Carregando do GitHub...');
+  try {
+    const res = await fetch(`https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}/contents/${CONTENT_PATH}`, {
+      headers: { 'Authorization': `token ${pat}`, 'Accept': 'application/vnd.github.v3+json' }
+    });
+    if (!res.ok) throw new Error(`GitHub error ${res.status}`);
+    const data = await res.json();
+    contentSha = data.sha;
+    const raw = decodeURIComponent(escape(atob(data.content.replace(/\n/g,''))));
+    content = JSON.parse(raw);
+    renderAll();
+    markClean();
+    toast('Conteúdo carregado do GitHub', 'success');
+  } catch(e) {
+    console.error(e);
+    toast('Erro ao carregar do GitHub: ' + e.message, 'error');
+    loadLocal();
+  } finally {
+    hideLoading();
+  }
+}
+
+function loadLocal() {
+  fetch('data/content.json?' + Date.now())
+    .then(r => r.json())
+    .then(c => { content = c; renderAll(); markClean(); })
+    .catch(() => { content = defaultContent(); renderAll(); });
+}
+
+function defaultContent() {
+  return {
+    hero: { subtitle: '', stats: [{number:'',label:''},{number:'',label:''},{number:'',label:''}] },
+    quemSomos: { stats: [{number:'',label:''},{number:'',label:''},{number:'',label:''}] },
+    depoimentos: []
+  };
+}
+
+/* ===== RENDER ===== */
+function renderAll() {
+  if (!content) return;
+  renderHeroSubtitle();
+  renderHeroStats();
+  renderQsStats();
+  renderDepoimentos();
+}
+
+function renderHeroSubtitle() {
+  const el = document.getElementById('hero-subtitle');
+  if (el && content.hero) el.value = content.hero.subtitle || '';
+}
+
+function renderHeroStats() {
+  renderStatsEditor('hero-stats-editor', content.hero?.stats || [], 'hero');
+}
+function renderQsStats() {
+  renderStatsEditor('qs-stats-editor', content.quemSomos?.stats || [], 'qs');
+}
+
+function renderStatsEditor(containerId, stats, prefix) {
+  const el = document.getElementById(containerId);
+  if (!el) return;
+  el.innerHTML = stats.map((s, i) => `
+    <div class="stat-card">
+      <div class="stat-preview" id="${prefix}-preview-${i}">${s.number || '—'}</div>
+      <div class="field">
+        <label class="field-label">Número</label>
+        <input type="text" value="${esc(s.number)}" placeholder="500+"
+          oninput="updateStat('${prefix}',${i},'number',this.value)">
+      </div>
+      <div class="field">
+        <label class="field-label">Label</label>
+        <input type="text" value="${esc(s.label)}" placeholder="Membros ativos"
+          oninput="updateStat('${prefix}',${i},'label',this.value)">
+      </div>
+    </div>`).join('');
+}
+
+function updateStat(prefix, i, field, val) {
+  if (prefix === 'hero') content.hero.stats[i][field] = val;
+  else content.quemSomos.stats[i][field] = val;
+  if (field === 'number') {
+    const prev = document.getElementById(`${prefix}-preview-${i}`);
+    if (prev) prev.textContent = val || '—';
+  }
+  markDirty();
+}
+
+function renderDepoimentos() {
+  const list = document.getElementById('depo-list');
+  if (!list) return;
+  const depos = content.depoimentos || [];
+  if (depos.length === 0) {
+    list.innerHTML = `<div class="empty-state">
+      <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+      <p>Nenhum depoimento ainda.<br>Clique em "Adicionar" abaixo.</p>
+    </div>`;
+    return;
+  }
+  list.innerHTML = depos.map((d, i) => {
+    const av = initials(d.name || '?');
+    return `
+    <div class="depo-item" id="depo-item-${i}">
+      <div class="depo-item-header" onclick="toggleDepo(${i})">
+        <div class="depo-avatar-preview">${av}</div>
+        <div class="depo-item-meta">
+          <div class="depo-item-name">${esc(d.name) || 'Sem nome'}</div>
+          <div class="depo-item-role">${esc(d.role) || 'Sem cargo'}</div>
+        </div>
+        <svg class="depo-item-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+      </div>
+      <div class="depo-item-body">
+        <div class="field">
+          <label class="field-label">Depoimento</label>
+          <textarea rows="3" oninput="updateDepo(${i},'text',this.value)">${esc(d.text)}</textarea>
+        </div>
+        <div class="field-row">
+          <div class="field">
+            <label class="field-label">Nome</label>
+            <input type="text" value="${esc(d.name)}" oninput="updateDepo(${i},'name',this.value)">
+          </div>
+          <div class="field">
+            <label class="field-label">Cargo / Empresa</label>
+            <input type="text" value="${esc(d.role)}" oninput="updateDepo(${i},'role',this.value)">
+          </div>
+        </div>
+        <div style="margin-top:12px;display:flex;justify-content:flex-end;">
+          <button class="btn btn-danger" onclick="removeDepo(${i})">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/><path d="M10 11v6M14 11v6"/><path d="M9 6V4h6v2"/></svg>
+            Remover
+          </button>
+        </div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function toggleDepo(i) {
+  const item = document.getElementById(`depo-item-${i}`);
+  if (item) item.classList.toggle('open');
+}
+
+function updateDepo(i, field, val) {
+  content.depoimentos[i][field] = val;
+  // atualiza header ao vivo
+  const item = document.getElementById(`depo-item-${i}`);
+  if (item) {
+    if (field === 'name') {
+      item.querySelector('.depo-item-name').textContent = val || 'Sem nome';
+      item.querySelector('.depo-avatar-preview').textContent = initials(val || '?');
+    }
+    if (field === 'role') item.querySelector('.depo-item-role').textContent = val || 'Sem cargo';
+  }
+  markDirty();
+}
+
+function addDepoimento() {
+  if (!content.depoimentos) content.depoimentos = [];
+  content.depoimentos.push({ id: Date.now().toString(), text: '', name: '', role: '' });
+  renderDepoimentos();
+  // abre o novo
+  const idx = content.depoimentos.length - 1;
+  const item = document.getElementById(`depo-item-${idx}`);
+  if (item) item.classList.add('open');
+  markDirty();
+}
+
+function removeDepo(i) {
+  content.depoimentos.splice(i, 1);
+  renderDepoimentos();
+  markDirty();
+}
+
+/* ===== COLLECT CHANGES ===== */
+function collectContent() {
+  // hero subtitle
+  const sub = document.getElementById('hero-subtitle');
+  if (sub && content.hero) content.hero.subtitle = sub.value;
+  return content;
+}
+
+/* ===== PUBLISH ===== */
+async function publish() {
+  if (!pat) {
+    document.getElementById('modal-setup').classList.remove('hidden');
+    return;
+  }
+  collectContent();
+  showLoading('Publicando no GitHub...');
+  try {
+    const json = JSON.stringify(content, null, 2);
+    const encoded = btoa(unescape(encodeURIComponent(json)));
+
+    // pega SHA atual se não tiver
+    if (!contentSha) {
+      const r = await fetch(`https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}/contents/${CONTENT_PATH}`, {
+        headers: { 'Authorization': `token ${pat}` }
+      });
+      if (r.ok) { const d = await r.json(); contentSha = d.sha; }
+    }
+
+    const body = {
+      message: '✏️ Atualização de conteúdo via CMS',
+      content: encoded
+    };
+    if (contentSha) body.sha = contentSha;
+
+    const res = await fetch(`https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}/contents/${CONTENT_PATH}`, {
+      method: 'PUT',
+      headers: {
+        'Authorization': `token ${pat}`,
+        'Accept': 'application/vnd.github.v3+json',
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(body)
+    });
+
+    if (!res.ok) {
+      const err = await res.json();
+      throw new Error(err.message || `Erro ${res.status}`);
+    }
+    const result = await res.json();
+    contentSha = result.content?.sha;
+    markClean();
+    toast('✅ Publicado com sucesso! Site atualiza em ~1 min.', 'success');
+  } catch(e) {
+    console.error(e);
+    toast('Erro ao publicar: ' + e.message, 'error');
+  } finally {
+    hideLoading();
+  }
+}
+
+/* ===== NAVIGATION ===== */
+function showTab(tab, btn) {
+  document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
+  document.getElementById('tab-' + tab)?.classList.add('active');
+  btn?.classList.add('active');
+  const titles = { hero: 'Hero & Estatísticas', depoimentos: 'Depoimentos', quemsomos: 'Quem Somos' };
+  document.getElementById('topbar-title').textContent = titles[tab] || tab;
+}
+
+function openEditorVisual() {
+  window.open('editor.html', '_blank');
+}
+
+/* ===== DIRTY STATE ===== */
+function markDirty() {
+  isDirty = true;
+  document.getElementById('save-dot').className = 'save-dot unsaved';
+  document.getElementById('save-label').textContent = 'Alterações não publicadas';
+  document.getElementById('publish-btn').disabled = false;
+}
+function markClean() {
+  isDirty = false;
+  document.getElementById('save-dot').className = 'save-dot saved';
+  document.getElementById('save-label').textContent = 'Publicado';
+  document.getElementById('publish-btn').disabled = !pat;
+}
+
+/* ===== UTILS ===== */
+function initials(name) {
+  return (name || '').split(' ').filter(Boolean).slice(0,2).map(w => w[0].toUpperCase()).join('') || '?';
+}
+function esc(str) {
+  return (str || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+function showLoading(msg) {
+  document.getElementById('loading-text').textContent = msg || 'Carregando...';
+  document.getElementById('loading').classList.remove('hidden');
+}
+function hideLoading() {
+  document.getElementById('loading').classList.add('hidden');
+}
+function toast(msg, type = 'info') {
+  const icons = { success: '✅', error: '❌', info: 'ℹ️' };
+  const el = document.createElement('div');
+  el.className = `toast ${type}`;
+  el.innerHTML = `<span class="toast-icon">${icons[type]}</span><span>${msg}</span>`;
+  document.getElementById('toasts').appendChild(el);
+  setTimeout(() => el.remove(), 4000);
+}
+</script>
+</body>
+</html>

@@ -790,11 +790,11 @@
         CLUBE<br>DOS<br><span class="highlight">REFERIDOS</span>
       </h1>
 
-      <p class="hero-subtitle">
+      <p class="hero-subtitle" id="hero-subtitle">
         A plataforma dos melhores vendedores do Brasil. Acesse conteúdos exclusivos, videoaulas, materiais e muito mais para acelerar seus resultados.
       </p>
 
-      <div class="hero-stats">
+      <div class="hero-stats" id="hero-stats">
         <div class="stat-item">
           <div class="stat-number">500+</div>
           <div class="stat-label">Membros ativos</div>
@@ -1036,7 +1036,7 @@
         <h2 class="lp-title">Nascemos para<br>transformar vendedores<br>em <span style="color:var(--accent)">referências</span></h2>
         <p class="lp-subtitle" style="margin-bottom: var(--space-xl);">O Clube dos Referidos surgiu da visão de que os melhores vendedores merecem um espaço exclusivo para crescer, se conectar e ser reconhecidos.</p>
         <p style="color: var(--text-secondary); line-height: 1.8; font-size: 0.95rem; margin-bottom: var(--space-xl);">Nossa missão é simples: reunir profissionais de alta performance, oferecer ferramentas de elite e criar uma rede de conexões que gera oportunidades reais. Acreditamos que quando vendedores excepcionais se encontram, negócios extraordinários acontecem.</p>
-        <div class="hero-stats" style="margin-top: 0;">
+        <div class="hero-stats" id="quem-somos-stats" style="margin-top: 0;">
           <div class="stat-item">
             <div class="stat-number">500+</div>
             <div class="stat-label">Membros ativos</div>
@@ -1145,7 +1145,8 @@
     <h2 class="lp-title">O que dizem nossos <span style="color:var(--accent);text-shadow:0 0 20px rgba(0,200,232,0.6)">membros</span></h2>
     <p class="lp-subtitle">Histórias reais de profissionais que transformaram seus negócios dentro do Clube dos Referidos.</p>
 
-    <div class="depo-grid">
+    <div class="depo-grid" id="depo-grid">
+      <!-- Preenchido dinamicamente pelo content.json -->
       <div class="depo-card">
         <div class="depo-stars">★★★★★</div>
         <p class="depo-text">"O Clube dos Referidos mudou completamente minha visão de vendas. As conexões que fiz aqui me trouxeram clientes que jamais teria alcançado sozinho."</p>
@@ -1537,5 +1538,51 @@
   }
 </script>
 
+
+<script>
+/* ---- Carrega content.json e atualiza o DOM ---- */
+(function() {
+  function initials(name) {
+    return name.split(' ').slice(0,2).map(w => w[0]).join('').toUpperCase();
+  }
+  function renderStats(containerId, stats) {
+    const el = document.getElementById(containerId);
+    if (!el || !stats) return;
+    el.innerHTML = stats.map(s => `
+      <div class="stat-item">
+        <div class="stat-number">${s.number}</div>
+        <div class="stat-label">${s.label}</div>
+      </div>`).join('');
+  }
+  function renderDepoimentos(depos) {
+    const grid = document.getElementById('depo-grid');
+    if (!grid || !depos) return;
+    grid.innerHTML = depos.map(d => `
+      <div class="depo-card">
+        <div class="depo-stars">★★★★★</div>
+        <p class="depo-text">"${d.text}"</p>
+        <div class="depo-author">
+          <div class="depo-avatar">${initials(d.name)}</div>
+          <div>
+            <div class="depo-name">${d.name}</div>
+            <div class="depo-role">${d.role}</div>
+          </div>
+        </div>
+      </div>`).join('');
+  }
+  fetch('data/content.json?' + Date.now())
+    .then(r => r.json())
+    .then(c => {
+      if (c.hero) {
+        const sub = document.getElementById('hero-subtitle');
+        if (sub && c.hero.subtitle) sub.textContent = c.hero.subtitle;
+        renderStats('hero-stats', c.hero.stats);
+      }
+      if (c.quemSomos) renderStats('quem-somos-stats', c.quemSomos.stats);
+      if (c.depoimentos) renderDepoimentos(c.depoimentos);
+    })
+    .catch(() => {}); /* fallback: mantém conteúdo estático do HTML */
+})();
+</script>
 </body>
 </html>
