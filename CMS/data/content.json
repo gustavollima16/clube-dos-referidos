@@ -3,23 +3,41 @@
     "badge": "Acesso exclusivo por convite",
     "subtitle": "A plataforma dos melhores vendedores do Brasil. Acesse conteúdos exclusivos, videoaulas, materiais e muito mais para acelerar seus resultados.",
     "stats": [
-      { "number": "500+", "label": "Membros ativos" },
-      { "number": "80+",  "label": "Videoaulas" },
-      { "number": "24/7", "label": "Acesso livre" }
+      {
+        "number": "500+",
+        "label": "Membros ativos"
+      },
+      {
+        "number": "80+",
+        "label": "Videoaulas"
+      },
+      {
+        "number": "24/7",
+        "label": "Acesso livre"
+      }
     ]
   },
   "quemSomos": {
     "stats": [
-      { "number": "500+",  "label": "Membros ativos" },
-      { "number": "R$50M+","label": "Gerados pela rede" },
-      { "number": "5 anos","label": "De comunidade" }
+      {
+        "number": "500+",
+        "label": "Membros ativos"
+      },
+      {
+        "number": "R$50M+",
+        "label": "Gerados pela rede"
+      },
+      {
+        "number": "5 anos",
+        "label": "De comunidade"
+      }
     ]
   },
   "depoimentos": [
     {
       "id": "1",
-      "text": "O Clube dos Referidos mudou completamente minha visão de vendas. As conexões que fiz aqui me trouxeram clientes que jamais teria alcançado sozinho.",
-      "name": "Ricardo Mendes",
+      "text": "O Clube dos Referidos mudou completamente minha visão de vendas. As conexões que fiz aqui me trouxeram clientes que jamais teria alcançado sozinho. Os mentores são sensacionais e acompanham de perto.",
+      "name": "Ricardo Mendes Silva",
       "role": "Diretor Comercial"
     },
     {
