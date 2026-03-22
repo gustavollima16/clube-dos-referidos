@@ -1,34 +1,34 @@
 // ===== SERVICE WORKER — Clube dos Referidos =====
 // Atualiza automaticamente quando o site é publicado no GitHub Pages
 
-const CACHE_NAME = 'cdr-v1';
+const CACHE_NAME = 'cdr-v2';
 
 // Arquivos que ficam em cache para funcionar sem internet
 const STATIC_ASSETS = [
-  '/clube-dos-referidos/',
-  '/clube-dos-referidos/index.html',
-  '/clube-dos-referidos/dashboard.html',
-  '/clube-dos-referidos/videoaulas.html',
-  '/clube-dos-referidos/ebooks.html',
-  '/clube-dos-referidos/arquivos.html',
-  '/clube-dos-referidos/fotos.html',
-  '/clube-dos-referidos/membros.html',
-  '/clube-dos-referidos/sobre.html',
-  '/clube-dos-referidos/css/global.css',
-  '/clube-dos-referidos/js/auth.js',
-  '/clube-dos-referidos/js/sidebar.js',
-  '/clube-dos-referidos/js/supabase-config.js',
-  '/clube-dos-referidos/js/data/videos.js',
-  '/clube-dos-referidos/js/data/ebooks.js',
-  '/clube-dos-referidos/js/data/arquivos.js',
-  '/clube-dos-referidos/images/logo.png',
-  '/clube-dos-referidos/images/emblema.png',
-  '/clube-dos-referidos/images/gustavo-lima.jpg',
-  '/clube-dos-referidos/images/juliana-daleva.jpg',
-  '/clube-dos-referidos/images/icon-192.png',
-  '/clube-dos-referidos/images/icon-512.png',
-  '/clube-dos-referidos/CMS/data/content.json',
-  '/clube-dos-referidos/manifest.json'
+  '/',
+  '/index.html',
+  '/dashboard.html',
+  '/videoaulas.html',
+  '/ebooks.html',
+  '/arquivos.html',
+  '/fotos.html',
+  '/membros.html',
+  '/sobre.html',
+  '/css/global.css',
+  '/js/auth.js',
+  '/js/sidebar.js',
+  '/js/supabase-config.js',
+  '/js/data/videos.js',
+  '/js/data/ebooks.js',
+  '/js/data/arquivos.js',
+  '/images/logo.png',
+  '/images/emblema.png',
+  '/images/gustavo-lima.jpg',
+  '/images/juliana-daleva.jpg',
+  '/images/icon-192.png',
+  '/images/icon-512.png',
+  '/CMS/data/content.json',
+  '/manifest.json'
 ];
 
 // ── INSTALL: guarda os arquivos no cache ──────────────────────────────────────
@@ -65,7 +65,7 @@ self.addEventListener('fetch', event => {
   const url = new URL(event.request.url);
 
   // Ignora requisições externas (Supabase, Google Fonts, etc.)
-  if (!url.hostname.includes('github.io') && url.hostname !== location.hostname) {
+  if (url.hostname !== location.hostname) {
     return;
   }
 
