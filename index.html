@@ -4,6 +4,16 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Clube dos Referidos — Área de Membros</title>
+
+  <!-- PWA -->
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#00C8E8">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="CdR">
+  <link rel="apple-touch-icon" href="images/apple-touch-icon.png">
+
   <link rel="stylesheet" href="css/global.css">
   <style>
     body {
@@ -1768,6 +1778,17 @@
     .then(c => applyContent(c))
     .catch(() => {}); /* fallback: mantém conteúdo estático do HTML */
 })();
+</script>
+
+<!-- PWA — Service Worker -->
+<script>
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('/clube-dos-referidos/sw.js')
+      .then(reg => console.log('[PWA] Service Worker registrado:', reg.scope))
+      .catch(err => console.warn('[PWA] Falha no registro:', err));
+  });
+}
 </script>
 </body>
 </html>
