@@ -1204,13 +1204,16 @@ ${customCss}
       };
       const manifestB64 = btoa(unescape(encodeURIComponent(JSON.stringify(manifest, null, 2) + '\n')));
 
-      await Promise.all([
-        uploadIconGitHub(token, 'images/icon-192.png', b192, sha192),
-        uploadIconGitHub(token, 'images/icon-512.png',  b512, sha512),
-        uploadIconGitHub(token, 'images/apple-touch-icon.png', b180, sha180),
-        uploadIconGitHub(token, 'apple-touch-icon.png', b180, shaApple),
-        uploadIconGitHub(token, 'manifest.json', manifestB64, shaManifest)
-      ]);
+      // Upload sequencial para evitar conflito 409 no GitHub
+      status.textContent = 'Salvando ícone 192px...';
+      await uploadIconGitHub(token, 'images/icon-192.png', b192, sha192);
+      status.textContent = 'Salvando ícone 512px...';
+      await uploadIconGitHub(token, 'images/icon-512.png', b512, sha512);
+      status.textContent = 'Salvando ícone Apple...';
+      await uploadIconGitHub(token, 'images/apple-touch-icon.png', b180, sha180);
+      await uploadIconGitHub(token, 'apple-touch-icon.png', b180, shaApple);
+      status.textContent = 'Salvando manifest...';
+      await uploadIconGitHub(token, 'manifest.json', manifestB64, shaManifest);
 
       status.textContent = 'Salvo! Reinstale o app no celular.';
       status.style.color = '#00e676';
