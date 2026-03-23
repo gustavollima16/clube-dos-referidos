@@ -1222,6 +1222,21 @@ ${customCss}
       status.textContent = 'Salvando manifest...';
       await uploadGitHub(token, 'manifest.json', manifestB64);
 
+      // Bump ?v= no apple-touch-icon do index.html para iOS buscar ícone novo
+      status.textContent = 'Atualizando versão do ícone...';
+      const idxUrl = `https://api.github.com/repos/${GH_OWNER}/${GH_REPO}/contents/index.html?ref=${GH_BRANCH}&_=${Date.now()}`;
+      const idxRes = await fetch(idxUrl, { headers: { 'Authorization': `token ${token}`, 'Accept': 'application/vnd.github.v3+json' } });
+      const idxData = await idxRes.json();
+      const bytes = new Uint8Array(atob(idxData.content.replace(/\n/g,'')).split('').map(c=>c.charCodeAt(0)));
+      let idxContent = new TextDecoder('utf-8').decode(bytes);
+      idxContent = idxContent.replace(/href="\/apple-touch-icon\.png\?v=(\d+)"/, (_, v) => `href="/apple-touch-icon.png?v=${+v+1}"`);
+      if (!idxContent.includes('apple-touch-icon.png?v=')) {
+        idxContent = idxContent.replace(/href="\/apple-touch-icon\.png"/, 'href="/apple-touch-icon.png?v=1"');
+      }
+      const enc = new TextEncoder().encode(idxContent);
+      const idxB64 = btoa(Array.from(enc).map(b=>String.fromCharCode(b)).join(''));
+      await uploadGitHub(token, 'index.html', idxB64);
+
       status.textContent = 'Salvo! Reinstale o app no celular.';
       status.style.color = '#00e676';
       setTimeout(() => { status.textContent = ''; status.style.color = '#00C8E8'; }, 4000);
