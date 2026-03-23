@@ -1,12 +1,12 @@
 {
   "name": "Clube dos Referidos",
-  "short_name": "Gustavo Lima",
+  "short_name": "Referidos",
   "description": "A comunidade dos melhores vendedores do Brasil",
   "start_url": "/",
   "scope": "/",
   "display": "standalone",
   "orientation": "portrait-primary",
-  "background_color": "#fcfcfc",
+  "background_color": "#000000",
   "theme_color": "#00c8e8",
   "lang": "pt-BR",
   "icons": [
