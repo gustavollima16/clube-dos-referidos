@@ -764,7 +764,15 @@
         </div>
         <div class="color-row">
           <label>Cor de fundo do ícone</label>
-          <input type="color" id="pwa-bg" value="#000000">
+          <input type="color" id="pwa-bg" value="#000000" oninput="previewIcone()">
+        </div>
+        <div class="control">
+          <label>Tamanho da logo — <span id="pwa-logo-val">120</span>%</label>
+          <input type="range" id="pwa-logo-size" min="60" max="130" step="5" value="120" oninput="document.getElementById('pwa-logo-val').textContent=this.value; previewIcone()">
+        </div>
+        <div style="text-align:center;margin:8px 0 4px;">
+          <canvas id="pwa-preview-canvas" width="96" height="96" style="border-radius:20px;border:1px solid #333;"></canvas>
+          <div style="font-size:10px;opacity:.5;margin-top:4px;">Prévia do ícone</div>
         </div>
         <button onclick="salvarPWA()" style="margin-top:10px;width:100%;padding:8px;background:#00C8E8;color:#000;border:none;border-radius:8px;font-weight:700;font-size:13px;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px;" id="btn-salvar-pwa">
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 16 12 12 8 16"/><line x1="12" y1="12" x2="12" y2="21"/><path d="M20.39 18.39A5 5 0 0 0 18 9h-1.26A8 8 0 1 0 3 16.3"/></svg>
@@ -1072,55 +1080,141 @@ ${customCss}
     }
   }
 
-  /* ── PWA — SALVAR MANIFEST.JSON ── */
+  /* ── PWA — GERA ÍCONE VIA CANVAS ── */
+  let _logoImg = null;
+
+  function carregarLogoImg() {
+    return new Promise((resolve) => {
+      if (_logoImg) { resolve(_logoImg); return; }
+      const img = new Image();
+      img.crossOrigin = 'anonymous';
+      img.onload = () => { _logoImg = img; resolve(img); };
+      img.onerror = () => resolve(null);
+      img.src = 'images/logo.png?' + Date.now();
+    });
+  }
+
+  async function gerarIconeBase64(size) {
+    const logo = await carregarLogoImg();
+    const bg   = document.getElementById('pwa-bg').value;
+    const pct  = parseFloat(document.getElementById('pwa-logo-size').value) / 100;
+
+    const canvas = document.createElement('canvas');
+    canvas.width  = size;
+    canvas.height = size;
+    const ctx = canvas.getContext('2d');
+
+    ctx.fillStyle = bg;
+    ctx.fillRect(0, 0, size, size);
+
+    if (logo) {
+      const drawSize = Math.round(size * pct);
+      const offset   = Math.round((size - drawSize) / 2);
+      ctx.drawImage(logo, offset, offset, drawSize, drawSize);
+    }
+
+    // Retorna base64 sem o prefixo data:image/png;base64,
+    return canvas.toDataURL('image/png').split(',')[1];
+  }
+
+  async function previewIcone() {
+    const logo = await carregarLogoImg();
+    const bg   = document.getElementById('pwa-bg').value;
+    const pct  = parseFloat(document.getElementById('pwa-logo-size').value) / 100;
+    const c    = document.getElementById('pwa-preview-canvas');
+    const ctx  = c.getContext('2d');
+    const size = 96;
+
+    ctx.fillStyle = bg;
+    ctx.fillRect(0, 0, size, size);
+    if (logo) {
+      const drawSize = Math.round(size * pct);
+      const offset   = Math.round((size - drawSize) / 2);
+      ctx.drawImage(logo, offset, offset, drawSize, drawSize);
+    }
+  }
+
+  async function uploadIconGitHub(token, filename, base64, existingSha) {
+    const url = `https://api.github.com/repos/${GH_OWNER}/${GH_REPO}/contents/${filename}`;
+    const body = { message: `Editor: atualiza ${filename}`, content: base64, branch: GH_BRANCH };
+    if (existingSha) body.sha = existingSha;
+    const res = await fetch(url, {
+      method: 'PUT',
+      headers: { 'Authorization': `token ${token}`, 'Content-Type': 'application/json' },
+      body: JSON.stringify(body)
+    });
+    if (!res.ok) throw new Error(`Erro ao salvar ${filename}: ${res.status}`);
+    return res.json();
+  }
+
+  async function getSha(token, filename) {
+    const res = await fetch(`https://api.github.com/repos/${GH_OWNER}/${GH_REPO}/contents/${filename}?ref=${GH_BRANCH}`, {
+      headers: { 'Authorization': `token ${token}`, 'Accept': 'application/vnd.github.v3+json' }
+    });
+    if (!res.ok) return null;
+    const d = await res.json();
+    return d.sha || null;
+  }
+
+  /* ── PWA — SALVAR MANIFEST + ÍCONES ── */
   async function salvarPWA() {
     const token = localStorage.getItem('cms_gh_pat');
     if (!token) { document.getElementById('modal-token').classList.add('show'); return; }
 
-    const btn = document.getElementById('btn-salvar-pwa');
+    const btn    = document.getElementById('btn-salvar-pwa');
     const status = document.getElementById('pwa-status');
     btn.disabled = true;
-    status.textContent = 'Salvando...';
+    status.style.color = '#00C8E8';
+    status.textContent = 'Gerando ícones...';
 
     try {
+      // Gera os 3 ícones via Canvas
+      const [b192, b512, b180] = await Promise.all([
+        gerarIconeBase64(192),
+        gerarIconeBase64(512),
+        gerarIconeBase64(180)
+      ]);
+
+      status.textContent = 'Salvando no GitHub...';
+
+      // Busca SHAs atuais em paralelo
+      const [sha192, sha512, sha180, shaApple, shaManifest] = await Promise.all([
+        getSha(token, 'images/icon-192.png'),
+        getSha(token, 'images/icon-512.png'),
+        getSha(token, 'images/apple-touch-icon.png'),
+        getSha(token, 'apple-touch-icon.png'),
+        getSha(token, 'manifest.json')
+      ]);
+
+      // Upload dos ícones e manifest em paralelo
       const manifest = {
         name: document.getElementById('pwa-name').value.trim() || 'Clube dos Referidos',
         short_name: document.getElementById('pwa-short').value.trim() || 'Referidos',
         description: 'A comunidade dos melhores vendedores do Brasil',
-        start_url: '/',
-        scope: '/',
-        display: 'standalone',
+        start_url: '/', scope: '/', display: 'standalone',
         orientation: 'portrait-primary',
         background_color: document.getElementById('pwa-bg').value,
         theme_color: document.getElementById('pwa-theme').value,
         lang: 'pt-BR',
         icons: [
           { src: 'images/icon-192.png', sizes: '192x192', type: 'image/png', purpose: 'any maskable' },
-          { src: 'images/icon-512.png', sizes: '512x512', type: 'image/png', purpose: 'any maskable' }
+          { src: 'images/icon-512.png',  sizes: '512x512', type: 'image/png', purpose: 'any maskable' }
         ],
-        screenshots: [],
-        categories: ['business', 'education']
+        screenshots: [], categories: ['business', 'education']
       };
+      const manifestB64 = btoa(unescape(encodeURIComponent(JSON.stringify(manifest, null, 2) + '\n')));
 
-      // Busca SHA atual do manifest.json
-      const res = await fetch(`https://api.github.com/repos/${GH_OWNER}/${GH_REPO}/contents/manifest.json?ref=${GH_BRANCH}`, {
-        headers: { 'Authorization': `token ${token}`, 'Accept': 'application/vnd.github.v3+json' }
-      });
-      if (!res.ok) throw new Error('Erro ao buscar manifest.json: ' + res.status);
-      const data = await res.json();
+      await Promise.all([
+        uploadIconGitHub(token, 'images/icon-192.png', b192, sha192),
+        uploadIconGitHub(token, 'images/icon-512.png',  b512, sha512),
+        uploadIconGitHub(token, 'images/apple-touch-icon.png', b180, sha180),
+        uploadIconGitHub(token, 'apple-touch-icon.png', b180, shaApple),
+        uploadIconGitHub(token, 'manifest.json', manifestB64, shaManifest)
+      ]);
 
-      const encoded = btoa(unescape(encodeURIComponent(JSON.stringify(manifest, null, 2) + '\n')));
-
-      const put = await fetch(`https://api.github.com/repos/${GH_OWNER}/${GH_REPO}/contents/manifest.json`, {
-        method: 'PUT',
-        headers: { 'Authorization': `token ${token}`, 'Content-Type': 'application/json' },
-        body: JSON.stringify({ message: 'Editor: atualiza PWA manifest', content: encoded, sha: data.sha, branch: GH_BRANCH })
-      });
-      if (!put.ok) throw new Error('Erro ao salvar: ' + put.status);
-
-      status.textContent = 'Salvo com sucesso!';
+      status.textContent = 'Salvo! Reinstale o app no celular.';
       status.style.color = '#00e676';
-      setTimeout(() => { status.textContent = ''; status.style.color = '#00C8E8'; }, 3000);
+      setTimeout(() => { status.textContent = ''; status.style.color = '#00C8E8'; }, 4000);
     } catch(e) {
       status.textContent = 'Erro: ' + e.message;
       status.style.color = '#ff5252';
@@ -1134,10 +1228,11 @@ ${customCss}
       const res = await fetch('manifest.json?' + Date.now());
       if (!res.ok) return;
       const m = await res.json();
-      if (m.name) document.getElementById('pwa-name').value = m.name;
-      if (m.short_name) document.getElementById('pwa-short').value = m.short_name;
-      if (m.theme_color) document.getElementById('pwa-theme').value = m.theme_color;
-      if (m.background_color) document.getElementById('pwa-bg').value = m.background_color;
+      if (m.name)             document.getElementById('pwa-name').value  = m.name;
+      if (m.short_name)       document.getElementById('pwa-short').value = m.short_name;
+      if (m.theme_color)      document.getElementById('pwa-theme').value = m.theme_color;
+      if (m.background_color) document.getElementById('pwa-bg').value    = m.background_color;
+      setTimeout(previewIcone, 500); // aguarda logo carregar
     } catch(e) {}
   }
 
