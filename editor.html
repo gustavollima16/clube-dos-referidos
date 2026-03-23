@@ -887,35 +887,92 @@
     injectStyle();
   }
 
-  function buildFullCSS() {
-    const accent = strVal('c-accent') || '#00C8E8';
-    const ctaBg = strVal('c-cta-bg') || '#00C8E8';
-    const bgSection = strVal('c-bg-section') || '#0a0a0e';
-    const bgFooter = strVal('c-bg-footer') || '#000000';
-    const bgCard = strVal('c-bg-card') || '#111111';
-    const stars = strVal('c-stars') || '#00C8E8';
-    const inputBg = strVal('c-input-bg') || '#1a1a1a';
-    const scrollbar = strVal('c-scrollbar') || '#00C8E8';
-    const selection = strVal('c-selection') || '#003040';
-    const fontDisplay = strVal('font-display') || 'Space Grotesk';
-    const fontBody = strVal('font-body') || 'Inter';
-    const customCss = strVal('custom-css') || '';
+  // Controles que foram carregados do site ou alterados pelo usuário
+  const _loadedControls = new Set();
+  const _dirtyControls  = new Set();
+  // Detecta qualquer mudança feita pelo usuário no painel
+  document.addEventListener('DOMContentLoaded', () => {
+    const panelBody = document.getElementById('panel-body');
+    if (panelBody) {
+      panelBody.addEventListener('input',  e => { if (e.target?.id) _dirtyControls.add(e.target.id); });
+      panelBody.addEventListener('change', e => { if (e.target?.id) _dirtyControls.add(e.target.id); });
+    }
+  });
+  // true se o controle foi carregado do site OU o usuário mexeu nele
+  const inc = id => _loadedControls.has(id) || _dirtyControls.has(id);
 
-    // Google Fonts import
-    const fontsNeeded = [];
-    if (fontDisplay !== 'Space Grotesk') fontsNeeded.push(fontDisplay.replace(/ /g, '+') + ':wght@400;700');
-    if (fontBody !== 'Inter') fontsNeeded.push(fontBody.replace(/ /g, '+') + ':wght@400;500;600');
-    const importLine = fontsNeeded.length > 0
-      ? `@import url('https://fonts.googleapis.com/css2?family=${fontsNeeded.join('&family=')}&display=swap');`
-      : '';
+  function buildFullCSS() {
+    const accent      = strVal('c-accent')    || '#00C8E8';
+    const ctaBg       = strVal('c-cta-bg')    || '#00C8E8';
+    const stars       = strVal('c-stars')     || '#00C8E8';
+    const scrollbar   = strVal('c-scrollbar') || '#00C8E8';
+    const selection   = strVal('c-selection') || '#003040';
+    const fontDisplay = strVal('font-display') || 'Space Grotesk';
+    const fontBody    = strVal('font-body')    || 'Inter';
+    const customCss   = strVal('custom-css')   || '';
+
+    // ── Seções opcionais (só incluídas se o usuário carregou ou alterou) ──────
+    const lines = [];
+
+    // :root — só se cor/fonte foi alterada
+    if (inc('c-accent') || inc('font-display') || inc('font-body')) {
+      const fontsNeeded = [];
+      if (fontDisplay !== 'Space Grotesk') fontsNeeded.push(fontDisplay.replace(/ /g,'+') + ':wght@400;700');
+      if (fontBody    !== 'Inter')         fontsNeeded.push(fontBody.replace(/ /g,'+')    + ':wght@400;500;600');
+      if (fontsNeeded.length) lines.push(`@import url('https://fonts.googleapis.com/css2?family=${fontsNeeded.join('&family=')}&display=swap');`);
+      lines.push(`:root {\n  --accent: ${accent};\n  --font-display: '${fontDisplay}', sans-serif;\n  --font-body: '${fontBody}', sans-serif;\n}`);
+    }
+
+    // Cores
+    if (inc('c-cta-bg'))   lines.push(`.btn-primary, .btn-primary { background: ${ctaBg} !important; }`);
+    if (inc('c-stars'))    lines.push(`.depo-stars { color: ${stars} !important; }`);
+    if (inc('neon-blur'))  lines.push(`.hero-title .highlight { color: var(--accent); text-shadow: 0 0 ${val('neon-blur')}px rgba(0,200,232,0.5); }`);
+    if (inc('c-scrollbar')) lines.push(`::-webkit-scrollbar-thumb { background: ${scrollbar}; }`);
+    if (inc('c-selection')) lines.push(`::selection { background: ${selection}; }`);
+
+    // Tipografia
+    if (inc('hero-title-size') || inc('font-display')) lines.push(`.hero-title { font-size: ${val('hero-title-size')}rem; font-family: var(--font-display); }`);
+    if (inc('hero-sub-size')   || inc('body-lh'))      lines.push(`.hero-subtitle { font-size: ${val('hero-sub-size')}rem; line-height: ${val('body-lh')}; }`);
+    if (inc('section-title-size') || inc('heading-ls')) lines.push(`.lp-title, .section-title { font-size: ${val('section-title-size')}rem; letter-spacing: ${val('heading-ls')}px; }`);
+    if (inc('body-lh') || inc('font-body'))            lines.push(`body { line-height: ${val('body-lh')}; font-family: var(--font-body); }`);
+
+    // Layout
+    if (inc('hero-min-h')) lines.push(`.hero-panel { min-height: ${val('hero-min-h')}px; }`);
+    if (inc('navbar-h'))   lines.push(`.top-nav { height: ${val('navbar-h')}px; }`);
+
+    // Espaçamentos
+    if (inc('section-pad')) lines.push(`.lp-section { padding-top: ${val('section-pad')}px; padding-bottom: ${val('section-pad')}px; }`);
+    if (inc('card-gap'))  { lines.push(`.benefits-grid { gap: ${val('card-gap')}px; }`); lines.push(`.depo-grid { gap: ${val('card-gap')}px; }`); }
+    if (inc('btn-px') || inc('btn-py')) lines.push(`.btn-primary { padding: ${val('btn-py')}px ${val('btn-px')}px; }`);
+
+    // Elementos
+    if (inc('card-radius'))   lines.push(`.benefit-card, .depo-card, .mentor-card { border-radius: ${val('card-radius')}px; }`);
+    if (inc('btn-radius'))    lines.push(`.btn, .btn-primary { border-radius: ${val('btn-radius')}px; }`);
+    if (inc('card-shadow'))   lines.push(`.benefit-card { box-shadow: 0 4px ${val('card-shadow')}px rgba(0,0,0,0.4); }`);
+    if (inc('mentor-radius')) lines.push(`.mentor-photo-wrap { border-radius: ${val('mentor-radius')}%; overflow: hidden; }\n.mentor-photo { border-radius: ${val('mentor-radius')}%; }\n.mentor-photo-border { border-radius: ${val('mentor-radius')}%; }`);
+    if (inc('anim-speed'))    lines.push(`* { transition-duration: ${val('anim-speed')}s; }`);
+
+    // Mobile opcional
+    const mobLines = [];
+    if (inc('hero-title-m'))     mobLines.push(`  .hero-title { font-size: ${val('hero-title-m')}rem; }`);
+    if (inc('hero-sub-m'))       mobLines.push(`  .hero-subtitle { font-size: ${val('hero-sub-m')}rem; }`);
+    if (inc('section-title-m'))  mobLines.push(`  .lp-title { font-size: ${val('section-title-m')}rem; }`);
+    if (inc('hero-min-h-m'))     mobLines.push(`  .landing-hero { min-height: ${val('hero-min-h-m')}px; }`);
+    if (inc('section-pad-m'))    mobLines.push(`  .lp-section { padding-top: ${val('section-pad-m')}px; padding-bottom: ${val('section-pad-m')}px; }`);
+    if (inc('card-gap-m'))       mobLines.push(`  .benefits-grid, .depo-grid, .mentores-grid { gap: ${val('card-gap-m')}px; }`);
+    if (inc('btn-px-m') || inc('btn-py-m') || inc('btn-radius-m')) mobLines.push(`  .btn, .btn-primary { padding: ${val('btn-py-m')}px ${val('btn-px-m')}px; border-radius: ${val('btn-radius-m')}px; }`);
+
+    // ── Bloco sempre presente (marca d'água + logos) ──────────────────────────
+    const optionalCss = lines.length ? lines.join('\n') + '\n' : '';
+    const mobileCoreLines = [
+      `  .hero-watermark { top: ${val('mwm-top')}%; left: ${val('mwm-left')}%; width: ${val('mwm-size')}%; }`,
+      `  .hero-subtitle { margin-top: ${val('sub-mt')}rem; }`,
+      `  .nav-logo img { height: ${val('nav-logo')}px; }`,
+      `  .footer-logo { height: ${val('footer-logo')}px; margin-top: ${val('footer-mt')}rem; }`,
+      ...mobLines
+    ];
 
     return `/* EDITOR-START */
-${importLine}
-:root {
-  --accent: ${accent};
-  --font-display: '${fontDisplay}', sans-serif;
-  --font-body: '${fontBody}', sans-serif;
-}
 /* Watermark */
 .hero-watermark {
   position: absolute;
@@ -932,46 +989,9 @@ ${importLine}
 .hero-subtitle { margin-top: ${val('sub-mt-d')}rem; }
 .nav-logo img { height: ${val('nav-logo-d')}px; }
 .footer-logo { height: ${val('footer-logo-d')}px; }
-/* Colors */
-.btn-primary, .btn-primary { background: ${ctaBg} !important; }
-.depo-stars { color: ${stars} !important; }
-.hero-title .highlight { color: var(--accent); text-shadow: 0 0 ${val('neon-blur')}px rgba(0,200,232,0.5); }
-/* Typography */
-.hero-title { font-size: ${val('hero-title-size')}rem; font-family: var(--font-display); }
-.hero-subtitle { font-size: ${val('hero-sub-size')}rem; line-height: ${val('body-lh')}; }
-.lp-title, .section-title { font-size: ${val('section-title-size')}rem; letter-spacing: ${val('heading-ls')}px; }
-body { line-height: ${val('body-lh')}; font-family: var(--font-body); }
-/* Layout */
-.hero-panel { min-height: ${val('hero-min-h')}px; }
-.top-nav { height: ${val('navbar-h')}px; }
-/* Spacing */
-.lp-section { padding-top: ${val('section-pad')}px; padding-bottom: ${val('section-pad')}px; }
-.benefits-grid { gap: ${val('card-gap')}px; }
-.depo-grid { gap: ${val('card-gap')}px; }
-.btn-primary { padding: ${val('btn-py')}px ${val('btn-px')}px; }
-/* Elements */
-.benefit-card, .depo-card, .mentor-card { border-radius: ${val('card-radius')}px; }
-.btn, .btn-primary { border-radius: ${val('btn-radius')}px; }
-.benefit-card { box-shadow: 0 4px ${val('card-shadow')}px rgba(0,0,0,0.4); }
-.mentor-photo-wrap { border-radius: ${val('mentor-radius')}%; overflow: hidden; }
-.mentor-photo { border-radius: ${val('mentor-radius')}%; }
-.mentor-photo-border { border-radius: ${val('mentor-radius')}%; }
-* { transition-duration: ${val('anim-speed')}s; }
-/* Scrollbar */
-::-webkit-scrollbar-thumb { background: ${scrollbar}; }
-::selection { background: ${selection}; }
-/* Mobile */
+${optionalCss}/* Mobile */
 @media (max-width: 900px) {
-  .hero-watermark { top: ${val('mwm-top')}%; left: ${val('mwm-left')}%; width: ${val('mwm-size')}%; }
-  .hero-subtitle { margin-top: ${val('sub-mt')}rem; font-size: ${val('hero-sub-m')}rem; }
-  .nav-logo img { height: ${val('nav-logo')}px; }
-  .footer-logo { height: ${val('footer-logo')}px; margin-top: ${val('footer-mt')}rem; }
-  .hero-title { font-size: ${val('hero-title-m')}rem; }
-  .lp-title { font-size: ${val('section-title-m')}rem; }
-  .landing-hero { min-height: ${val('hero-min-h-m')}px; }
-  .lp-section { padding-top: ${val('section-pad-m')}px; padding-bottom: ${val('section-pad-m')}px; }
-  .benefits-grid, .depo-grid, .mentores-grid { gap: ${val('card-gap-m')}px; }
-  .btn, .btn-primary { padding: ${val('btn-py-m')}px ${val('btn-px-m')}px; border-radius: ${val('btn-radius-m')}px; }
+${mobileCoreLines.join('\n')}
 }
 /* Custom CSS */
 ${customCss}
