@@ -742,6 +742,38 @@
       </div>
     </div>
 
+    <!-- PWA -->
+    <div class="group">
+      <div class="group-title" onclick="toggleGroup(this)">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="2" width="14" height="20" rx="2"/><line x1="12" y1="18" x2="12.01" y2="18"/></svg>
+        PWA — App no Celular
+        <i class="toggle-arrow">▼</i>
+      </div>
+      <div class="group-body">
+        <div class="control">
+          <label>Nome do app</label>
+          <input type="text" id="pwa-name" value="Clube dos Referidos" style="width:100%;padding:6px 8px;background:#1a1a1a;border:1px solid #333;border-radius:6px;color:#fff;font-size:13px;">
+        </div>
+        <div class="control">
+          <label>Nome curto <span style="opacity:.5;font-size:11px;">(aparece sob o ícone)</span></label>
+          <input type="text" id="pwa-short" value="Referidos" style="width:100%;padding:6px 8px;background:#1a1a1a;border:1px solid #333;border-radius:6px;color:#fff;font-size:13px;">
+        </div>
+        <div class="color-row">
+          <label>Cor do tema <span style="opacity:.5;font-size:11px;">(barra de status)</span></label>
+          <input type="color" id="pwa-theme" value="#00C8E8">
+        </div>
+        <div class="color-row">
+          <label>Cor de fundo do ícone</label>
+          <input type="color" id="pwa-bg" value="#000000">
+        </div>
+        <button onclick="salvarPWA()" style="margin-top:10px;width:100%;padding:8px;background:#00C8E8;color:#000;border:none;border-radius:8px;font-weight:700;font-size:13px;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px;" id="btn-salvar-pwa">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 16 12 12 8 16"/><line x1="12" y1="12" x2="12" y2="21"/><path d="M20.39 18.39A5 5 0 0 0 18 9h-1.26A8 8 0 1 0 3 16.3"/></svg>
+          Salvar PWA no Site
+        </button>
+        <div id="pwa-status" style="font-size:11px;text-align:center;margin-top:6px;color:#00C8E8;min-height:16px;"></div>
+      </div>
+    </div>
+
   </div><!-- /panel-body -->
 
   <div id="btn-area">
@@ -1040,6 +1072,75 @@ ${customCss}
     }
   }
 
+  /* ── PWA — SALVAR MANIFEST.JSON ── */
+  async function salvarPWA() {
+    const token = localStorage.getItem('cms_gh_pat');
+    if (!token) { document.getElementById('modal-token').classList.add('show'); return; }
+
+    const btn = document.getElementById('btn-salvar-pwa');
+    const status = document.getElementById('pwa-status');
+    btn.disabled = true;
+    status.textContent = 'Salvando...';
+
+    try {
+      const manifest = {
+        name: document.getElementById('pwa-name').value.trim() || 'Clube dos Referidos',
+        short_name: document.getElementById('pwa-short').value.trim() || 'Referidos',
+        description: 'A comunidade dos melhores vendedores do Brasil',
+        start_url: '/',
+        scope: '/',
+        display: 'standalone',
+        orientation: 'portrait-primary',
+        background_color: document.getElementById('pwa-bg').value,
+        theme_color: document.getElementById('pwa-theme').value,
+        lang: 'pt-BR',
+        icons: [
+          { src: 'images/icon-192.png', sizes: '192x192', type: 'image/png', purpose: 'any maskable' },
+          { src: 'images/icon-512.png', sizes: '512x512', type: 'image/png', purpose: 'any maskable' }
+        ],
+        screenshots: [],
+        categories: ['business', 'education']
+      };
+
+      // Busca SHA atual do manifest.json
+      const res = await fetch(`https://api.github.com/repos/${GH_OWNER}/${GH_REPO}/contents/manifest.json?ref=${GH_BRANCH}`, {
+        headers: { 'Authorization': `token ${token}`, 'Accept': 'application/vnd.github.v3+json' }
+      });
+      if (!res.ok) throw new Error('Erro ao buscar manifest.json: ' + res.status);
+      const data = await res.json();
+
+      const encoded = btoa(unescape(encodeURIComponent(JSON.stringify(manifest, null, 2) + '\n')));
+
+      const put = await fetch(`https://api.github.com/repos/${GH_OWNER}/${GH_REPO}/contents/manifest.json`, {
+        method: 'PUT',
+        headers: { 'Authorization': `token ${token}`, 'Content-Type': 'application/json' },
+        body: JSON.stringify({ message: 'Editor: atualiza PWA manifest', content: encoded, sha: data.sha, branch: GH_BRANCH })
+      });
+      if (!put.ok) throw new Error('Erro ao salvar: ' + put.status);
+
+      status.textContent = 'Salvo com sucesso!';
+      status.style.color = '#00e676';
+      setTimeout(() => { status.textContent = ''; status.style.color = '#00C8E8'; }, 3000);
+    } catch(e) {
+      status.textContent = 'Erro: ' + e.message;
+      status.style.color = '#ff5252';
+    }
+    btn.disabled = false;
+  }
+
+  /* ── CARREGA VALORES DO MANIFEST.JSON ── */
+  async function carregarPWA() {
+    try {
+      const res = await fetch('manifest.json?' + Date.now());
+      if (!res.ok) return;
+      const m = await res.json();
+      if (m.name) document.getElementById('pwa-name').value = m.name;
+      if (m.short_name) document.getElementById('pwa-short').value = m.short_name;
+      if (m.theme_color) document.getElementById('pwa-theme').value = m.theme_color;
+      if (m.background_color) document.getElementById('pwa-bg').value = m.background_color;
+    } catch(e) {}
+  }
+
   iframe.addEventListener('load', injectStyle);
 
   /* ── CARREGA VALORES REAIS DO INDEX.HTML ── */
@@ -1120,6 +1221,7 @@ ${customCss}
   }
 
   carregarValoresReais();
+  carregarPWA();
 
   // ── DRAG TO MOVE ──
   const header = document.getElementById('panel-header');
@@ -1166,14 +1268,14 @@ const TARGET_MAP = {
   'mwm-size':          { sel: '.hero-watermark', label: 'Marca d\'água (Mobile)' },
   'sub-mt-d':          { sel: '.hero-subtitle', label: 'Subtítulo do Hero' },
   'sub-mt':            { sel: '.hero-subtitle', label: 'Subtítulo do Hero (Mobile)' },
-  'nav-logo-d':        { sel: '.nav-logo img', label: 'Logo da navegação' },
-  'nav-logo':          { sel: '.nav-logo img', label: 'Logo da navegação (Mobile)' },
+  'nav-logo-d':        { sel: 'nav', label: 'Logo da navegação' },
+  'nav-logo':          { sel: 'nav', label: 'Logo da navegação (Mobile)' },
   'footer-logo-d':     { sel: '.footer-logo', label: 'Logo do rodapé' },
   'footer-logo':       { sel: '.footer-logo', label: 'Logo do rodapé (Mobile)' },
   'footer-mt':         { sel: '.footer-logo', label: 'Posição vertical do logo do rodapé' },
-  'c-accent':          { sel: '.hero-highlight', label: 'Cor de destaque (accent)' },
-  'neon-blur':         { sel: '.hero-highlight', label: 'Efeito neon "REFERIDOS"' },
-  'c-cta-bg':          { sel: 'nav .btn-primary', label: 'Botão "Área de Membros" na nav' },
+  'c-accent':          { sel: '.hero-title .highlight', label: 'Cor de destaque — "REFERIDOS"' },
+  'neon-blur':         { sel: '.hero-title .highlight', label: 'Efeito neon — "REFERIDOS"' },
+  'c-cta-bg':          { sel: '.nav-cta a', label: 'Botão "Área de Membros" na nav' },
   'c-bg-section':      { sel: '#somos', label: 'Fundo das seções alternadas' },
   'c-bg-footer':       { sel: '.site-footer', label: 'Fundo do rodapé' },
   'c-bg-card':         { sel: '.benefit-card', label: 'Cards de benefícios' },
@@ -1186,7 +1288,7 @@ const TARGET_MAP = {
   'section-title-size':{ sel: '.lp-title', label: 'Tamanho dos títulos de seção' },
   'heading-ls':        { sel: '.hero-title', label: 'Espaçamento entre letras (headings)' },
   'body-lh':           { sel: '.lp-subtitle', label: 'Altura da linha do texto' },
-  'hero-min-h':        { sel: '.landing-hero', label: 'Altura da seção Hero' },
+  'hero-min-h':        { sel: '.hero-panel', label: 'Altura da seção Hero' },
   'navbar-h':          { sel: 'nav', label: 'Barra de navegação' },
   'section-pad':       { sel: '.lp-section', label: 'Espaçamento interno das seções' },
   'card-gap':          { sel: '.benefits-grid', label: 'Espaço entre os cards de benefícios' },
@@ -1200,7 +1302,7 @@ const TARGET_MAP = {
   'hero-title-m':      { sel: '.hero-title', label: 'Título Hero — tamanho mobile' },
   'hero-sub-m':        { sel: '.hero-subtitle', label: 'Subtítulo Hero — tamanho mobile' },
   'section-title-m':   { sel: '.lp-title', label: 'Títulos de seção — tamanho mobile' },
-  'hero-min-h-m':      { sel: '.landing-hero', label: 'Altura mínima do Hero (Mobile)' },
+  'hero-min-h-m':      { sel: '.hero-panel', label: 'Altura mínima do Hero (Mobile)' },
   'section-pad-m':     { sel: '.lp-section', label: 'Padding das seções (Mobile)' },
   'card-gap-m':        { sel: '.benefits-grid', label: 'Espaço entre cards (Mobile)' },
   'btn-px-m':          { sel: '.btn-primary', label: 'Botões — padding horizontal (Mobile)' },
