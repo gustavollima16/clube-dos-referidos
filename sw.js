@@ -1,41 +1,24 @@
 // ===== SERVICE WORKER — Clube dos Referidos =====
 // Atualiza automaticamente quando o site é publicado no GitHub Pages
 
-const CACHE_NAME = 'cdr-v3';
+const CACHE_NAME = 'cdr-v4';
 
-// Arquivos que ficam em cache para funcionar sem internet
-const STATIC_ASSETS = [
-  '/',
-  '/index.html',
-  '/dashboard.html',
-  '/videoaulas.html',
-  '/ebooks.html',
-  '/arquivos.html',
-  '/fotos.html',
-  '/membros.html',
-  '/sobre.html',
-  '/css/global.css',
-  '/js/auth.js',
-  '/js/sidebar.js',
-  '/js/supabase-config.js',
-  '/js/data/videos.js',
-  '/js/data/ebooks.js',
-  '/js/data/arquivos.js',
+// Apenas imagens ficam em cache (não mudam com frequência)
+const IMAGE_ASSETS = [
   '/images/logo.png',
   '/images/emblema.png',
   '/images/gustavo-lima.jpg',
   '/images/juliana-daleva.jpg',
   '/images/icon-192.png',
   '/images/icon-512.png',
-  '/CMS/data/content.json',
-  '/manifest.json'
+  '/apple-touch-icon.png'
 ];
 
-// ── INSTALL: guarda os arquivos no cache ──────────────────────────────────────
+// ── INSTALL: guarda só imagens no cache ──────────────────────────────────────
 self.addEventListener('install', event => {
   event.waitUntil(
     caches.open(CACHE_NAME).then(cache => {
-      return cache.addAll(STATIC_ASSETS).catch(err => {
+      return cache.addAll(IMAGE_ASSETS).catch(err => {
         console.warn('[SW] Alguns arquivos não puderam ser cacheados:', err);
       });
     })
@@ -60,7 +43,7 @@ self.addEventListener('activate', event => {
   self.clients.claim();
 });
 
-// ── FETCH: estratégia por tipo de recurso ─────────────────────────────────────
+// ── FETCH: Network First para tudo, Cache First só para imagens ───────────────
 self.addEventListener('fetch', event => {
   const url = new URL(event.request.url);
 
@@ -69,31 +52,33 @@ self.addEventListener('fetch', event => {
     return;
   }
 
-  // HTML → Network First (garante conteúdo sempre atualizado)
-  if (event.request.headers.get('accept')?.includes('text/html')) {
+  // Imagens → Cache First (não mudam com frequência)
+  if (url.pathname.match(/\.(png|jpg|jpeg|gif|webp|svg|ico)$/i)) {
     event.respondWith(
-      fetch(event.request)
-        .then(response => {
-          const clone = response.clone();
-          caches.open(CACHE_NAME).then(cache => cache.put(event.request, clone));
+      caches.match(event.request).then(cached => {
+        if (cached) return cached;
+        return fetch(event.request).then(response => {
+          if (response.ok) {
+            const clone = response.clone();
+            caches.open(CACHE_NAME).then(cache => cache.put(event.request, clone));
+          }
           return response;
-        })
-        .catch(() => caches.match(event.request))
+        });
+      })
     );
     return;
   }
 
-  // Demais assets → Cache First (rápido, atualiza em background)
+  // HTML, CSS, JS, JSON → Network First (sempre atualizado)
   event.respondWith(
-    caches.match(event.request).then(cached => {
-      const networkFetch = fetch(event.request).then(response => {
+    fetch(event.request)
+      .then(response => {
         if (response.ok) {
           const clone = response.clone();
           caches.open(CACHE_NAME).then(cache => cache.put(event.request, clone));
         }
         return response;
-      });
-      return cached || networkFetch;
-    })
+      })
+      .catch(() => caches.match(event.request))
   );
 });
