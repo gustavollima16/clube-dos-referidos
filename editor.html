@@ -1134,26 +1134,25 @@ ${customCss}
     }
   }
 
-  async function uploadIconGitHub(token, filename, base64, existingSha) {
-    const url = `https://api.github.com/repos/${GH_OWNER}/${GH_REPO}/contents/${filename}`;
-    const body = { message: `Editor: atualiza ${filename}`, content: base64, branch: GH_BRANCH };
-    if (existingSha) body.sha = existingSha;
-    const res = await fetch(url, {
+  async function uploadGitHub(token, filename, base64) {
+    const url     = `https://api.github.com/repos/${GH_OWNER}/${GH_REPO}/contents/${filename}`;
+    const authHdr = { 'Authorization': `token ${token}`, 'Accept': 'application/vnd.github.v3+json' };
+
+    // Sempre busca o SHA fresco imediatamente antes de salvar
+    const getRes = await fetch(`${url}?ref=${GH_BRANCH}&_=${Date.now()}`, { headers: authHdr });
+    const body   = { message: `Editor PWA: ${filename}`, content: base64, branch: GH_BRANCH };
+    if (getRes.ok) {
+      const d = await getRes.json();
+      if (d.sha) body.sha = d.sha;
+    }
+
+    const putRes = await fetch(url, {
       method: 'PUT',
       headers: { 'Authorization': `token ${token}`, 'Content-Type': 'application/json' },
       body: JSON.stringify(body)
     });
-    if (!res.ok) throw new Error(`Erro ao salvar ${filename}: ${res.status}`);
-    return res.json();
-  }
-
-  async function getSha(token, filename) {
-    const res = await fetch(`https://api.github.com/repos/${GH_OWNER}/${GH_REPO}/contents/${filename}?ref=${GH_BRANCH}`, {
-      headers: { 'Authorization': `token ${token}`, 'Accept': 'application/vnd.github.v3+json' }
-    });
-    if (!res.ok) return null;
-    const d = await res.json();
-    return d.sha || null;
+    if (!putRes.ok) throw new Error(`Erro ao salvar ${filename}: ${putRes.status}`);
+    return putRes.json();
   }
 
   /* ── PWA — SALVAR MANIFEST + ÍCONES ── */
@@ -1175,18 +1174,6 @@ ${customCss}
         gerarIconeBase64(180)
       ]);
 
-      status.textContent = 'Salvando no GitHub...';
-
-      // Busca SHAs atuais em paralelo
-      const [sha192, sha512, sha180, shaApple, shaManifest] = await Promise.all([
-        getSha(token, 'images/icon-192.png'),
-        getSha(token, 'images/icon-512.png'),
-        getSha(token, 'images/apple-touch-icon.png'),
-        getSha(token, 'apple-touch-icon.png'),
-        getSha(token, 'manifest.json')
-      ]);
-
-      // Upload dos ícones e manifest em paralelo
       const manifest = {
         name: document.getElementById('pwa-name').value.trim() || 'Clube dos Referidos',
         short_name: document.getElementById('pwa-short').value.trim() || 'Referidos',
@@ -1204,16 +1191,16 @@ ${customCss}
       };
       const manifestB64 = btoa(unescape(encodeURIComponent(JSON.stringify(manifest, null, 2) + '\n')));
 
-      // Upload sequencial para evitar conflito 409 no GitHub
+      // Upload sequencial — cada arquivo busca seu SHA fresco na hora
       status.textContent = 'Salvando ícone 192px...';
-      await uploadIconGitHub(token, 'images/icon-192.png', b192, sha192);
+      await uploadGitHub(token, 'images/icon-192.png', b192);
       status.textContent = 'Salvando ícone 512px...';
-      await uploadIconGitHub(token, 'images/icon-512.png', b512, sha512);
+      await uploadGitHub(token, 'images/icon-512.png', b512);
       status.textContent = 'Salvando ícone Apple...';
-      await uploadIconGitHub(token, 'images/apple-touch-icon.png', b180, sha180);
-      await uploadIconGitHub(token, 'apple-touch-icon.png', b180, shaApple);
+      await uploadGitHub(token, 'images/apple-touch-icon.png', b180);
+      await uploadGitHub(token, 'apple-touch-icon.png', b180);
       status.textContent = 'Salvando manifest...';
-      await uploadIconGitHub(token, 'manifest.json', manifestB64, shaManifest);
+      await uploadGitHub(token, 'manifest.json', manifestB64);
 
       status.textContent = 'Salvo! Reinstale o app no celular.';
       status.style.color = '#00e676';
