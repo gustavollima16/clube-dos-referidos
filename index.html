@@ -743,27 +743,72 @@
       .lp-section { padding: 70px var(--space-lg); }
     }
     /* EDITOR-START */
-    .hero-watermark {
-      position: absolute;
-      width: 94%;
-      max-width: 691px;
-      top: 38%;
-      left: 67%;
-      transform: translate(-50%, -50%);
-      opacity: 0.07;
-      pointer-events: none;
-      z-index: 0;
-    }
-    .hero-subtitle { margin-top: 0rem; }
-    .nav-logo img { height: 44px; }
-    .footer-logo { height: 56px; }
-    @media (max-width: 900px) {
-      .hero-watermark { top: 27%; left: 65%; width: 76%; }
-      .hero-subtitle { margin-top: 3rem; }
-      .nav-logo img { height: 35px; }
-      .footer-logo { height: 240px; margin-top: -1.5rem; }
-    }
-    /* EDITOR-END */
+
+:root {
+  --accent: #00c8e8;
+  --font-display: 'Space Grotesk', sans-serif;
+  --font-body: 'Inter', sans-serif;
+}
+/* Watermark */
+.hero-watermark {
+  position: absolute;
+  width: 94%;
+  max-width: 691px;
+  top: 38%;
+  left: 67%;
+  transform: translate(-50%, -50%);
+  opacity: 0.07;
+  pointer-events: none;
+  z-index: 0;
+}
+/* Logos */
+.hero-subtitle { margin-top: 0rem; }
+.nav-logo img { height: 44px; }
+.footer-logo { height: 56px; }
+/* Colors */
+.btn-primary, .btn-primary { background: #00c8e8 !important; }
+.depo-stars { color: #00c8e8 !important; }
+.hero-title .highlight { text-shadow: 0 0 20px rgba(0,200,232,0.6); }
+/* Typography */
+.hero-title { font-size: 4.5rem; font-family: var(--font-display); }
+.hero-subtitle { font-size: 1.1rem; line-height: 1.6; }
+.lp-title, .section-title { font-size: 2.5rem; letter-spacing: 0px; }
+body { line-height: 1.6; font-family: var(--font-body); }
+/* Layout */
+.hero-panel { min-height: 700px; }
+.top-nav { height: 80px; }
+/* Spacing */
+.lp-section { padding-top: 120px; padding-bottom: 120px; }
+.benefits-grid { gap: 24px; }
+.depo-grid { gap: 24px; }
+.btn-primary { padding: 16px 40px; }
+/* Elements */
+.benefit-card, .depo-card, .mentor-card { border-radius: 16px; }
+.btn, .btn-primary { border-radius: 50px; }
+.benefit-card { box-shadow: 0 4px 0px rgba(0,0,0,0.4); }
+.mentor-photo-wrap { border-radius: 50%; overflow: hidden; }
+.mentor-photo { border-radius: 50%; }
+.mentor-photo-border { border-radius: 50%; }
+* { transition-duration: 0.3s; }
+/* Scrollbar */
+::-webkit-scrollbar-thumb { background: #00c8e8; }
+::selection { background: #003040; }
+/* Mobile */
+@media (max-width: 900px) {
+  .hero-watermark { top: 27%; left: 65%; width: 76%; }
+  .hero-subtitle { margin-top: 3rem; font-size: 1rem; }
+  .nav-logo img { height: 35px; }
+  .footer-logo { height: 240px; margin-top: -1.5rem; }
+  .hero-title { font-size: 3rem; }
+  .lp-title { font-size: 1.8rem; }
+  .landing-hero { min-height: 600px; }
+  .lp-section { padding-top: 70px; padding-bottom: 70px; }
+  .benefits-grid, .depo-grid, .mentores-grid { gap: 16px; }
+  .btn, .btn-primary { padding: 14px 28px; border-radius: 50px; }
+}
+/* Custom CSS */
+
+/* EDITOR-END */
   </style>
 </head>
 <body class="auth-page">
