@@ -546,7 +546,7 @@
         </div>
         <div class="control">
           <div class="control-label">Intensidade neon "REFERIDOS" <span class="control-value" id="v-neon-blur-val">20px</span></div>
-          <input type="range" min="0" max="60" step="2" value="20" id="neon-blur" oninput="update()">
+          <input type="range" min="0" max="60" step="2" value="30" id="neon-blur" oninput="update()">
         </div>
       </div>
     </div>
@@ -935,7 +935,7 @@ ${importLine}
 /* Colors */
 .btn-primary, .btn-primary { background: ${ctaBg} !important; }
 .depo-stars { color: ${stars} !important; }
-.hero-title .highlight { text-shadow: 0 0 ${val('neon-blur')}px rgba(0,200,232,0.6); }
+.hero-title .highlight { color: var(--accent); text-shadow: 0 0 ${val('neon-blur')}px rgba(0,200,232,0.5); }
 /* Typography */
 .hero-title { font-size: ${val('hero-title-size')}rem; font-family: var(--font-display); }
 .hero-subtitle { font-size: ${val('hero-sub-size')}rem; line-height: ${val('body-lh')}; }
@@ -1231,16 +1231,23 @@ ${customCss}
   /* ── CARREGA VALORES REAIS DO INDEX.HTML ── */
   function setSlider(id, v) {
     const el = document.getElementById(id);
-    if (el) el.value = v;
+    if (el && v !== null && !isNaN(v)) el.value = v;
+  }
+  function setColor(id, v) {
+    const el = document.getElementById(id);
+    if (el && v) el.value = v;
   }
 
   async function carregarValoresReais() {
+    // Trava o botão Publicar até os valores reais estarem carregados
+    const btnPub = document.getElementById('btn-publicar');
+    if (btnPub) { btnPub.disabled = true; btnPub.title = 'Carregando valores do site...'; }
+
     try {
       let html;
       const pat = localStorage.getItem('cms_gh_pat');
       if (pat) {
-        // Busca sempre do GitHub (fonte da verdade)
-        const res = await fetch(`https://api.github.com/repos/${GH_OWNER}/${GH_REPO}/contents/${GH_FILE}?ref=${GH_BRANCH}`, {
+        const res = await fetch(`https://api.github.com/repos/${GH_OWNER}/${GH_REPO}/contents/${GH_FILE}?ref=${GH_BRANCH}&_=${Date.now()}`, {
           headers: { 'Authorization': `token ${pat}`, 'Accept': 'application/vnd.github.v3+json' }
         });
         if (res.ok) {
@@ -1250,59 +1257,83 @@ ${customCss}
         }
       }
       if (!html) {
-        // Fallback: arquivo local
-        const res = await fetch('/index.html?' + Date.now());
+        const res = await fetch('index.html?' + Date.now());
         html = await res.text();
       }
+
       const m = html.match(/\/\* EDITOR-START \*\/([\s\S]*?)\/\* EDITOR-END \*\//);
       if (!m) return;
       const css = m[1];
 
-      const get = (pattern) => { const r = css.match(pattern); return r ? parseFloat(r[1]) : null; };
-
-      const wmTop    = get(/\.hero-watermark[\s\S]*?top:\s*([\d.]+)%/);
-      const wmLeft   = get(/\.hero-watermark[\s\S]*?left:\s*([\d.]+)%/);
-      const wmSize   = get(/max-width:\s*([\d.]+)px/);
-      const wmOp     = get(/opacity:\s*([\d.]+)/);
-      const subMtD   = get(/\.hero-subtitle\s*\{[^}]*margin-top:\s*([\d.]+)rem/);
-      const navLogoD = get(/\.nav-logo img\s*\{[^}]*height:\s*([\d.]+)px/);
-      const footerD  = get(/\.footer-logo\s*\{[^}]*height:\s*([\d.]+)px/);
+      // Helper: extrai float de um padrão no bloco (fora do @media)
+      const beforeMedia = css.split(/@media/)[0];
+      const get = (pattern, src) => { const r = (src||beforeMedia).match(pattern); return r ? parseFloat(r[1]) : null; };
+      const getStr = (pattern, src) => { const r = (src||beforeMedia).match(pattern); return r ? r[1].trim() : null; };
 
       // Mobile — dentro do @media
-      const mobile = css.match(/@media[\s\S]*?\{([\s\S]*)\}/);
-      const mob = mobile ? mobile[1] : '';
-      const getM = (pattern) => { const r = mob.match(pattern); return r ? parseFloat(r[1]) : null; };
+      const mediaBlock = (css.match(/@media[^{]*\{([\s\S]*)\}/) || [])[1] || '';
 
-      const mwmTop  = getM(/\.hero-watermark[^}]*top:\s*([\d.]+)%/);
-      const mwmLeft = getM(/\.hero-watermark[^}]*left:\s*([\d.]+)%/);
-      const mwmSize = getM(/\.hero-watermark[^}]*width:\s*([\d.]+)%/);
-      const subMt   = getM(/\.hero-subtitle[^}]*margin-top:\s*([\d.]+)rem/);
-      const navLogo = getM(/\.nav-logo img[^}]*height:\s*([\d.]+)px/);
-      const footer  = getM(/\.footer-logo[^}]*height:\s*([\d.]+)px/);
-      const footerMt= getM(/\.footer-logo[^}]*margin-top:\s*(-?[\d.]+)rem/);
-
-      if (wmTop   !== null) setSlider('wm-top',        wmTop);
-      if (wmLeft  !== null) setSlider('wm-left',       wmLeft);
-      if (wmSize  !== null) setSlider('wm-size',       wmSize);
-      if (wmOp    !== null) setSlider('wm-op',         Math.round(wmOp * 100));
-      if (subMtD  !== null) setSlider('sub-mt-d',      subMtD);
-      if (navLogoD!== null) setSlider('nav-logo-d',    navLogoD);
-      if (footerD !== null) setSlider('footer-logo-d', footerD);
-      if (mwmTop  !== null) setSlider('mwm-top',       mwmTop);
-      if (mwmLeft !== null) setSlider('mwm-left',      mwmLeft);
-      if (mwmSize !== null) setSlider('mwm-size',      mwmSize);
-      if (subMt   !== null) setSlider('sub-mt',        subMt);
-      if (navLogo !== null) setSlider('nav-logo',      navLogo);
-      if (footer  !== null) setSlider('footer-logo',   footer);
-      if (footerMt!== null) setSlider('footer-mt',     footerMt);
-      // Load accent color from CSS variables
-      const accentMatch = css.match(/--accent:\s*(#[a-fA-F0-9]{6})/);
-      if (accentMatch) { const el = document.getElementById('c-accent'); if(el) el.value = accentMatch[1]; }
-      const ctaBgMatch = css.match(/\.btn-primary[^{]*\{[^}]*background:\s*(#[a-fA-F0-9]{6})/);
-      if (ctaBgMatch) { const el = document.getElementById('c-cta-bg'); if(el) el.value = ctaBgMatch[1]; }
+      // ── Watermark Desktop
+      setSlider('wm-top',        get(/\.hero-watermark[\s\S]*?top:\s*([\d.]+)%/));
+      setSlider('wm-left',       get(/\.hero-watermark[\s\S]*?left:\s*([\d.]+)%/));
+      setSlider('wm-size',       get(/max-width:\s*([\d.]+)px/));
+      setSlider('wm-op',         (() => { const v = get(/opacity:\s*([\d.]+)/); return v !== null ? Math.round(v*100) : null; })());
+      // ── Logos Desktop
+      setSlider('sub-mt-d',      get(/\.hero-subtitle\s*\{[^}]*margin-top:\s*([\d.]+)rem/));
+      setSlider('nav-logo-d',    get(/\.nav-logo img\s*\{[^}]*height:\s*([\d.]+)px/));
+      setSlider('footer-logo-d', get(/\.footer-logo\s*\{[^}]*height:\s*([\d.]+)px/));
+      // ── Colors
+      setColor('c-accent',       getStr(/--accent:\s*(#[a-fA-F0-9]{6})/));
+      setColor('c-cta-bg',       getStr(/\.btn-primary[^{]*\{[^}]*background:\s*(#[a-fA-F0-9]{6})/));
+      setColor('c-stars',        getStr(/\.depo-stars[^{]*\{[^}]*color:\s*(#[a-fA-F0-9]{6})/));
+      setColor('c-scrollbar',    getStr(/scrollbar-thumb[^{]*\{[^}]*background:\s*(#[a-fA-F0-9]{6})/));
+      setColor('c-selection',    getStr(/::selection[^{]*\{[^}]*background:\s*(#[a-fA-F0-9]{6})/));
+      // ── Neon
+      setSlider('neon-blur',     get(/\.hero-title .highlight[^}]*text-shadow:\s*0 0 ([\d.]+)px/));
+      // ── Typography Desktop
+      setSlider('hero-title-size',    get(/\.hero-title\s*\{[^}]*font-size:\s*([\d.]+)rem/));
+      setSlider('hero-sub-size',      get(/\.hero-subtitle\s*\{[^}]*font-size:\s*([\d.]+)rem/));
+      setSlider('section-title-size', get(/\.lp-title[^}]*font-size:\s*([\d.]+)rem/));
+      setSlider('heading-ls',         get(/letter-spacing:\s*([\d.]+)px/));
+      setSlider('body-lh',            get(/body\s*\{[^}]*line-height:\s*([\d.]+)/));
+      // ── Layout Desktop
+      setSlider('hero-min-h',    get(/\.hero-panel[^}]*min-height:\s*([\d.]+)px/));
+      setSlider('navbar-h',      get(/\.top-nav\s*\{[^}]*height:\s*([\d.]+)px/));
+      // ── Spacing Desktop
+      setSlider('section-pad',   get(/\.lp-section[^}]*padding-top:\s*([\d.]+)px/));
+      setSlider('card-gap',      get(/\.benefits-grid\s*\{[^}]*gap:\s*([\d.]+)px/));
+      setSlider('btn-px',        get(/\.btn-primary\s*\{[^}]*padding:\s*[\d.]+px\s*([\d.]+)px/));
+      setSlider('btn-py',        get(/\.btn-primary\s*\{[^}]*padding:\s*([\d.]+)px/));
+      // ── Elements Desktop
+      setSlider('card-radius',   get(/\.benefit-card[^}]*border-radius:\s*([\d.]+)px/));
+      setSlider('btn-radius',    get(/\.btn[^,}]*border-radius:\s*([\d.]+)px/));
+      setSlider('card-shadow',   get(/box-shadow:\s*0 4px ([\d.]+)px/));
+      setSlider('mentor-radius', get(/\.mentor-photo-wrap[^}]*border-radius:\s*([\d.]+)%/));
+      setSlider('anim-speed',    get(/transition-duration:\s*([\d.]+)s/));
+      // ── Mobile
+      setSlider('mwm-top',       get(/\.hero-watermark[^}]*top:\s*([\d.]+)%/, mediaBlock));
+      setSlider('mwm-left',      get(/\.hero-watermark[^}]*left:\s*([\d.]+)%/, mediaBlock));
+      setSlider('mwm-size',      get(/\.hero-watermark[^}]*width:\s*([\d.]+)%/, mediaBlock));
+      setSlider('sub-mt',        get(/\.hero-subtitle[^}]*margin-top:\s*([\d.]+)rem/, mediaBlock));
+      setSlider('nav-logo',      get(/\.nav-logo img[^}]*height:\s*([\d.]+)px/, mediaBlock));
+      setSlider('footer-logo',   get(/\.footer-logo[^}]*height:\s*([\d.]+)px/, mediaBlock));
+      setSlider('footer-mt',     get(/\.footer-logo[^}]*margin-top:\s*(-?[\d.]+)rem/, mediaBlock));
+      setSlider('hero-title-m',  get(/\.hero-title[^}]*font-size:\s*([\d.]+)rem/, mediaBlock));
+      setSlider('section-title-m', get(/\.lp-title[^}]*font-size:\s*([\d.]+)rem/, mediaBlock));
+      setSlider('hero-min-h-m',  get(/\.landing-hero[^}]*min-height:\s*([\d.]+)px/, mediaBlock));
+      setSlider('section-pad-m', get(/\.lp-section[^}]*padding-top:\s*([\d.]+)px/, mediaBlock));
+      setSlider('card-gap-m',    get(/\.benefits-grid[^}]*gap:\s*([\d.]+)px/, mediaBlock));
+      setSlider('btn-px-m',      get(/\.btn[^}]*padding:\s*[\d.]+px\s*([\d.]+)px/, mediaBlock));
+      setSlider('btn-py-m',      get(/\.btn[^}]*padding:\s*([\d.]+)px/, mediaBlock));
+      setSlider('btn-radius-m',  get(/\.btn[^}]*border-radius:\s*([\d.]+)px/, mediaBlock));
 
       update();
-    } catch(e) {}
+    } catch(e) {
+      console.warn('[Editor] Erro ao carregar valores:', e);
+    } finally {
+      // Libera o botão Publicar após carregar (com ou sem erro)
+      if (btnPub) { btnPub.disabled = false; btnPub.title = ''; }
+    }
   }
 
   carregarValoresReais();
