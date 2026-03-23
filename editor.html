@@ -907,11 +907,15 @@
   const inc = id => _loadedControls.has(id) || _dirtyControls.has(id);
 
   function buildFullCSS() {
-    const accent      = strVal('c-accent')    || '#00C8E8';
+    const accent      = strVal('c-accent')     || '#00C8E8';
     const ctaBg       = strVal('c-cta-bg')    || '#00C8E8';
     const stars       = strVal('c-stars')     || '#00C8E8';
     const scrollbar   = strVal('c-scrollbar') || '#00C8E8';
     const selection   = strVal('c-selection') || '#003040';
+    const bgSection   = strVal('c-bg-section') || '#111111';
+    const bgFooter    = strVal('c-bg-footer')  || '#000000';
+    const bgCard      = strVal('c-bg-card')    || '#1a1a1a';
+    const inputBg     = strVal('c-input-bg')   || '#1a1a1a';
     const fontDisplay = strVal('font-display') || 'Space Grotesk';
     const fontBody    = strVal('font-body')    || 'Inter';
     const customCss   = strVal('custom-css')   || '';
@@ -932,8 +936,12 @@
     if (inc('c-cta-bg'))   lines.push(`.btn-primary, .btn-primary { background: ${ctaBg} !important; }`);
     if (inc('c-stars'))    lines.push(`.depo-stars { color: ${stars} !important; }`);
     if (inc('neon-blur'))  lines.push(`.hero-title .highlight { color: var(--accent); text-shadow: 0 0 ${val('neon-blur')}px rgba(0,200,232,0.5); }`);
-    if (inc('c-scrollbar')) lines.push(`::-webkit-scrollbar-thumb { background: ${scrollbar}; }`);
-    if (inc('c-selection')) lines.push(`::selection { background: ${selection}; }`);
+    if (inc('c-scrollbar'))   lines.push(`::-webkit-scrollbar-thumb { background: ${scrollbar}; }`);
+    if (inc('c-selection'))   lines.push(`::selection { background: ${selection}; }`);
+    if (inc('c-bg-section'))  lines.push(`:root { --bg-secondary: ${bgSection}; }`);
+    if (inc('c-bg-card'))     lines.push(`:root { --bg-card: ${bgCard}; }`);
+    if (inc('c-bg-footer'))   lines.push(`.site-footer { background: ${bgFooter} !important; }`);
+    if (inc('c-input-bg'))    lines.push(`.form-control { background: ${inputBg}; -webkit-box-shadow: 0 0 0 999px ${inputBg} inset !important; box-shadow: 0 0 0 999px ${inputBg} inset !important; }`);
 
     // Tipografia
     if (inc('hero-title-size') || inc('font-display')) lines.push(`.hero-title { font-size: ${val('hero-title-size')}rem; font-family: var(--font-display); }`);
@@ -1329,6 +1337,10 @@ ${customCss}
       setColor('c-stars',        getStr(/\.depo-stars[^{]*\{[^}]*color:\s*(#[a-fA-F0-9]{6})/));
       setColor('c-scrollbar',    getStr(/scrollbar-thumb[^{]*\{[^}]*background:\s*(#[a-fA-F0-9]{6})/));
       setColor('c-selection',    getStr(/::selection[^{]*\{[^}]*background:\s*(#[a-fA-F0-9]{6})/));
+      setColor('c-bg-section',   getStr(/--bg-secondary:\s*(#[a-fA-F0-9]{6})/));
+      setColor('c-bg-card',      getStr(/--bg-card:\s*(#[a-fA-F0-9]{6})/));
+      setColor('c-bg-footer',    getStr(/\.site-footer[^{]*\{[^}]*background:\s*(#[a-fA-F0-9]{6})/));
+      setColor('c-input-bg',     getStr(/\.form-control[^{]*\{[^}]*background:\s*(#[a-fA-F0-9]{6})/));
       // ── Neon
       setSlider('neon-blur',     get(/\.hero-title .highlight[^}]*text-shadow:\s*0 0 ([\d.]+)px/));
       // ── Typography Desktop
@@ -1360,6 +1372,7 @@ ${customCss}
       setSlider('footer-logo',   get(/\.footer-logo[^}]*height:\s*([\d.]+)px/, mediaBlock));
       setSlider('footer-mt',     get(/\.footer-logo[^}]*margin-top:\s*(-?[\d.]+)rem/, mediaBlock));
       setSlider('hero-title-m',  get(/\.hero-title[^}]*font-size:\s*([\d.]+)rem/, mediaBlock));
+      setSlider('hero-sub-m',    get(/\.hero-subtitle[^}]*font-size:\s*([\d.]+)rem/, mediaBlock));
       setSlider('section-title-m', get(/\.lp-title[^}]*font-size:\s*([\d.]+)rem/, mediaBlock));
       setSlider('hero-pad-m',    get(/\.hero-panel[^}]*padding-top:\s*([\d.]+)px/, mediaBlock));
       setSlider('hero-min-h-m',  get(/\.hero-panel[^}]*min-height:\s*([\d.]+)px/, mediaBlock));
