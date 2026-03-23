@@ -1,7 +1,7 @@
 // ===== SERVICE WORKER — Clube dos Referidos =====
 // Atualiza automaticamente quando o site é publicado no GitHub Pages
 
-const CACHE_NAME = 'cdr-v4';
+const CACHE_NAME = 'cdr-v5';
 
 // Apenas imagens ficam em cache (não mudam com frequência)
 const IMAGE_ASSETS = [
