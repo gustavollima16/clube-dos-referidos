@@ -414,6 +414,40 @@
 </div>
 <div id="panel-body">
 
+    <!-- LOGOS DESKTOP -->
+    <div class="group only-desktop">
+      <div class="group-title" onclick="toggleGroup(this)">Logos <span class="group-badge">Desktop</span><i class="toggle-arrow">▼</i></div>
+      <div class="group-body">
+        <div class="control">
+          <div class="control-label">Logo topo (nav) <span class="control-value" id="v-nav-logo-d-val">44px</span></div>
+          <input type="range" min="20" max="100" value="44" id="nav-logo-d" oninput="update()">
+        </div>
+        <div class="control">
+          <div class="control-label">Logo footer — Tamanho <span class="control-value" id="v-footer-logo-d-val">56px</span></div>
+          <input type="range" min="20" max="200" value="56" id="footer-logo-d" oninput="update()">
+        </div>
+      </div>
+    </div>
+
+    <!-- LOGOS MOBILE -->
+    <div class="group only-mobile">
+      <div class="group-title" onclick="toggleGroup(this)">Logos <span class="group-badge mobile">Mobile</span><i class="toggle-arrow">▼</i></div>
+      <div class="group-body">
+        <div class="control">
+          <div class="control-label">Logo topo (nav) <span class="control-value" id="v-nav-logo-val">35px</span></div>
+          <input type="range" min="20" max="80" value="35" id="nav-logo" oninput="update()">
+        </div>
+        <div class="control">
+          <div class="control-label">Logo footer — Tamanho <span class="control-value" id="v-footer-logo-val">240px</span></div>
+          <input type="range" min="60" max="400" value="240" id="footer-logo" oninput="update()">
+        </div>
+        <div class="control">
+          <div class="control-label">Logo footer — Posição vertical <span class="control-value" id="v-footer-mt-val">-1.5rem</span></div>
+          <input type="range" min="-5" max="5" step="0.5" value="-1.5" id="footer-mt" oninput="update()">
+        </div>
+      </div>
+    </div>
+
     <!-- MARCA D'ÁGUA DESKTOP -->
     <div class="group only-desktop">
       <div class="group-title" onclick="toggleGroup(this)">Marca d'água — Hero <span class="group-badge">Desktop</span><i class="toggle-arrow">▼</i></div>
@@ -467,21 +501,6 @@
       </div>
     </div>
 
-    <!-- LOGOS DESKTOP -->
-    <div class="group only-desktop">
-      <div class="group-title" onclick="toggleGroup(this)">Logos <span class="group-badge">Desktop</span><i class="toggle-arrow">▼</i></div>
-      <div class="group-body">
-        <div class="control">
-          <div class="control-label">Logo topo (nav) <span class="control-value" id="v-nav-logo-d-val">44px</span></div>
-          <input type="range" min="20" max="100" value="44" id="nav-logo-d" oninput="update()">
-        </div>
-        <div class="control">
-          <div class="control-label">Logo footer — Tamanho <span class="control-value" id="v-footer-logo-d-val">56px</span></div>
-          <input type="range" min="20" max="200" value="56" id="footer-logo-d" oninput="update()">
-        </div>
-      </div>
-    </div>
-
     <!-- TEXTOS MOBILE -->
     <div class="group only-mobile">
       <div class="group-title" onclick="toggleGroup(this)">Texto Hero <span class="group-badge mobile">Mobile</span><i class="toggle-arrow">▼</i></div>
@@ -489,25 +508,6 @@
         <div class="control">
           <div class="control-label">Espaço acima do subtítulo <span class="control-value" id="v-sub-mt-val">3rem</span></div>
           <input type="range" min="0" max="10" step="0.5" value="3" id="sub-mt" oninput="update()">
-        </div>
-      </div>
-    </div>
-
-    <!-- LOGOS MOBILE -->
-    <div class="group only-mobile">
-      <div class="group-title" onclick="toggleGroup(this)">Logos <span class="group-badge mobile">Mobile</span><i class="toggle-arrow">▼</i></div>
-      <div class="group-body">
-        <div class="control">
-          <div class="control-label">Logo topo (nav) <span class="control-value" id="v-nav-logo-val">35px</span></div>
-          <input type="range" min="20" max="80" value="35" id="nav-logo" oninput="update()">
-        </div>
-        <div class="control">
-          <div class="control-label">Logo footer — Tamanho <span class="control-value" id="v-footer-logo-val">240px</span></div>
-          <input type="range" min="60" max="400" value="240" id="footer-logo" oninput="update()">
-        </div>
-        <div class="control">
-          <div class="control-label">Logo footer — Posição vertical <span class="control-value" id="v-footer-mt-val">-1.5rem</span></div>
-          <input type="range" min="-5" max="5" step="0.5" value="-1.5" id="footer-mt" oninput="update()">
         </div>
       </div>
     </div>
