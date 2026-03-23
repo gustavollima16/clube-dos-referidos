@@ -957,7 +957,7 @@
     if (inc('hero-title-m'))     mobLines.push(`  .hero-title { font-size: ${val('hero-title-m')}rem; }`);
     if (inc('hero-sub-m'))       mobLines.push(`  .hero-subtitle { font-size: ${val('hero-sub-m')}rem; }`);
     if (inc('section-title-m'))  mobLines.push(`  .lp-title { font-size: ${val('section-title-m')}rem; }`);
-    if (inc('hero-min-h-m'))     mobLines.push(`  .landing-hero { min-height: ${val('hero-min-h-m')}px; }`);
+    if (inc('hero-min-h-m'))     mobLines.push(`  .hero-panel { min-height: ${val('hero-min-h-m')}px; }`);
     if (inc('section-pad-m'))    mobLines.push(`  .lp-section { padding-top: ${val('section-pad-m')}px; padding-bottom: ${val('section-pad-m')}px; }`);
     if (inc('card-gap-m'))       mobLines.push(`  .benefits-grid, .depo-grid, .mentores-grid { gap: ${val('card-gap-m')}px; }`);
     if (inc('btn-px-m') || inc('btn-py-m') || inc('btn-radius-m')) mobLines.push(`  .btn, .btn-primary { padding: ${val('btn-py-m')}px ${val('btn-px-m')}px; border-radius: ${val('btn-radius-m')}px; }`);
@@ -1355,7 +1355,7 @@ ${customCss}
       setSlider('footer-mt',     get(/\.footer-logo[^}]*margin-top:\s*(-?[\d.]+)rem/, mediaBlock));
       setSlider('hero-title-m',  get(/\.hero-title[^}]*font-size:\s*([\d.]+)rem/, mediaBlock));
       setSlider('section-title-m', get(/\.lp-title[^}]*font-size:\s*([\d.]+)rem/, mediaBlock));
-      setSlider('hero-min-h-m',  get(/\.landing-hero[^}]*min-height:\s*([\d.]+)px/, mediaBlock));
+      setSlider('hero-min-h-m',  get(/\.hero-panel[^}]*min-height:\s*([\d.]+)px/, mediaBlock));
       setSlider('section-pad-m', get(/\.lp-section[^}]*padding-top:\s*([\d.]+)px/, mediaBlock));
       setSlider('card-gap-m',    get(/\.benefits-grid[^}]*gap:\s*([\d.]+)px/, mediaBlock));
       setSlider('btn-px-m',      get(/\.btn[^}]*padding:\s*[\d.]+px\s*([\d.]+)px/, mediaBlock));
